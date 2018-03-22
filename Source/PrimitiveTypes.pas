@@ -1051,7 +1051,7 @@
 			begin
 				exit INumber(Double(self / ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF})));
 			end;	
-			{$ENDREGION}
+		{$ENDREGION}
 
     const MinValue: NativeInt = {$IFDEF cpu64}$8000000000000000{$ELSE}$80000000{$ENDIF};
     const MaxValue: NativeInt = {$IFDEF cpu64}$7fffffffffffffff{$ELSE}$7fffffff{$ENDIF};
@@ -1106,16 +1106,6 @@
         result := (self = other);
       end;
 
-      method CompareTo(a: NativeInt): Integer;
-      begin
-		result := Integer( {$IFDEF cpu64}
-							 Int64(self).CompareTo(Int64(a))
-						   {$ELSE}
-							 Int32(self).CompareTo(Int32(a))
-                           {$ENDIF}
-                          );
-      end;
-
       method &Equals(obj: Object): Boolean; override;
       begin
         {$IFDEF cpu64}
@@ -1130,8 +1120,7 @@
         else
           exit False;
       end;
-
-
+			
       class method Parse(s: String): NativeUInt;
       begin
         if not DoTryParse(s, out result, true) then Convert.RaiseFormatException;
@@ -1141,6 +1130,30 @@
       begin
         exit DoTryParse(s, out Value, false);
       end;
+
+		{$Region Aritmethical Operators}
+			method &Add(const a: INumber): INumber; 
+			begin
+				exit INumber(self + ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF}));
+			end;
+	  
+			method &Subtract(const a: INumber): INumber; 
+			begin
+				exit INumber(self - ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF}));
+			end;	
+	  
+			method &Multiply(const a: INumber): INumber; 
+			begin
+				exit INumber(self * ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF}));
+			end;
+	  
+			method &Divide(const a: INumber): INumber; 
+			require
+				({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF}) <> 0;		
+			begin
+				exit INumber(Double(self / ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF})));
+			end;	
+		{$ENDREGION}
 
       const MinValue: NativeInt = $0;
       const MaxValue: NativeInt = {$IFDEF cpu64}$ffffffffffffffff{$ELSE}$ffffffff{$ENDIF};
