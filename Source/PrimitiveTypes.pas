@@ -527,7 +527,7 @@
       const MaxValue: Int16 = $7fff;
     end;
 
-    UInt16 = public record(IComparable<UInt16>, IEquatable<UInt16>)
+    UInt16 = public record(IIntegerNumber, IComparable<UInt16>, IEquatable<UInt16>)
     private
       class method DoTryParse(s: String; out Value: UInt16; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -576,6 +576,30 @@
       begin
         exit DoTryParse(s, out Value, false);
       end;
+
+			{$Region Aritmethical Operators}
+				method &Add(const a: INumber): INumber; 
+				begin
+					exit INumber(self + Int16(a));
+				end;
+	  
+				method &Subtract(const a: INumber): INumber; 
+				begin
+					exit INumber(self - UInt16(a));
+				end;
+	  
+				method &Multiply(const a: INumber): INumber; 
+				begin
+					exit INumber(self * UInt16(a));
+				end;
+	  
+				method &Divide(const a: INumber): INumber; 
+				require
+					UInt16(a) <> 0;		
+				begin
+					exit INumber(Double(self / UInt16(a)));
+				end;
+			{$ENDREGION}
 
       const MinValue: UInt16 = $0;
       const MaxValue: UInt16 = $ffff;
