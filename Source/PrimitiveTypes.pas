@@ -365,7 +365,7 @@
 			{$ENDREGION}
     end;
 
-    Byte = public record(IComparable<Byte>, IEquatable<Byte>)
+    Byte = public record(IIntegerNumber, IComparable<Byte>, IEquatable<Byte>)
     private
       class method DoTryParse(s: String; out Value: Byte; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -443,7 +443,7 @@
       const MaxValue: Byte = $ff;
     end;
 
-    Int16 = public record(IComparable<Int16>, IEquatable<Int16>)
+    Int16 = public record(IIntegerNumber, IComparable<Int16>, IEquatable<Int16>)
     private
       class method DoTryParse(s: String; out Value: Int16; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -498,6 +498,30 @@
       begin
         exit DoTryParse(s, out Value, false);
       end;
+
+			{$Region Aritmethical Operators}
+				method &Add(const a: INumber): INumber; 
+				begin
+					exit INumber(self + Int16(a));
+				end;
+	  
+				method &Subtract(const a: INumber): INumber; 
+				begin
+					exit INumber(self - Int16(a));
+				end;
+	  
+				method &Multiply(const a: INumber): INumber; 
+				begin
+					exit INumber(self * Int16(a));
+				end;
+	  
+				method &Divide(const a: INumber): INumber; 
+				require
+					Int16(a) <> 0;		
+				begin
+					exit INumber(Double(self / Int16(a)));
+				end;
+			{$ENDREGION}
 
       const MinValue: Int16 = $8000;
       const MaxValue: Int16 = $7fff;
