@@ -1,7 +1,7 @@
 ﻿namespace RemObjects.Elements.System;
 
   type
-    INumber = public interface
+    INumber = public interface (*mapped to ValueType*)
 			{$REGION Aritmethical Operators}
 				method &Add(const a: INumber): INumber;
 				method &Subtract(const a: INumber): INumber;
@@ -10,22 +10,22 @@
 	  
 				class operator Add(const a, b: INumber): INumber; inline;
 				begin
-					a.&Add(b);
+					exit a.&Add(b);
 				end;
 	  
 				class operator Subtract(const a, b: INumber): INumber; inline;
 				begin
-					a.&Subtract(b);
+					exit a.&Subtract(b);
 				end;
 	  
 				class operator Multiply(const a, b: INumber): INumber; inline;
 				begin
-					a.&Multiply(b);
+					exit a.&Multiply(b);
 				end;
 	  
 				class operator Divide(const a, b: INumber): INumber; inline;
 				begin
-					a.&Divide(b);
+					exit a.&Divide(b);
 				end;
 				{$ENDREGION}
     end;
@@ -176,36 +176,40 @@
       end;
 	  
 			{$Region Aritmethical Operators}
-				method &Add(const a: INumber): INumber; implements INumber.Add;
+				method &Add(const a: INumber): INumber;
+						//needs to check if a is Single or Double 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(a));	
+					var charCode2: Integer := ord(Char(IIntegerNumber(a)));	
 					var codeResult := Char(charCode1 + charCode2);
 					exit INumber(codeResult);
 				end;
 	  
-				method &Subtract(const a: INumber): INumber; implements INumber.Subtract;
+				method &Subtract(const a: INumber): INumber; 
+						//needs to check if a is Single or Double
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(a));	
+					var charCode2: Integer := ord(Char(IIntegerNumber(a)));	
 					var codeResult := Char(charCode1 - charCode2);
 					exit INumber(codeResult);
 				end;
 	  
-				method &Multiply(const a: INumber): INumber; implements INumber.Multiply;
+				method &Multiply(const a: INumber): INumber; 
+					//needs to check if a is Single or Double
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(a));	
+					var charCode2: Integer := ord(Char(IIntegerNumber(a)));	
 					var codeResult := Char(charCode1 * charCode2);
 					exit INumber(codeResult);
 				end;
 	  
-				method &Divide(const a: INumber): INumber; implements INumber.Divide;
+				method &Divide(const a: INumber): INumber; 
 				require
-					ord(Char(a)) <> 0;		
+					//needs to check if a is Single or Double
+					ord(Char(IIntegerNumber(a))) <> 0;		
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(a));	
+					var charCode2: Integer := ord(Char(IIntegerNumber(a)));	
 					var codeResult := Char(charCode1 div charCode2);
 					exit INumber(codeResult);
 				end;
@@ -244,38 +248,38 @@
       end;
 
 			{$Region Aritmethical Operators}
-				method &Add(const a: INumber): INumber; implements INumber.Add;
+				method &Add(const a: INumber): INumber; 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(a));	
-					var wordAsAnsiChar := AnsiChar(charCode1 + charCode2);
-					exit INumber(wordAsAnsiChar);
+					var charCode2: Integer := ord(AnsiChar(IIntegerNumber(a)));	
+					var charCodeResult := AnsiChar(charCode1 + charCode2);
+					exit INumber(charCodeResult);
 				end;
 	  
-				method &Subtract(const a: INumber): INumber; implements INumber.Subtract;
+				method &Subtract(const a: INumber): INumber; 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(a));	
-					var wordAsAnsiChar := AnsiChar(charCode1 - charCode2);
-					exit INumber(wordAsAnsiChar);
+					var charCode2: Integer := ord(AnsiChar(IIntegerNumber(a)));	
+					var charCodeResult := AnsiChar(charCode1 - charCode2);
+					exit INumber(charCodeResult);
 				end;
 	  
-				method &Multiply(const a: INumber): INumber; implements INumber.Multiply;
+				method &Multiply(const a: INumber): INumber; 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(a));	
-					var wordAsAnsiChar := AnsiChar(charCode1 * charCode2);
-					exit INumber(wordAsAnsiChar);
+					var charCode2: Integer := ord(AnsiChar(IIntegerNumber(a)));	
+					var charCodeResult := AnsiChar(charCode1 * charCode2);
+					exit INumber(charCodeResult);
 				end;
 	  
-				method &Divide(const a: INumber): INumber; implements INumber.Divide;
+				method &Divide(const a: INumber): INumber; 
 				require
-					ord(a) <> 0;		
+					ord(AnsiChar(IIntegerNumber(a))) <> 0;		
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(a));	
-					var wordAsAnsiChar := AnsiChar(charCode1 div charCode2);
-					exit INumber(wordAsAnsiChar);
+					var charCode2: Integer := ord(AnsiChar(IIntegerNumber(a)));		
+					var charCodeResult := AnsiChar(charCode1 div charCode2);
+					exit INumber(charCodeResult);
 				end;
 			{$ENDREGION}
   end;
@@ -341,31 +345,31 @@
       end;
 			
 			{$Region Aritmethical Operators}
-				method &Add(const a: INumber): INumber; implements INumber.Add;
+				method &Add(const a: INumber): INumber; 
 				begin
-					exit self + SByte(a);
+					exit INumber(self + SByte(IIntegerNumber(a)));
 				end;
 	  
-				method &Subtract(const a: INumber): INumber; implements INumber.Subtract;
+				method &Subtract(const a: INumber): INumber; 
 				begin
-					exit self - SByte(a);
+					exit INumber(self - SByte(IIntegerNumber(a)));
 				end;
 	  
-				method &Multiply(const a: INumber): INumber; implements INumber.Multiply;
+				method &Multiply(const a: INumber): INumber; 
 				begin
-					exit self * SByte(a);
+					exit INumber(self * SByte(IIntegerNumber(a)));
 				end;
 	  
-				method &Divide(const a: INumber): INumber; implements INumber.Divide;
+				method &Divide(const a: INumber): INumber; 
 				require
-					SByte(a) <> 0;		
+					SByte(IIntegerNumber(a)) <> 0;		
 				begin
-					exit self / SByte(a);
+					exit INumber(Double(self / SByte(IIntegerNumber(a))));
 				end;
 			{$ENDREGION}
     end;
 
-    Byte = public record(IIntegerNumber, IComparable<Byte>, IEquatable<Byte>)
+    Byte = public record(IComparable<Byte>, IEquatable<Byte>)
     private
       class method DoTryParse(s: String; out Value: Byte; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -419,7 +423,7 @@
       const MaxValue: Byte = $ff;
     end;
 
-    Int16 = public record(IIntegerNumber, IComparable<Int16>, IEquatable<Int16>)
+    Int16 = public record(IComparable<Int16>, IEquatable<Int16>)
     private
       class method DoTryParse(s: String; out Value: Int16; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -479,7 +483,7 @@
       const MaxValue: Int16 = $7fff;
     end;
 
-    UInt16 = public record(IIntegerNumber, IComparable<UInt16>, IEquatable<UInt16>)
+    UInt16 = public record(IComparable<UInt16>, IEquatable<UInt16>)
     private
       class method DoTryParse(s: String; out Value: UInt16; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -533,7 +537,7 @@
       const MaxValue: UInt16 = $ffff;
     end;
 
-    Int32 = public record(IIntegerNumber, IComparable<Int32>, IEquatable<Int32>)
+    Int32 = public record(IComparable<Int32>, IEquatable<Int32>)
     private
       class method DoTryParse(s: String; out Value: Int32; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -572,7 +576,7 @@
 
         if self < a then
          result := -1
-        else if (m_value > value) then
+        else if (a > self) then
           result := 1;
       end;
 
@@ -598,7 +602,7 @@
       const MaxValue: Int32 = $7fffffff;
     end;
 
-    UInt32 = public record(IIntegerNumber, IEquatable<UInt32>, IComparable<UInt32>)
+    UInt32 = public record(IEquatable<UInt32>, IComparable<UInt32>)
     private
       class method DoTryParse(s: String; out Value: UInt32; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -637,8 +641,8 @@
       begin
         result := 0;
 
-        result := if (self < value) then -1
-                  else if (self > value) then 1;
+        result := if (self < a) then -1
+                  else if (self > a) then 1;
       end;
 
       class method Parse(s: String): UInt32;
@@ -655,7 +659,7 @@
       const MaxValue: UInt32 = $ffffffff;
     end;
 
-    Int64 = public record(IIntegerNumber, IEquatable<Int64>, IComparable<Int64>)
+    Int64 = public record(IEquatable<Int64>, IComparable<Int64>)
     private
       class method DoTryParse(s: String; out Value: Int64; aRaiseOverflowException: Boolean):Boolean; inline;
       begin
@@ -698,8 +702,8 @@
       begin
         result := 0;
 
-        result := if (self < value) then -1
-                  else if (self > value) then 1;
+        result := if (self < a) then -1
+                  else if (self > a) then 1;
       end;
 
       method &Equals(obj: Object): Boolean; override;
@@ -724,7 +728,7 @@
       const MaxValue: Int64 = $7fffffffffffffff;
     end;
 
-    UInt64 = public record(IIntegerNumber, IEquatable<UInt64>, IComparable<UInt64>)
+    UInt64 = public record(IEquatable<UInt64>, IComparable<UInt64>)
     private
       class method DoTryParse(s: String; out Value: UInt64; aRaiseOverflowException: Boolean):Boolean;inline;
       begin
@@ -768,8 +772,8 @@
       begin
         result := 0;
 
-        result := if (self < value) then -1
-                  else if (self > value) then 1;
+        result := if (self < a) then -1
+                  else if (self > a) then 1;
       end;
 
       class method Parse(s: String): UInt64;
@@ -786,7 +790,7 @@
       const MaxValue: UInt64 = $ffffffffffffffff;
     end;
 
-    NativeInt = public record(IIntegerNumber, IEquatable<NativeInt>, IComparable<NativeInt>)
+    NativeInt = public record(IEquatable<NativeInt>, IComparable<NativeInt>)
     private
       class method DoTryParse(s: String; out Value: NativeInt; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -816,11 +820,6 @@
       begin
         exit Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
       end;
-
-	  method &Equals(other: NativeInt): Boolean;
-	  begin
-		result := (self = other);
-	  end;
 
 	  method CompareTo(a: NativeInt): Integer;
 	  begin
@@ -870,7 +869,7 @@
       const MaxValue: NativeInt = {$IFDEF cpu64}$7fffffffffffffff{$ELSE}$7fffffff{$ENDIF};
     end;
 
-    NativeUInt = public record(IIntegerNumber, IEquatable<NativeInt>, IComparable<NativeInt>)
+    NativeUInt = public record(IEquatable<NativeInt>, IComparable<NativeInt>)
     private
       class method DoTryParse(s: String; out Value: NativeUInt; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -898,9 +897,9 @@
       begin
         result :=
 					{$IFDEF cpu64}       
-						 (self = UInt64(obj))
+						 (self = UInt64(other))
 					{$else}
-						(self = UInt32(obj))
+						(self = UInt32(other))
 					{$Endif}
       end;
 
@@ -1080,7 +1079,7 @@
 
             // At least one of the values is NaN.
             if (IsNaN(self)) then
-                result := (if IsNaN(value) then 0 else -1)
+                result := (if IsNaN(a) then 0 else -1)
             else // f is NaN.
                 result := 1;
       end;
@@ -1159,7 +1158,7 @@
 
             // At least one of the values is NaN.
             if (IsNaN(self)) then
-                result := (if IsNaN(value) then 0 else -1)
+                result := (if IsNaN(a) then 0 else -1)
             else // f is NaN.
                 result := 1;
       end;
