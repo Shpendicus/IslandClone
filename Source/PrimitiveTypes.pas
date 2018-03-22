@@ -949,13 +949,12 @@
 					exit INumber(Double(self / UInt64(a)));
 				end;
 			{$ENDREGION}
-
-
+			
       const MinValue: UInt64 = $0;
       const MaxValue: UInt64 = $ffffffffffffffff;
     end;
 
-    NativeInt = public record(IEquatable<NativeInt>, IComparable<NativeInt>)
+    NativeInt = public record(IIntegerNumber, IEquatable<NativeInt>, IComparable<NativeInt>)
     private
       class method DoTryParse(s: String; out Value: NativeInt; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -986,52 +985,76 @@
         exit Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
       end;
 
-	  method CompareTo(a: NativeInt): Integer;
-	  begin
-		result := Integer( {$IFDEF cpu64}
-						     Int64(self).CompareTo(Int64(a))
-						   {$ELSE}
-							 Int32(self).CompareTo(Int32(a))
-						   {$ENDIF}
-						  );
-	  end;
+			method CompareTo(a: NativeInt): Integer;
+			begin
+				result := Integer( {$IFDEF cpu64}
+										 Int64(self).CompareTo(Int64(a))
+									 {$ELSE}
+									 Int32(self).CompareTo(Int32(a))
+									 {$ENDIF}
+									);
+			end;
 						
-	  method &Equals(obj: NativeInt): Boolean;
-	  begin
-		result := {$IFDEF cpu64}       
-					(self = Int64(obj))
-				  {$else}
-					(self = Int32(obj))
-				  {$Endif}
-	  end;
+			method &Equals(obj: NativeInt): Boolean;
+			begin
+				result := {$IFDEF cpu64}       
+										(self = Int64(obj))
+									{$ELSE}
+										(self = Int32(obj))
+									{$ENDIF}
+			end;
 
-      method &Equals(obj: Object): Boolean; override;
-      begin
-        {$IFDEF cpu64}
-        if assigned(obj) and (obj is Int64) then
-          exit self = Int64(obj);
-        {$else}
-        if assigned(obj) and (obj is Int32) then
-          exit self = Int32(obj);
-        {$ENDIF}
-        if assigned(obj) and (obj is NativeInt) then
-          exit self = NativeInt(obj)
-        else
-          exit False;
-      end;
+			method &Equals(obj: Object): Boolean; override;
+				begin
+					{$IFDEF cpu64}
+						if assigned(obj) and (obj is Int64) then
+							exit self = Int64(obj);
+					{$else}
+						if assigned(obj) and (obj is Int32) then
+							exit self = Int32(obj);
+					{$ENDIF}
+						if assigned(obj) and (obj is NativeInt) then
+							exit self = NativeInt(obj)
+					else
+						exit False;
+				end;  
 
-      class method Parse(s: String): NativeInt;
-      begin
-        if not DoTryParse(s, out result, true) then Convert.RaiseFormatException;
-      end;
+			class method Parse(s: String): NativeInt;
+			begin
+				if not DoTryParse(s, out result, true) then Convert.RaiseFormatException;
+			end;   
 
-      class method TryParse(s: String; out Value: NativeInt):Boolean;
-      begin
-        exit DoTryParse(s, out Value, false);
-      end;
+			class method TryParse(s: String; out Value: NativeInt):Boolean;
+				begin
+					exit DoTryParse(s, out Value, false);
+				end;
 
-      const MinValue: NativeInt = {$IFDEF cpu64}$8000000000000000{$ELSE}$80000000{$ENDIF};
-      const MaxValue: NativeInt = {$IFDEF cpu64}$7fffffffffffffff{$ELSE}$7fffffff{$ENDIF};
+		{$Region Aritmethical Operators}
+			method &Add(const a: INumber): INumber; 
+			begin
+				exit INumber(self + ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}));
+			end;
+	  
+			method &Subtract(const a: INumber): INumber; 
+			begin
+				exit INumber(self - ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}));
+			end;	
+	  
+			method &Multiply(const a: INumber): INumber; 
+			begin
+				exit INumber(self * ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}));
+			end;
+	  
+			method &Divide(const a: INumber): INumber; 
+			require
+				({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}) <> 0;		
+			begin
+				exit INumber(Double(self / ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF})));
+			end;	
+			{$ENDREGION}
+
+    const MinValue: NativeInt = {$IFDEF cpu64}$8000000000000000{$ELSE}$80000000{$ENDIF};
+    const MaxValue: NativeInt = {$IFDEF cpu64}$7fffffffffffffff{$ELSE}$7fffffff{$ENDIF};
     end;
 
     NativeUInt = public record(IEquatable<NativeInt>, IComparable<NativeInt>)
@@ -1069,13 +1092,13 @@
       end;
 
       method CompareTo(a: NativeInt): Integer;
-	  begin
-	    result := Integer( {$IFDEF cpu64}
-							 UInt64(self).CompareTo(UInt64(a))
-						   {$ELSE}
-							 UInt32(self).CompareTo(UInt32(a))
-						   {$ENDIF}
-						 );
+			begin
+				result := Integer( {$IFDEF cpu64}
+								 UInt64(self).CompareTo(UInt64(a))
+								 {$ELSE}
+								 UInt32(self).CompareTo(UInt32(a))
+								 {$ENDIF}
+							 );
 			end;
 
       method &Equals(other: NativeInt): Boolean;
