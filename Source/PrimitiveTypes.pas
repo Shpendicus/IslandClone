@@ -1,7 +1,7 @@
 ﻿namespace RemObjects.Elements.System;
 
   type
-    INumber = public interface (*mapped to ValueType*)
+    INumber = public interface 
 			{$REGION Aritmethical Operators}
 				method &Add(const a: INumber): INumber;
 				method &Subtract(const a: INumber): INumber;
@@ -90,7 +90,7 @@
 
       method GetHashCode: Integer; override;
       begin
-        exit Integer(self);
+        exit ord(self);
       end;
 
       method &Equals(const other: Char): boolean;
@@ -177,39 +177,35 @@
 	  
 			{$Region Aritmethical Operators}
 				method &Add(const a: INumber): INumber;
-						//needs to check if a is Single or Double 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(IIntegerNumber(a)));	
+					var charCode2: Integer := ord(Char(a));	
 					var codeResult := Char(charCode1 + charCode2);
 					exit INumber(codeResult);
 				end;
 	  
 				method &Subtract(const a: INumber): INumber; 
-						//needs to check if a is Single or Double
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(IIntegerNumber(a)));	
+					var charCode2: Integer := ord(Char(if (a is Single) or (a is Double) then a else a));	
 					var codeResult := Char(charCode1 - charCode2);
 					exit INumber(codeResult);
 				end;
 	  
 				method &Multiply(const a: INumber): INumber; 
-					//needs to check if a is Single or Double
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(IIntegerNumber(a)));	
+					var charCode2: Integer := ord(Char(a));	
 					var codeResult := Char(charCode1 * charCode2);
 					exit INumber(codeResult);
 				end;
 	  
 				method &Divide(const a: INumber): INumber; 
 				require
-					//needs to check if a is Single or Double
-					ord(Char(IIntegerNumber(a))) <> 0;		
+					ord(Char(a)) <> 0;		
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(IIntegerNumber(a)));	
+					var charCode2: Integer := ord(Char(a));	
 					var codeResult := Char(charCode1 div charCode2);
 					exit INumber(codeResult);
 				end;
@@ -251,7 +247,7 @@
 				method &Add(const a: INumber): INumber; 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(IIntegerNumber(a)));	
+					var charCode2: Integer := ord(AnsiChar(a));	
 					var charCodeResult := AnsiChar(charCode1 + charCode2);
 					exit INumber(charCodeResult);
 				end;
@@ -259,7 +255,7 @@
 				method &Subtract(const a: INumber): INumber; 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(IIntegerNumber(a)));	
+					var charCode2: Integer := ord(AnsiChar(a));	
 					var charCodeResult := AnsiChar(charCode1 - charCode2);
 					exit INumber(charCodeResult);
 				end;
@@ -267,17 +263,17 @@
 				method &Multiply(const a: INumber): INumber; 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(IIntegerNumber(a)));	
+					var charCode2: Integer := ord(AnsiChar(a));	
 					var charCodeResult := AnsiChar(charCode1 * charCode2);
 					exit INumber(charCodeResult);
 				end;
 	  
 				method &Divide(const a: INumber): INumber; 
 				require
-					ord(AnsiChar(IIntegerNumber(a))) <> 0;		
+					ord(AnsiChar(a)) <> 0;		
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(IIntegerNumber(a)));		
+					var charCode2: Integer := ord(AnsiChar(a));		
 					var charCodeResult := AnsiChar(charCode1 div charCode2);
 					exit INumber(charCodeResult);
 				end;
@@ -347,24 +343,24 @@
 			{$Region Aritmethical Operators}
 				method &Add(const a: INumber): INumber; 
 				begin
-					exit INumber(self + SByte(IIntegerNumber(a)));
+					exit INumber(self + SByte(a));
 				end;
 	  
 				method &Subtract(const a: INumber): INumber; 
 				begin
-					exit INumber(self - SByte(IIntegerNumber(a)));
+					exit INumber(self - SByte(a));
 				end;
 	  
 				method &Multiply(const a: INumber): INumber; 
 				begin
-					exit INumber(self * SByte(IIntegerNumber(a)));
+					exit INumber(self * SByte(a));
 				end;
 	  
 				method &Divide(const a: INumber): INumber; 
 				require
-					SByte(IIntegerNumber(a)) <> 0;		
+					SByte(a) <> 0;		
 				begin
-					exit INumber(Double(self / SByte(IIntegerNumber(a))));
+					exit INumber(Double(self / SByte(a)));
 				end;
 			{$ENDREGION}
     end;
@@ -418,6 +414,30 @@
       begin
         exit DoTryParse(s, out Value, false);
       end;
+
+			{$Region Aritmethical Operators}
+				method &Add(const a: INumber): INumber; 
+				begin
+					exit INumber(self + Byte(a));
+				end;
+	  
+				method &Subtract(const a: INumber): INumber; 
+				begin
+					exit INumber(self - Byte(a));
+				end;
+	  
+				method &Multiply(const a: INumber): INumber; 
+				begin
+					exit INumber(self * Byte(a));
+				end;
+	  
+				method &Divide(const a: INumber): INumber; 
+				require
+					Byte(a) <> 0;		
+				begin
+					exit INumber(Double(self / Byte(a)));
+				end;
+			{$ENDREGION}
 
       const MinValue: Byte = $0;
       const MaxValue: Byte = $ff;
