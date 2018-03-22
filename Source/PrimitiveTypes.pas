@@ -339,8 +339,30 @@
       begin
         exit DoTryParse(s, out Value, false);
       end;
-
-
+			
+			{$Region Aritmethical Operators}
+				method &Add(const a: INumber): INumber; implements INumber.Add;
+				begin
+					exit self + SByte(a);
+				end;
+	  
+				method &Subtract(const a: INumber): INumber; implements INumber.Subtract;
+				begin
+					exit self - SByte(a);
+				end;
+	  
+				method &Multiply(const a: INumber): INumber; implements INumber.Multiply;
+				begin
+					exit self * SByte(a);
+				end;
+	  
+				method &Divide(const a: INumber): INumber; implements INumber.Divide;
+				require
+					SByte(a) <> 0;		
+				begin
+					exit self / SByte(a);
+				end;
+			{$ENDREGION}
     end;
 
     Byte = public record(IIntegerNumber, IComparable<Byte>, IEquatable<Byte>)
