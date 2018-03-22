@@ -1,0 +1,109 @@
+<Project>
+  <Name>STRATEGY - PATTERN</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Serializing</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>FormatablePairStream</Name>
+        <Access>Public</Access>
+        <Location left="270" top="533" />
+        <Size width="244" height="103" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void SwitchOutputFormat(IFormatter formatter)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>FormatablePairStream &lt;HAT&gt; einen IFormatter
+
+IFormatter:
+Kann z.B sein:
+&lt;JSON Formatter&gt;
+&lt;XML Formatter&gt;
+&lt;Binary Formatter&gt;
+
+Möglicherweise über das Strategy-Pattern?</Text>
+        <Location left="922" top="533" />
+        <Size width="160" height="172" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IFormatter</Name>
+        <Access>Public</Access>
+        <Location left="270" top="115" />
+        <Size width="228" height="155" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">Byte[] Serialize(Object input)</Member>
+        <Member type="Method">Obejct Deserialize(Byte[] input)</Member>
+        <Member type="Method">ByteStream Serialize(Object input)</Member>
+        <Member type="Method">Obejct Deserialize(IEnumerable&lt;Byte&gt; input)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>BinaryFormatter</Name>
+        <Access>Public</Access>
+        <Location left="939" top="55" />
+        <Size width="289" height="96" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>JSONFormatter</Name>
+        <Access>Public</Access>
+        <Location left="939" top="221" />
+        <Size width="289" height="96" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Entspricht dem CONTEXT
+</Text>
+        <Location left="489" top="505" />
+        <Size width="160" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Entspricht der ABSTRAKTEN 
+STRATEGY
+</Text>
+        <Location left="459" top="92" />
+        <Size width="160" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Entspricht der KONKRETEN
+STRATEGY
+
+STRATEGY
+</Text>
+        <Location left="1186" top="280" />
+        <Size width="160" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Entspricht der KONKRETEN
+STRATEGY
+
+STRATEGY
+</Text>
+        <Location left="1186" top="55" />
+        <Size width="160" height="50" />
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="0" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="3" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>897</X>
+          <Y>188</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="4" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>
