@@ -97,9 +97,11 @@
     <Reference Include="gc" />
     <Reference Include="rtl" />
   </ItemGroup>
+  <PropertyGroup>
+  </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Island.Windows.targets" />
+  <Import Project="Island.Shared.projitems" Label="Shared" />
   <PropertyGroup>
     <PreBuildEvent />
   </PropertyGroup>
-  <Import Project="Island.Shared.projitems" Label="Shared" />
 </Project>

@@ -98,9 +98,9 @@
         result := (self = other);
       end;
 
-      method CompareTo(const a: Char): Integer;
+      method CompareTo(const a: Char): boolean;
       begin
-        result := ord(self) - ord(a);
+        result := self - a;
       end;
 
       method &Equals(obj: Object): Boolean; override;
@@ -176,38 +176,34 @@
       end;
 	  
 			{$Region Aritmethical Operators}
-				method &Add(const a: INumber): INumber; implements INumber.Add;
+				method &Add(const a: INumber): INumber; 
 				begin
-					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(a));	
-					var codeResult := Char(charCode1 + charCode2);
-					exit INumber(codeResult);
+				var word1 := ord(self);
+				var word2 := ord(a);		
+				exit INumber(word1 + word2);
 				end;
 	  
-				method &Subtract(const a: INumber): INumber; implements INumber.Subtract;
+				method &Subtract(const a: INumber): INumber; 
 				begin
-					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(a));	
-					var codeResult := Char(charCode1 - charCode2);
-					exit INumber(codeResult);
+				var word1 := ord(self);
+				var word2 := ord(a);		
+				exit INumber(word1 - word2);
 				end;
 	  
-				method &Multiply(const a: INumber): INumber; implements INumber.Multiply;
+				method &Multiply(const a: INumber): INumber;
 				begin
-					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(a));	
-					var codeResult := Char(charCode1 * charCode2);
-					exit INumber(codeResult);
+					var word1 := ord(self);
+					var word2 := ord(a);		
+					exit INumber(word1 * word2);
 				end;
 	  
-				method &Divide(const a: INumber): INumber; implements INumber.Divide;
+				method &Divide(const a: INumber): INumber; 
 				require
-					ord(Char(a)) <> 0;		
+					Int16(a) <> 0;		
 				begin
-					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(a));	
-					var codeResult := Char(charCode1 div charCode2);
-					exit INumber(codeResult);
+					var word1 := ord(self);
+					var word2 := ord(a);		
+					exit INumber(word1 div word2);
 				end;
 			{$ENDREGION}
 	  	  
@@ -217,7 +213,7 @@
     public
       method ToString: String; override;
       begin
-        exit String(self);
+        exit Char(self).ToString;
       end;
 
       method GetHashCode: Integer; override;
@@ -232,7 +228,7 @@
 
       method CompareTo(const a: AnsiChar): Integer;
       begin
-        result := ord(self) - ord(a);
+        result := (self - a);
       end;
 
       method &Equals(obj: Object): Boolean; override;
@@ -242,42 +238,6 @@
         else
           exit False;
       end;
-
-			{$Region Aritmethical Operators}
-				method &Add(const a: INumber): INumber; implements INumber.Add;
-				begin
-					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(a));	
-					var wordAsAnsiChar := AnsiChar(charCode1 + charCode2);
-					exit INumber(wordAsAnsiChar);
-				end;
-	  
-				method &Subtract(const a: INumber): INumber; implements INumber.Subtract;
-				begin
-					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(a));	
-					var wordAsAnsiChar := AnsiChar(charCode1 - charCode2);
-					exit INumber(wordAsAnsiChar);
-				end;
-	  
-				method &Multiply(const a: INumber): INumber; implements INumber.Multiply;
-				begin
-					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(a));	
-					var wordAsAnsiChar := AnsiChar(charCode1 * charCode2);
-					exit INumber(wordAsAnsiChar);
-				end;
-	  
-				method &Divide(const a: INumber): INumber; implements INumber.Divide;
-				require
-					ord(a) <> 0;		
-				begin
-					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(AnsiChar(a));	
-					var wordAsAnsiChar := AnsiChar(charCode1 div charCode2);
-					exit INumber(wordAsAnsiChar);
-				end;
-			{$ENDREGION}
   end;
 
     SByte = public record(IIntegerNumber, IComparable<SByte>, IEquatable<SByte>)
@@ -339,8 +299,6 @@
       begin
         exit DoTryParse(s, out Value, false);
       end;
-
-
     end;
 
     Byte = public record(IIntegerNumber, IComparable<Byte>, IEquatable<Byte>)
