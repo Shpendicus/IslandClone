@@ -1274,9 +1274,9 @@
       method CompareTo(const a: Single): Integer;
       begin
        result :=
-            if (self < a) then -1
-            else if (self = a) then 0
-            else if (self > a) then 1;
+            if (self < a) then -1;
+            if (self = a) then 0;
+            if (self > a) then 1;
 
             // At least one of the values is NaN.
             if (IsNaN(self)) then
@@ -1307,6 +1307,30 @@
       begin
         exit DoTryParse(s, aLocale, out Value, false);
       end;
+
+			{$Region Aritmethical Operators}
+			method &Add(const a: INumber): INumber; 
+			begin
+				exit INumber(self + Single(a));
+			end;
+	  
+			method &Subtract(const a: INumber): INumber; 
+			begin
+				exit INumber(self - Single(a));
+			end;	
+	  
+			method &Multiply(const a: INumber): INumber; 
+			begin
+				exit INumber(self * Single(a));
+			end;
+	  
+			method &Divide(const a: INumber): INumber; 
+			require
+				({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}) <> 0;		
+			begin
+				exit INumber(Single(self / Single(a)));
+			end;	
+		{$ENDREGION}
 
     end;
 
