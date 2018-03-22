@@ -926,6 +926,31 @@
         exit DoTryParse(s, out Value, false);
       end;
 
+			{$Region Aritmethical Operators}
+				method &Add(const a: INumber): INumber; 
+				begin
+					exit INumber(self + UInt64(a));
+				end;
+	  
+				method &Subtract(const a: INumber): INumber; 
+				begin
+					exit INumber(self - UInt64(a));
+				end;
+	  
+				method &Multiply(const a: INumber): INumber; 
+				begin
+					exit INumber(self * UInt64(a));
+				end;
+	  
+				method &Divide(const a: INumber): INumber; 
+				require
+					UInt64(a) <> 0;		
+				begin
+					exit INumber(Double(self / UInt64(a)));
+				end;
+			{$ENDREGION}
+
+
       const MinValue: UInt64 = $0;
       const MaxValue: UInt64 = $ffffffffffffffff;
     end;
