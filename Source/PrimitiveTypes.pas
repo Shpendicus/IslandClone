@@ -410,6 +410,11 @@
 				begin
 					exit INumber(Double(self / SByte(a)));
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(SByte(a));
+				end;
 			{$ENDREGION}
     end;
 
