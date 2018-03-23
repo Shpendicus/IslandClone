@@ -1,13 +1,14 @@
 ﻿namespace RemObjects.Elements.System;
 
   type
-    INumber = public interface 
+    INumber = public interface
 			{$REGION Aritmethical Operators}
 				method &Add(const a: INumber): INumber;
 				method &Subtract(const a: INumber): INumber;
 				method &Multiply(const a: INumber): INumber;
 				method &Divide(const a: INumber): INumber;
-	  
+				method &Implicit(const a: INumber): INumber;
+
 				class operator Add(const a, b: INumber): INumber; inline;
 				begin
 					exit a.&Add(b);
@@ -27,11 +28,16 @@
 				begin
 					exit a.&Divide(b);
 				end;
+
+				class operator Implicit(const a, b: INumber): INumber;
+				begin
+					exit a.&Implicit(b);
+				end;
 				{$ENDREGION}
     end;
 
-    IIntegerNumber = public interface(INumber)
-    end;
+//    IIntegerNumber = public interface(INumber)
+//    end;
 
     ValueType = public abstract class
     end;
@@ -41,6 +47,38 @@
 
     Void = public record
     end;
+
+		IntegerExtension = public extension record(Integer, INumber)
+			{$Region Aritmethical Operators}
+				method &Add(const a: INumber): INumber; 
+				begin
+					exit INumber(self + Integer(a));
+				end;
+	  
+				method &Subtract(const a: INumber): INumber; 
+				begin
+					exit INumber(self - Integer(a));
+				end;
+	  
+				method &Multiply(const a: INumber): INumber; 
+				begin
+					exit INumber(self * Integer(a));
+				end;
+	  
+				method &Divide(const a: INumber): INumber; 
+				require
+					Integer(a) <> 0;		
+				begin
+					exit INumber(Double(self / Integer(a)));
+				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(Integer(a));
+				end;
+
+			{$ENDREGION}
+		end;
 
     Boolean = public record(IEquatable<Boolean>, IComparable<Boolean>)
     public
@@ -81,7 +119,7 @@
       end;
     end;
     
-    Char = public record(IIntegerNumber, IComparable<Char>, IEquatable<Char>)
+    Char = public record(INumber, IComparable<Char>, IEquatable<Char>)
     public
       method ToString: String; override;
       begin
@@ -209,11 +247,16 @@
 					var codeResult := Char(charCode1 div charCode2);
 					exit INumber(codeResult);
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(Char(a));
+				end;
 			{$ENDREGION}
 	  	  
     end;
 
-    AnsiChar = public record(IIntegerNumber, IComparable<AnsiChar>, IEquatable<AnsiChar>)
+    AnsiChar = public record(INumber, IComparable<AnsiChar>, IEquatable<AnsiChar>)
     public
       method ToString: String; override;
       begin
@@ -277,10 +320,15 @@
 					var charCodeResult := AnsiChar(charCode1 div charCode2);
 					exit INumber(charCodeResult);
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(AnsiChar(a));
+				end;
 			{$ENDREGION}
   end;
 
-    SByte = public record(IIntegerNumber, IComparable<SByte>, IEquatable<SByte>)
+    SByte = public record(INumber, IComparable<SByte>, IEquatable<SByte>)
     private
       class method DoTryParse(s: String; out Value: SByte; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -362,10 +410,15 @@
 				begin
 					exit INumber(Double(self / SByte(a)));
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(SByte(a));
+				end;
 			{$ENDREGION}
     end;
 
-    Byte = public record(IIntegerNumber, IComparable<Byte>, IEquatable<Byte>)
+    Byte = public record(INumber, IComparable<Byte>, IEquatable<Byte>)
     private
       class method DoTryParse(s: String; out Value: Byte; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -437,13 +490,18 @@
 				begin
 					exit INumber(Double(self / Byte(a)));
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(Byte(a));
+				end;
 			{$ENDREGION}
 
       const MinValue: Byte = $0;
       const MaxValue: Byte = $ff;
     end;
 
-    Int16 = public record(IIntegerNumber, IComparable<Int16>, IEquatable<Int16>)
+    Int16 = public record(INumber, IComparable<Int16>, IEquatable<Int16>)
     private
       class method DoTryParse(s: String; out Value: Int16; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -521,13 +579,18 @@
 				begin
 					exit INumber(Double(self / Int16(a)));
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(Int16(a));
+				end;
 			{$ENDREGION}
 
       const MinValue: Int16 = $8000;
       const MaxValue: Int16 = $7fff;
     end;
 
-    UInt16 = public record(IIntegerNumber, IComparable<UInt16>, IEquatable<UInt16>)
+    UInt16 = public record(INumber, IComparable<UInt16>, IEquatable<UInt16>)
     private
       class method DoTryParse(s: String; out Value: UInt16; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -599,13 +662,18 @@
 				begin
 					exit INumber(Double(self / UInt16(a)));
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(UInt16(a));
+				end;
 			{$ENDREGION}
 
       const MinValue: UInt16 = $0;
       const MaxValue: UInt16 = $ffff;
     end;
 
-    Int32 = public record(IIntegerNumber, IComparable<Int32>, IEquatable<Int32>)
+    Int32 = public record(INumber, IComparable<Int32>, IEquatable<Int32>)
     private
       class method DoTryParse(s: String; out Value: Int32; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -688,13 +756,18 @@
 				begin
 					exit INumber(Double(self / Int32(a)));
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(Int32(a));
+				end;
 			{$ENDREGION}
 
       const MinValue: Int32 = $80000000;
       const MaxValue: Int32 = $7fffffff;
     end;
 
-    UInt32 = public record(IEquatable<UInt32>, IComparable<UInt32>)
+    UInt32 = public record(INumber, IEquatable<UInt32>, IComparable<UInt32>)
     private
       class method DoTryParse(s: String; out Value: UInt32; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -775,7 +848,7 @@
       const MaxValue: UInt32 = $ffffffff;
     end;
 
-    Int64 = public record(IEquatable<Int64>, IComparable<Int64>)
+    Int64 = public record(INumber, IEquatable<Int64>, IComparable<Int64>)
     private
       class method DoTryParse(s: String; out Value: Int64; aRaiseOverflowException: Boolean):Boolean; inline;
       begin
@@ -868,7 +941,7 @@
       const MaxValue: Int64 = $7fffffffffffffff;
     end;
 
-    UInt64 = public record(IEquatable<UInt64>, IComparable<UInt64>)
+    UInt64 = public record(INumber, IEquatable<UInt64>, IComparable<UInt64>)
     private
       class method DoTryParse(s: String; out Value: UInt64; aRaiseOverflowException: Boolean):Boolean;inline;
       begin
@@ -954,7 +1027,7 @@
       const MaxValue: UInt64 = $ffffffffffffffff;
     end;
 
-    NativeInt = public record(IIntegerNumber, IEquatable<NativeInt>, IComparable<NativeInt>)
+    NativeInt = public record(INumber, IEquatable<NativeInt>, IComparable<NativeInt>)
     private
       class method DoTryParse(s: String; out Value: NativeInt; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -1057,7 +1130,7 @@
     const MaxValue: NativeInt = {$IFDEF cpu64}$7fffffffffffffff{$ELSE}$7fffffff{$ENDIF};
     end;
 
-    NativeUInt = public record(IEquatable<NativeInt>, IComparable<NativeInt>)
+    NativeUInt = public record(INumber, IEquatable<NativeInt>, IComparable<NativeInt>)
     private
       class method DoTryParse(s: String; out Value: NativeUInt; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -1274,15 +1347,15 @@
       method CompareTo(const a: Single): Integer;
       begin
        result :=
-            if (self < a) then -1;
-            if (self = a) then 0;
-            if (self > a) then 1;
+            if (self < a) then -1 else
+            if (self = a) then 0 else
+            if (self > a) then 1 else
 
             // At least one of the values is NaN.
             if (IsNaN(self)) then
-                result := (if IsNaN(a) then 0 else -1)
+                (if IsNaN(a) then 0 else -1)
             else // f is NaN.
-                result := 1;
+                1;
       end;
 
       method &Equals(obj: Object): Boolean;
