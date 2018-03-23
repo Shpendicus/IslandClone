@@ -579,6 +579,11 @@
 				begin
 					exit INumber(Double(self / Int16(a)));
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(Int16(a));
+				end;
 			{$ENDREGION}
 
       const MinValue: Int16 = $8000;
@@ -656,6 +661,11 @@
 					UInt16(a) <> 0;		
 				begin
 					exit INumber(Double(self / UInt16(a)));
+				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(UInt16(a));
 				end;
 			{$ENDREGION}
 
