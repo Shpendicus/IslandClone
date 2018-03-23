@@ -65,6 +65,12 @@
 				begin
 					exit INumber(Double(self / Integer(a)));
 				end;
+
+				class operator Implicit(const a: INumber): Integer;
+				begin
+					//implement...
+				end;
+
 			{$ENDREGION}
 		end;
 
