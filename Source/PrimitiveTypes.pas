@@ -7,7 +7,6 @@
 				method &Subtract(const a: INumber): INumber;
 				method &Multiply(const a: INumber): INumber;
 				method &Divide(const a: INumber): INumber;
-				method &Implicit(const a: INumber): INumber;
 
 				class operator Add(const a, b: INumber): INumber; inline;
 				begin
@@ -27,11 +26,6 @@
 				class operator Divide(const a, b: INumber): INumber; inline;
 				begin
 					exit a.&Divide(b);
-				end;
-
-				class operator Implicit(const a, b: INumber): INumber;
-				begin
-					exit a.&Implicit(b);
 				end;
 				{$ENDREGION}
     end;
@@ -71,12 +65,6 @@
 				begin
 					exit INumber(Double(self / Integer(a)));
 				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(Integer(a));
-				end;
-
 			{$ENDREGION}
 		end;
 
@@ -247,11 +235,6 @@
 					var codeResult := Char(charCode1 div charCode2);
 					exit INumber(codeResult);
 				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(Char(a));
-				end;
 			{$ENDREGION}
 	  	  
     end;
@@ -319,11 +302,6 @@
 					var charCode2: Integer := ord(AnsiChar(a));		
 					var charCodeResult := AnsiChar(charCode1 div charCode2);
 					exit INumber(charCodeResult);
-				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(AnsiChar(a));
 				end;
 			{$ENDREGION}
   end;
@@ -410,11 +388,6 @@
 				begin
 					exit INumber(Double(self / SByte(a)));
 				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(SByte(a));
-				end;
 			{$ENDREGION}
     end;
 
@@ -489,11 +462,6 @@
 					Byte(a) <> 0;		
 				begin
 					exit INumber(Double(self / Byte(a)));
-				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(Byte(a));
 				end;
 			{$ENDREGION}
 
@@ -579,11 +547,6 @@
 				begin
 					exit INumber(Double(self / Int16(a)));
 				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(Int16(a));
-				end;
 			{$ENDREGION}
 
       const MinValue: Int16 = $8000;
@@ -661,11 +624,6 @@
 					UInt16(a) <> 0;		
 				begin
 					exit INumber(Double(self / UInt16(a)));
-				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(UInt16(a));
 				end;
 			{$ENDREGION}
 
