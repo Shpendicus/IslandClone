@@ -490,6 +490,11 @@
 				begin
 					exit INumber(Double(self / Byte(a)));
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(Byte(a));
+				end;
 			{$ENDREGION}
 
       const MinValue: Byte = $0;
