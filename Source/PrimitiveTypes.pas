@@ -320,11 +320,6 @@
 					var charCodeResult := AnsiChar(charCode1 div charCode2);
 					exit INumber(charCodeResult);
 				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(AnsiChar(a));
-				end;
 			{$ENDREGION}
   end;
 
@@ -410,11 +405,6 @@
 				begin
 					exit INumber(Double(self / SByte(a)));
 				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(SByte(a));
-				end;
 			{$ENDREGION}
     end;
 
@@ -489,11 +479,6 @@
 					Byte(a) <> 0;		
 				begin
 					exit INumber(Double(self / Byte(a)));
-				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(Byte(a));
 				end;
 			{$ENDREGION}
 
@@ -579,11 +564,6 @@
 				begin
 					exit INumber(Double(self / Int16(a)));
 				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(Int16(a));
-				end;
 			{$ENDREGION}
 
       const MinValue: Int16 = $8000;
@@ -661,11 +641,6 @@
 					UInt16(a) <> 0;		
 				begin
 					exit INumber(Double(self / UInt16(a)));
-				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(UInt16(a));
 				end;
 			{$ENDREGION}
 
@@ -755,11 +730,6 @@
 					Int32(a) <> 0;		
 				begin
 					exit INumber(Double(self / Int32(a)));
-				end;
-
-				method &Implicit(const a: INumber): INumber;
-				begin
-					exit INumber(Int32(a));
 				end;
 			{$ENDREGION}
 
