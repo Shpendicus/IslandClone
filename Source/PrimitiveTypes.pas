@@ -320,6 +320,11 @@
 					var charCodeResult := AnsiChar(charCode1 div charCode2);
 					exit INumber(charCodeResult);
 				end;
+
+				method &Implicit(const a: INumber): INumber;
+				begin
+					exit INumber(AnsiChar(a));
+				end;
 			{$ENDREGION}
   end;
 
