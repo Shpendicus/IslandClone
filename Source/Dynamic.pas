@@ -484,7 +484,7 @@ type
 
       end;
       
-      raise new Exception('Binary operator '+aOp+' not supported on these type');
+      raise new Exception('Binary operator '+aOp.ToString+' not supported on these type');
     end;
 
     method Unary(aLeft: Object; aOp: Integer): Object;

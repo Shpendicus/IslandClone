@@ -93,7 +93,8 @@
           if self then
             true
           else
-            false;
+            false; 
+						
       end;
 
       method CompareTo(const a: Boolean): Integer;
@@ -241,6 +242,11 @@
 					var codeResult := Char(charCode1 div charCode2);
 					exit INumber(codeResult);
 				end;
+
+				class operator Implicit(const a: INumber): Char;
+				begin
+					exit Char(a);
+				end;
 			{$ENDREGION}
 	  	  
     end;
@@ -308,6 +314,11 @@
 					var charCode2: Integer := ord(AnsiChar(a));		
 					var charCodeResult := AnsiChar(charCode1 div charCode2);
 					exit INumber(charCodeResult);
+				end;
+
+				class operator Implicit(const a: INumber): AnsiChar;
+				begin
+					//implement...
 				end;
 			{$ENDREGION}
   end;
@@ -394,6 +405,11 @@
 				begin
 					exit INumber(Double(self / SByte(a)));
 				end;
+
+				class operator Implicit(const a: INumber): SByte;
+				begin
+					exit SByte(a);
+				end;
 			{$ENDREGION}
     end;
 
@@ -468,6 +484,11 @@
 					Byte(a) <> 0;		
 				begin
 					exit INumber(Double(self / Byte(a)));
+				end;
+
+				class operator Implicit(const a: INumber): Byte;
+				begin
+					exit Byte(a);
 				end;
 			{$ENDREGION}
 
@@ -553,6 +574,11 @@
 				begin
 					exit INumber(Double(self / Int16(a)));
 				end;
+
+				class operator Implicit(const a: INumber): Int16;
+				begin
+					exit Int16(a);
+				end;
 			{$ENDREGION}
 
       const MinValue: Int16 = $8000;
@@ -581,7 +607,7 @@
         exit self;
       end;
 
-      method &Equals(const other: UInt16): boolean;
+      method &Equals(const other: UInt16): Boolean;
       begin
         result := (self = other);
       end;
@@ -631,6 +657,12 @@
 				begin
 					exit INumber(Double(self / UInt16(a)));
 				end;
+						
+				class operator Implicit(const a: INumber): UInt16;
+				begin
+					exit UInt16(a);
+				end;
+
 			{$ENDREGION}
 
       const MinValue: UInt16 = $0;
@@ -720,6 +752,11 @@
 				begin
 					exit INumber(Double(self / Int32(a)));
 				end;
+						
+				class operator Implicit(const a: INumber): Int32;
+				begin
+					exit Int32(a);
+				end;
 			{$ENDREGION}
 
       const MinValue: Int32 = $80000000;
@@ -800,6 +837,11 @@
 					UInt32(a) <> 0;		
 				begin
 					exit INumber(Double(self / UInt32(a)));
+				end;
+
+				class operator Implicit(const a: INumber): UInt32;
+				begin
+					exit UInt32(a);
 				end;
 			{$ENDREGION}
 
@@ -894,6 +936,11 @@
 				begin
 					exit INumber(Double(self / Int64(a)));
 				end;
+
+				class operator Implicit(const a: INumber): Int64;
+				begin
+					exit Int64(a);
+				end;
 			{$ENDREGION}
 
       const MinValue: Int64 = $8000000000000000;
@@ -979,6 +1026,11 @@
 					UInt64(a) <> 0;		
 				begin
 					exit INumber(Double(self / UInt64(a)));
+				end;
+
+				class operator Implicit(const a: INumber): UInt64;
+				begin
+					exit UInt64(a);
 				end;
 			{$ENDREGION}
 			
@@ -1083,6 +1135,11 @@
 			begin
 				exit INumber(Double(self / ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF})));
 			end;	
+
+			class operator Implicit(const a: INumber): NativeInt;
+			begin
+				exit ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF});
+			end;
 		{$ENDREGION}
 
     const MinValue: NativeInt = {$IFDEF cpu64}$8000000000000000{$ELSE}$80000000{$ENDIF};
@@ -1185,6 +1242,11 @@
 			begin
 				exit INumber(Double(self / ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF})));
 			end;	
+
+			class operator Implicit(const a: INumber): NativeUInt;
+			begin
+				exit ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
+			end;
 		{$ENDREGION}
 
       const MinValue: NativeInt = $0;
@@ -1362,6 +1424,11 @@
 			begin
 				exit INumber(Single(self / Single(a)));
 			end;	
+
+			class operator Implicit(const a: INumber): Single;
+			begin
+				exit Single(a);
+			end;
 		{$ENDREGION}
 
     end;
@@ -1518,6 +1585,36 @@
       begin
         exit DoTryParse(s, aLocale, out Value, false);
       end;
+
+			{$Region Aritmethical Operators}
+			method &Add(const a: INumber): INumber; 
+			begin
+				exit INumber(self + Double(a));
+			end;
+	  
+			method &Subtract(const a: INumber): INumber; 
+			begin
+				exit INumber(self - Double(a));
+			end;	
+	  
+			method &Multiply(const a: INumber): INumber; 
+			begin
+				exit INumber(self * Double(a));
+			end;
+	  
+			method &Divide(const a: INumber): INumber; 
+			require
+				Double(a) <> 0.0;		(*Needs proper floating-point-equal*)
+			begin
+				exit INumber(Single(self / Double(a)));
+			end;	
+
+			class operator Implicit(const a: INumber): Double;
+			begin
+				exit Double(a);
+			end;
+		{$ENDREGION}
+
   end;
 
     FloatToString = private static class

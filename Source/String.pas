@@ -284,10 +284,10 @@ begin
   var len := self.Length;
   var lEnd := len-1;
 
-  while (lStart ≤ lEnd) and Char.IsWhiteSpace(self[lStart]) do inc(lStart);
+  while (lStart <= lEnd) and Char.IsWhiteSpace(self[lStart]) do inc(lStart);
   if lStart > lEnd then exit '';
 
-  while (lEnd ≥ lStart) and Char.IsWhiteSpace(self[lEnd]) do dec(lEnd);
+  while (lEnd >= lStart) and Char.IsWhiteSpace(self[lEnd]) do dec(lEnd);
   if lEnd < lStart then exit '';
 
   result := Substring(lStart, lEnd-lStart+1);

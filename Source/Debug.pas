@@ -7,7 +7,7 @@ type
     class method Assert(aCheck: Boolean; aMessage: String; aFile: String := currentFileName(); aLine: Integer := currentLineNumber());
     begin
       if not aCheck then
-        raise new AssertionException('Assertion failed: '+aMessage+' at '+aFile+'('+aLine+')');
+        raise new AssertionException('Assertion failed: '+aMessage+' at '+aFile+'('+aLine.ToString+')');
     end;
     class method Throw(s: String);
     begin
