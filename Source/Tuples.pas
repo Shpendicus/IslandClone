@@ -17,7 +17,7 @@ interface
 			method ToString: String; override;
 
 			class operator Equal(const arg1, arg2: Tuple<T1>): Boolean;
-
+			class operator NotEqual(const arg1, arg2: Tuple<T1>): Boolean;
 		end;
 		{$ENDREGION}
 
@@ -32,7 +32,9 @@ interface
 			method &Equals(other: Tuple<T1, T2>): Boolean;
 			method CompareTo(a: Tuple<T1, T2>): Integer;
 			method ToString: String; override;
+
 			class operator Equal(const arg1, arg2: Tuple<T1, T2>): Boolean;
+			class operator NotEqual(const arg1, arg2: Tuple<T1, T2>): Boolean;
 		end;
 		{$ENDREGION}
 
@@ -49,6 +51,7 @@ interface
 			method CompareTo(a: Tuple<T1, T2, T3>): Integer;
 			method ToString: String; override;
 			class operator Equal(const arg1, arg2: Tuple<T1, T2, T3>): Boolean;
+			class operator NotEqual(const arg1, arg2: Tuple<T1, T2, T3>): Boolean;
 		end;
 		{$ENDREGION}
 
@@ -66,6 +69,7 @@ interface
 			method CompareTo(a: Tuple<T1, T2, T3, T4>): Integer;
 			method ToString: String; override;
 			class operator Equal(const arg1, arg2: Tuple<T1, T2, T3, T4>): Boolean;
+			class operator NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4>): Boolean;
 		end;
 		{$ENDREGION}
 
@@ -85,7 +89,9 @@ interface
 			method &Equals(other: Tuple<T1, T2, T3, T4, T5>): Boolean;
 			method CompareTo(a: Tuple<T1, T2, T3, T4, T5>): Integer;
 			method ToString: String; override;
+
 			class operator Equal(const arg1, arg2: Tuple<T1, T2, T3, T4, T5>): boolean;
+			class operator NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4, T5>): Boolean;
 		end;
 		{$ENDREGION}
 
@@ -105,6 +111,7 @@ interface
 			method CompareTo(a: Tuple<T1, T2, T3, T4, T5, T6>): Integer;
 			method ToString: String; override;
 			class operator Equal(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6>): boolean;
+			class operator NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
 		end;
 		{$ENDREGION}
 
@@ -125,6 +132,7 @@ interface
 			method CompareTo(a: Tuple<T1, T2, T3, T4, T5, T6, T7>): Integer;
 			method ToString: String; override;
 			class operator Equal(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6, T7>): boolean;
+			class operator NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
 		end;
 		{$ENDREGION}
 
@@ -140,12 +148,15 @@ interface
 			 Item6: T6; readonly;
 			 Item7: T7; readonly;
 			 Item8: T8; readonly;
+
 			method GetHashCode: Integer; override;
 			method &Equals(arg1: Object): Boolean; override;
 			method &Equals(other: Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
 			method CompareTo(a: Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Integer;
 			method ToString: String; override;
+
 			class operator Equal(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): boolean;
+			class operator NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
 		end;
 		{$ENDREGION}
 
@@ -195,6 +206,11 @@ implementation
     result := arg1.Equals(arg2);
   end;
 
+	class operator Tuple<T1>.NotEqual(const arg1, arg2: Tuple<T1>): Boolean;
+	begin
+		exit not(arg1 = arg2);
+	end;
+
 	method Tuple<T1>.CompareTo(a: &Tuple<T1>): Integer;
 	begin
 		result := Item1.CompareTo(a.Item1);
@@ -202,7 +218,6 @@ implementation
 
 	method Tuple<T1>.ToString: String;
   begin
-    //(item1) => not optimization needed
     result := '(' + Item1.ToString + ')';
   end;
   {$ENDREGION}
@@ -237,6 +252,11 @@ implementation
 	class operator Tuple<T1, T2>.Equal(const arg1, arg2: Tuple<T1, T2>): Boolean;
   begin
     result := arg1.Equals(arg2);
+  end;
+
+	class operator Tuple<T1, T2>.NotEqual(const arg1, arg2: Tuple<T1, T2>): Boolean;
+  begin
+    result := not(arg1 = arg2);
   end;
 
 	method Tuple<T1, T2>.CompareTo(a: Tuple<T1, T2>): Integer;
@@ -293,6 +313,11 @@ implementation
 	class operator Tuple<T1, T2, T3>.Equal(const arg1, arg2: Tuple<T1, T2, T3>): Boolean;
   begin
     result := arg1.Equals(arg2);
+  end;
+
+	class operator Tuple<T1, T2, T3>.NotEqual(const arg1, arg2: Tuple<T1, T2, T3>): Boolean;
+  begin
+    result := not(arg1 = arg2);
   end;
 
 	method Tuple<T1, T2, T3>.CompareTo(a: Tuple<T1, T2, T3>): Integer;
@@ -358,6 +383,11 @@ implementation
               (other.Item2.Equals(Item2)) and
               (other.Item3.Equals(Item3)) and
               (other.Item4.Equals(Item4));
+  end;
+
+	class operator Tuple<T1, T2, T3, T4>.NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4>): Boolean;
+  begin
+    result := not(arg1 = arg2);
   end;
 
 	method Tuple<T1, T2, T3, T4>.CompareTo(a: Tuple<T1, T2, T3, T4>): Integer;
@@ -446,6 +476,11 @@ implementation
 	class operator Tuple<T1, T2, T3, T4, T5>.Equal(const arg1, arg2: Tuple<T1, T2, T3, T4, T5>): Boolean;
 	begin
 		result := arg1.Equals(arg2);
+	end;
+
+	class operator Tuple<T1, T2, T3, T4, T5>.NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4, T5>): Boolean;
+	begin
+		result := not (arg1 = arg2);
 	end;
 
 	method Tuple<T1, T2, T3, T4, T5>.CompareTo(a: Tuple<T1, T2, T3, T4, T5>): Integer;
@@ -539,6 +574,11 @@ implementation
 	class operator Tuple<T1, T2, T3, T4, T5, T6>.Equal(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
 	begin
 		result := arg1.Equals(arg2);
+	end;
+
+	class operator Tuple<T1, T2, T3, T4, T5, T6>.NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
+	begin
+		result := not (arg1 = arg2);
 	end;
 
 	method Tuple<T1, T2, T3, T4, T5, T6>.CompareTo(a: Tuple<T1, T2, T3, T4, T5, T6>): Integer;
@@ -644,6 +684,11 @@ implementation
 	class operator Tuple<T1, T2, T3, T4, T5, T6, T7>.Equal(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
 	begin
 		result := arg1.Equals(arg2);
+	end;
+
+	class operator Tuple<T1, T2, T3, T4, T5, T6, T7>.NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
+	begin
+		result := not (arg1 = arg2);
 	end;
 
 	method Tuple<T1, T2, T3, T4, T5, T6, T7>.CompareTo(a: Tuple<T1, T2, T3, T4, T5, T6, T7>): Integer;
@@ -760,6 +805,11 @@ implementation
 	class operator Tuple<T1, T2, T3, T4, T5, T6, T7, T8>.Equal(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
 	begin
 		result := arg1.Equals(arg2);
+	end;
+
+	class operator Tuple<T1, T2, T3, T4, T5, T6, T7, T8>.NotEqual(const arg1, arg2: Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
+	begin
+		result := not (arg1 = arg2);
 	end;
 
 	method Tuple<T1, T2, T3, T4, T5, T6, T7, T8>.CompareTo(a: Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Integer;

@@ -1146,7 +1146,7 @@
     const MaxValue: NativeInt = {$IFDEF cpu64}$7fffffffffffffff{$ELSE}$7fffffff{$ENDIF};
     end;
 
-    NativeUInt = public record(INumber, IEquatable<NativeInt>, IComparable<NativeInt>)
+    NativeUInt = public record(INumber, IEquatable<NativeUInt>, IComparable<NativeUInt>)
     private
       class method DoTryParse(s: String; out Value: NativeUInt; aRaiseOverflowException: Boolean):Boolean;
       begin
@@ -1180,12 +1180,14 @@
 					{$Endif}
       end;
 
-      method CompareTo(a: NativeInt): Integer;
+      method CompareTo(a: NativeUInt): Integer;
 			begin
-				result := Integer( {$IFDEF cpu64}
-								 UInt64(self).CompareTo(UInt64(a))
+				result := Integer
+							 (
+								 {$IFDEF cpu64}
+								  UInt64(self).CompareTo(UInt64(a))
 								 {$ELSE}
-								 UInt32(self).CompareTo(UInt32(a))
+								  UInt32(self).CompareTo(UInt32(a))
 								 {$ENDIF}
 							 );
 			end;
@@ -1475,16 +1477,14 @@
 
       method CompareTo(const a: Double): Integer;
       begin
-       result :=
-            if (self < a) then -1
-            else if (self = a) then 0
-            else if (self > a) then 1;
-
-            // At least one of the values is NaN.
-            if (IsNaN(self)) then
-                result := (if IsNaN(a) then 0 else -1)
-            else // f is NaN.
-                result := 1;
+				exit if (self < a) then -1
+						 else if (self = a) then 0
+						 else if (self > a) then 1 else
+						 {At least one of the values is NaN.}
+						 if (IsNaN(self)) then
+						   if IsNaN(a) then 0 
+							   else -1
+						 else 1; // f is NaN.
       end;
 
       method ToString(aLocale: Locale): String;
