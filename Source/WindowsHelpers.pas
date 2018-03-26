@@ -629,7 +629,7 @@ begin
 
   while rem >= divisor do begin
     var td := divisor;
-    var shift := highbit(rem) - highbit(divisor);
+    var shift := Integer(highbit(rem) - highbit(divisor));
     td := td shl shift;
     if (td > rem)  then begin
       dec(shift);
@@ -658,7 +658,8 @@ if divisor = dividend then exit 0;
   var q: UInt64 := 0;
   while rem >= divisor do begin
     var td := divisor;
-    var shift := highbit(rem) - highbit(divisor);
+		(*cast to integer is needed, due to the overwrite of all operators from <INumber>*)
+    var shift := Integer(highbit(rem) - highbit(divisor)); 
     td := td shl shift;
     if (td > rem)  then begin
       dec(shift);
@@ -687,7 +688,8 @@ begin
 
   while rem >= divisor do begin
     var td := divisor;
-    var shift := highbit(rem) - highbit(divisor);
+		(*cast to integer is needed, due to the overwrite of all operators from <INumber>*)
+    var shift := Integer(highbit(rem) - highbit(divisor));
     td := td shl shift;
     if (td > rem)  then begin
       dec(shift);
@@ -717,7 +719,7 @@ if divisor = dividend then exit 1;
   var q: UInt64 := 0;
   while rem >= divisor do begin
     var td := divisor;
-    var shift := highbit(rem) - highbit(divisor);
+    var shift := Integer(highbit(rem) - highbit(divisor));
     td := td shl shift;
     if (td > rem)  then begin
       dec(shift);

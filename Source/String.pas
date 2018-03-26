@@ -280,9 +280,9 @@ end;
 method String.Trim: String;
 begin
   if String.IsNullOrEmpty(self) then exit self;
-  var lStart := 0;
-  var len := self.Length;
-  var lEnd := len-1;
+  var lStart:Integer := 0;
+  var len := Integer(self.Length);
+  var lEnd := Integer(len-1);
 
   while (lStart <= lEnd) and Char.IsWhiteSpace(self[lStart]) do inc(lStart);
   if lStart > lEnd then exit '';
@@ -297,8 +297,8 @@ method String.Trim(aChars: array of Char): String;
 begin
   if String.IsNullOrEmpty(self) then exit self;
   var lStart := 0;
-  var len := self.Length;
-  var lEnd := len-1;
+  var len := Integer(self.Length);
+  var lEnd := Integer(len-1);
 
   while (lStart ≤ lEnd) and TestChar(self[lStart], aChars) do inc(lStart);
   if lStart > lEnd then exit '';
@@ -336,8 +336,8 @@ end;
 method String.TrimEnd: String;
 begin
   if String.IsNullOrEmpty(self) then exit self;
-  var len := self.Length;
-  var lEnd := len-1;
+  var len := Integer(self.Length);
+  var lEnd := Integer(len-1);
 
   while (lEnd ≥ 0) and Char.IsWhiteSpace(self[lEnd]) do dec(lEnd);
   if lEnd < 0 then exit '';
@@ -348,8 +348,8 @@ end;
 method String.TrimEnd(aChars: array of Char): String;
 begin
   if String.IsNullOrEmpty(self) then exit self;
-  var len := self.Length;
-  var lEnd := len-1;
+  var len := Integer(self.Length);
+  var lEnd := Integer(len-1);
 
   while (lEnd ≥ 0) and TestChar(self[lEnd], aChars) do dec(lEnd);
   if lEnd < 0 then exit '';

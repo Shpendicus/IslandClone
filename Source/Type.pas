@@ -901,8 +901,12 @@ type
       exit false;
     end;
     property Code: TypeCodes read get_Code;
-    property IsSigned: Boolean read Code in [TypeCodes.SByte, TypeCodes.Int16, TypeCodes.Int32, TypeCodes.Int64, TypeCodes.IntPtr, TypeCodes.UInt64];
-    property IsInteger: Boolean read Code in [TypeCodes.SByte, TypeCodes.Int16, TypeCodes.Int32, TypeCodes.Int64, TypeCodes.Byte, TypeCodes.UInt16, TypeCodes.UInt32, TypeCodes.UInt64, TypeCodes.IntPtr, TypeCodes.UInt64];
+    property IsSigned: Boolean 
+			read Code in [TypeCodes.SByte, TypeCodes.Int16, TypeCodes.Int32, TypeCodes.Int64, TypeCodes.IntPtr, TypeCodes.UInt64];
+
+    property IsInteger: Boolean 
+		read Code in [TypeCodes.SByte, TypeCodes.Int16, TypeCodes.Int32, TypeCodes.Int64, TypeCodes.Byte, TypeCodes.UInt16, TypeCodes.UInt32, TypeCodes.UInt64, TypeCodes.IntPtr, TypeCodes.UInt64];
+
     property IsIntegerOrFloat: Boolean read Code in [TypeCodes.SByte, TypeCodes.Int16, TypeCodes.Int32, TypeCodes.Int64, TypeCodes.Byte, TypeCodes.UInt16, TypeCodes.UInt32, TypeCodes.UInt64, TypeCodes.IntPtr, TypeCodes.UInt64, TypeCodes.Single, TypeCodes.Double];
     property IsFloat: Boolean read Code in [TypeCodes.Single, TypeCodes.Double];
 

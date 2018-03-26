@@ -522,7 +522,7 @@ type
         DynamicUnaryOperator.Plus: 
           exit aLeft;
       end;
-      raise new Exception('Unary operator '+aOp+' not supported on this type');
+      raise new Exception('Unary operator '+aOp.ToString+' not supported on this type');
     end;
   end;
 

@@ -56,9 +56,9 @@ begin
 end;
 
 method Stream.CopyTo(Destination: Stream);
-const
-  bufsize = 4*1024; //4 kb
-begin
+begin	
+	const	bufsize = 4096; //4kb
+	
   if Destination = nil then raise new Exception('Destination is null');
   if not self.CanRead then raise new NotSupportedException;
   if not Destination.CanWrite then raise new NotSupportedException;

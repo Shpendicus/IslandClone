@@ -68,7 +68,7 @@
 
 				class operator Implicit(const a: INumber): Integer;
 				begin
-					//implement...
+					exit Integer(a);
 				end;
 
 			{$ENDREGION}
@@ -220,7 +220,7 @@
 				method &Subtract(const a: INumber): INumber; 
 				begin
 					var charCode1: Integer := ord(self);
-					var charCode2: Integer := ord(Char(if (a is Single) or (a is Double) then a else a));	
+					var charCode2: Integer := ord(Char(a));	
 					var codeResult := Char(charCode1 - charCode2);
 					exit INumber(codeResult);
 				end;
@@ -244,6 +244,11 @@
 				end;
 
 				class operator Implicit(const a: INumber): Char;
+				begin
+					exit Char(a);
+				end;
+								
+				class operator Implicit(const a: Integer): Char;
 				begin
 					exit Char(a);
 				end;
@@ -314,11 +319,6 @@
 					var charCode2: Integer := ord(AnsiChar(a));		
 					var charCodeResult := AnsiChar(charCode1 div charCode2);
 					exit INumber(charCodeResult);
-				end;
-
-				class operator Implicit(const a: INumber): AnsiChar;
-				begin
-					//implement...
 				end;
 			{$ENDREGION}
   end;
@@ -1470,10 +1470,10 @@
 
       method &Equals(const other: Double): boolean;
       begin
-        //needs proper codelogic!
+        //needs proper floating point equals!
       end;
 
-      method CompareTo(const a: Single): Integer;
+      method CompareTo(const a: Double): Integer;
       begin
        result :=
             if (self < a) then -1
@@ -1604,9 +1604,9 @@
 	  
 			method &Divide(const a: INumber): INumber; 
 			require
-				Double(a) <> 0.0;		(*Needs proper floating-point-equal*)
+				Double(a) <> 0.0;	(*Needs proper floating-point-equal!*)
 			begin
-				exit INumber(Single(self / Double(a)));
+				exit INumber(Double(self / Double(a)));
 			end;	
 
 			class operator Implicit(const a: INumber): Double;
