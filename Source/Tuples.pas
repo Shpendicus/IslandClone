@@ -7,11 +7,10 @@ interface
 		Tuple<T1> = public record(IComparable<Tuple<T1>>, IEquatable<Tuple<T1>>)
 		private
 			COMPARABLE_ITEM1: nullable IComparable<T1> := Item1 as IComparable<T1>; readonly;
-
 		public
 			constructor(aItem1: T1);
 
-			Item1: T1; readonly;			
+			Item1: T1; readonly;
 
 			method GetHashCode: Integer; override;
 			method &Equals(arg1: Object): Boolean; override;
@@ -49,7 +48,7 @@ interface
 		private
 			COMPARABLE_ITEM1: nullable IComparable<T1> := Item1 as IComparable<T1>; readonly;
 			COMPARABLE_ITEM2: nullable IComparable<T2> := Item2 as IComparable<T2>; readonly;
-			COMPARABLE_ITEM3: nullable IComparable<T3> := Item2 as IComparable<T3>; readonly;
+			COMPARABLE_ITEM3: nullable IComparable<T3> := Item3 as IComparable<T3>; readonly;
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3);
 			Item1: T1; readonly;
@@ -70,8 +69,8 @@ interface
 		private
 			COMPARABLE_ITEM1: nullable IComparable<T1> := Item1 as IComparable<T1>; readonly;
 			COMPARABLE_ITEM2: nullable IComparable<T2> := Item2 as IComparable<T2>; readonly;
-			COMPARABLE_ITEM3: nullable IComparable<T3> := Item2 as IComparable<T3>; readonly;
-			COMPARABLE_ITEM4: nullable IComparable<T4> := Item2 as IComparable<T4>; readonly;
+			COMPARABLE_ITEM3: nullable IComparable<T3> := Item3 as IComparable<T3>; readonly;
+			COMPARABLE_ITEM4: nullable IComparable<T4> := Item4 as IComparable<T4>; readonly;
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4);
 			 Item1: T1; readonly;
@@ -227,8 +226,8 @@ implementation
 	end;
 
 	method Tuple<T1>.CompareTo(a: &Tuple<T1>): Integer;
-	begin		
-		result := self.COMPARABLE_ITEM1.CompareTo(a.Item1);
+	begin
+		result := COMPARABLE_ITEM1.CompareTo(a.Item1);
 	end;
 
 	method Tuple<T1>.ToString: String;
@@ -289,8 +288,7 @@ implementation
 	end;
 
 	method Tuple<T1, T2>.ToString: String;
-  begin
-    //(item1, item2) => no optimization needed
+  begin    
     result := '(' + Item1.ToString + ', ' + Item2.ToString + ')';
   end;
   {$ENDREGION}
