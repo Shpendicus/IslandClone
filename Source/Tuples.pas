@@ -5,10 +5,13 @@ interface
 	type
 		{$region 1-Tuple}
 		Tuple<T1> = public record(IComparable<Tuple<T1>>, IEquatable<Tuple<T1>>)
+		private
+			COMPARABLE_ITEM1: nullable IComparable<T1> := Item1 as IComparable<T1>; readonly;
+
 		public
 			constructor(aItem1: T1);
 
-			Item1: T1; readonly;
+			Item1: T1; readonly;			
 
 			method GetHashCode: Integer; override;
 			method &Equals(arg1: Object): Boolean; override;
@@ -23,6 +26,9 @@ interface
 
 	  {$region 2-Tuple}
 		Tuple<T1, T2> = public record(IComparable<Tuple<T1, T2>>, IEquatable<Tuple<T1, T2>>)
+		private
+			COMPARABLE_ITEM1: nullable IComparable<T1> := Item1 as IComparable<T1>; readonly;
+			COMPARABLE_ITEM2: nullable IComparable<T2> := Item2 as IComparable<T2>; readonly;
 		public
 			constructor(aItem1: T1; aItem2: T2);
 			Item1: T1; readonly;
@@ -212,8 +218,8 @@ implementation
 	end;
 
 	method Tuple<T1>.CompareTo(a: &Tuple<T1>): Integer;
-	begin
-		result := Item1.CompareTo(a.Item1);
+	begin		
+		result := self.COMPARABLE_ITEM1.CompareTo(a.Item1);
 	end;
 
 	method Tuple<T1>.ToString: String;
@@ -261,13 +267,13 @@ implementation
 
 	method Tuple<T1, T2>.CompareTo(a: Tuple<T1, T2>): Integer;
 	begin	  
-		var tmp := Item1.CompareTo(a.Item1);
+		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
 
 		if tmp <> 0 then
 		  result := tmp
 		else 
 		begin
-		  tmp := Item2.CompareTo(a.Item2);
+		  tmp := COMPARABLE_ITEM2.CompareTo(a.Item2);
 			if tmp <> 0 then 
 				result := tmp;
 		end;
