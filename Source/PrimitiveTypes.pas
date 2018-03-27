@@ -271,6 +271,15 @@
 					exit Char(a);
 				end;
 			{$ENDREGION}
+
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := ord(self);
+				var tmp2 := ord(Char(a));				
+				exit tmp1 < tmp2;
+			end;			
+			{$ENDREGION}
 	  	  
     end;
 
