@@ -46,10 +46,6 @@ interface
 
 		{$region 3-Tuple}
 		Tuple<T1, T2, T3> = public record(IComparable<Tuple<T1, T2, T3>>, IEquatable<Tuple<T1, T2, T3>>)
-		private
-			COMPARABLE_ITEM1: nullable IComparable<T1> := Item1 as IComparable<T1>; readonly;
-			COMPARABLE_ITEM2: nullable IComparable<T2> := Item2 as IComparable<T2>; readonly;
-			COMPARABLE_ITEM3: nullable IComparable<T3> := Item2 as IComparable<T3>; readonly;
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3);
 			Item1: T1; readonly;
@@ -67,11 +63,6 @@ interface
 
 		{$region 4-Tuple}
 		Tuple<T1, T2, T3, T4> = public record(IComparable<Tuple<T1, T2, T3, T4>>, IEquatable<Tuple<T1, T2, T3, T4>>)
-		private
-			COMPARABLE_ITEM1: nullable IComparable<T1> := Item1 as IComparable<T1>; readonly;
-			COMPARABLE_ITEM2: nullable IComparable<T2> := Item2 as IComparable<T2>; readonly;
-			COMPARABLE_ITEM3: nullable IComparable<T3> := Item2 as IComparable<T3>; readonly;
-			COMPARABLE_ITEM4: nullable IComparable<T4> := Item2 as IComparable<T4>; readonly;
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4);
 			 Item1: T1; readonly;
@@ -337,19 +328,19 @@ implementation
 
 	method Tuple<T1, T2, T3>.CompareTo(a: Tuple<T1, T2, T3>): Integer;
 	begin
-		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
+		var tmp := Item1.CompareTo(a.Item1);
 
 		if tmp <> 0 then
 		  result := tmp
 		else 
 		begin
-		  tmp := COMPARABLE_ITEM2.CompareTo(a.Item2);
+		  tmp := Item2.CompareTo(a.Item2);
 			if tmp <> 0 then 
 				result := tmp
 
 			else
 			begin
-				tmp := COMPARABLE_ITEM3.CompareTo(a.Item3);
+				tmp := Item3.CompareTo(a.Item3);
 
 				if tmp <> 0 then 
 					result := tmp
@@ -409,25 +400,25 @@ implementation
 	begin
 		result := 0;
 
-		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
+		var tmp := Item1.CompareTo(a.Item1);
 
 		if tmp <> 0 then
 		  result := tmp
 		else 
 		begin
-		  tmp := COMPARABLE_ITEM2.CompareTo(a.Item2);
+		  tmp := Item2.CompareTo(a.Item2);
 			if tmp <> 0 then 
 				result := tmp
 
 			else
 			begin
-				tmp := COMPARABLE_ITEM3.CompareTo(a.Item3);
+				tmp := Item3.CompareTo(a.Item3);
 
 				if tmp <> 0 then 
 					result := tmp
 				else
 				begin
-				  tmp := COMPARABLE_ITEM4.CompareTo(a.Item4);
+				  tmp := Item4.CompareTo(a.Item4);
 
 				if tmp <> 0 then 
 					result := tmp
