@@ -1133,6 +1133,15 @@
 				end;
 			{$ENDREGION}
 			
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := UInt64(self);
+				var tmp2 := UInt64(a);				
+				exit tmp1 < tmp2;
+			end;	
+			{$ENDREGION}
+
       const MinValue: UInt64 = $0;
       const MaxValue: UInt64 = $ffffffffffffffff;
     end;
