@@ -1368,8 +1368,17 @@
 			end;
 		{$ENDREGION}
 
-      const MinValue: NativeInt = $0;
-      const MaxValue: NativeInt = {$IFDEF cpu64}$ffffffffffffffff{$ELSE}$ffffffff{$ENDIF};
+		{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF});
+				var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});	
+				exit tmp1 < tmp2;
+			end;	
+		{$ENDREGION}
+
+    const MinValue: NativeInt = $0;
+    const MaxValue: NativeInt = {$IFDEF cpu64}$ffffffffffffffff{$ELSE}$ffffffff{$ENDIF};
     end;
 
     IntPtr = public NativeInt;
