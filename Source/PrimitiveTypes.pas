@@ -1033,6 +1033,15 @@
 				end;
 			{$ENDREGION}
 
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := Int64(self);
+				var tmp2 := Int64(a);				
+				exit tmp1 < tmp2;
+			end;	
+			{$ENDREGION}
+
       const MinValue: Int64 = $8000000000000000;
       const MaxValue: Int64 = $7fffffffffffffff;
     end;
