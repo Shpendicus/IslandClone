@@ -926,6 +926,15 @@
 				end;
 			{$ENDREGION}
 
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := UInt32(self);
+				var tmp2 := UInt32(a);				
+				exit tmp1 < tmp2;
+			end;	
+			{$ENDREGION}
+
       const MinValue: UInt32 = 0;
       const MaxValue: UInt32 = $ffffffff;
     end;
