@@ -348,6 +348,15 @@
 					exit INumber(charCodeResult);
 				end;
 			{$ENDREGION}
+
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := ord(self);
+				var tmp2 := ord(AnsiChar(a));				
+				exit tmp1 < tmp2;
+			end;			
+			{$ENDREGION}
   end;
 
     SByte = public record(INumber, IComparable<SByte>, IEquatable<SByte>)
