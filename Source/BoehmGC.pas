@@ -177,6 +177,7 @@ type
     begin
       aDest := aSource;
     end;
+
     class method Init(var Dest: BoehmGC); empty;
     class method Release(var Dest: BoehmGC); empty;
   end;
