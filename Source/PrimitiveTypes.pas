@@ -537,6 +537,15 @@
 				end;
 			{$ENDREGION}
 
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := Byte(self);
+				var tmp2 := Byte(a);				
+				exit tmp1 < tmp2;
+			end;			
+			{$ENDREGION}
+
       const MinValue: Byte = $0;
       const MaxValue: Byte = $ff;
     end;
