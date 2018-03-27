@@ -28,6 +28,16 @@
 					exit a.&Divide(b);
 				end;
 				{$ENDREGION}
+
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+
+			class operator Less(const a, b: INumber): Boolean; inline;
+			begin
+				exit a.&Less(b);
+			end;
+
+			{$ENDREGION}
     end;
 
 //    IIntegerNumber = public interface(INumber)
@@ -71,6 +81,14 @@
 					exit Integer(a);
 				end;
 
+			{$ENDREGION}
+
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp := Integer(a);
+				exit tmp < self;
+			end;			
 			{$ENDREGION}
 		end;
 
