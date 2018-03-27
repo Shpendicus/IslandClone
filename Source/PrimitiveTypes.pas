@@ -31,10 +31,16 @@
 
 			{$REGION Logical Operators}
 			method &Less(const a: INumber): Boolean;
-
+			method &LessOrEqual(const a: INumber): Boolean;
+			
 			class operator Less(const a, b: INumber): Boolean; inline;
 			begin
 				exit a.&Less(b);
+			end;
+						
+			class operator LessOrEqual(const a, b: INumber): Boolean; inline;
+			begin
+				exit a.&LessOrEqual(b);
 			end;
 
 			{$ENDREGION}
@@ -80,7 +86,6 @@
 				begin
 					exit Integer(a);
 				end;
-
 			{$ENDREGION}
 
 			{$REGION Logical Operators}
@@ -88,7 +93,13 @@
 			begin
 				var tmp := Integer(a);
 				exit tmp < self;
-			end;			
+			end;	
+			
+			method &LessOrEqual(const a: INumber): Boolean;
+			begin
+				var tmp := Integer(a);
+				exit tmp <= self;
+			end;		
 			{$ENDREGION}
 		end;
 
@@ -1490,7 +1501,7 @@
 
       method &Equals(const other: Single): Boolean;
       begin
-        //..needs a proper implementation
+				raise new NotImplementedException('Needs an optimized Equal-logic');
       end;
 
       method CompareTo(const a: Single): Integer;
@@ -1559,6 +1570,14 @@
 			end;
 		{$ENDREGION}
 
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := Single(self);
+				var tmp2 := Single(a);
+				exit tmp1 < tmp2;
+			end;	
+		{$ENDREGION}
     end;
 
     Double = public record(INumber, IEquatable<Double>, IComparable<Double>)
@@ -1598,7 +1617,7 @@
 
       method &Equals(const other: Double): boolean;
       begin
-        //needs proper floating point equals!
+        raise new NotImplementedException('Needs an optimized Equal-logic');
       end;
 
       method CompareTo(const a: Double): Integer;
