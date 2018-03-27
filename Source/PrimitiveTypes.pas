@@ -1250,6 +1250,15 @@
 			end;
 		{$ENDREGION}
 
+		{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := ({$IFDEF cpu64}Int64(self){$ELSE}Int32(self){$ENDIF});
+				var tmp2 := ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF});	
+				exit tmp1 < tmp2;
+			end;	
+		{$ENDREGION}
+
     const MinValue: NativeInt = {$IFDEF cpu64}$8000000000000000{$ELSE}$80000000{$ENDIF};
     const MaxValue: NativeInt = {$IFDEF cpu64}$7fffffffffffffff{$ELSE}$7fffffff{$ENDIF};
     end;
