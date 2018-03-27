@@ -102,7 +102,7 @@ type
       exit new NullReferenceException;
     end;
     
-    const FinalizerIndex = 4 + {$IFDEF I386}4{$ELSE}2{$ENDIF};
+    const FinalizerIndex = {$IFDEF I386}8{$ELSE}6{$ENDIF};
 
 
     [SymbolName('__newdelegate')]

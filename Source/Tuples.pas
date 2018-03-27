@@ -5,7 +5,6 @@ interface
 	type
 		{$region 1-Tuple}
 		&Tuple<T1> = public record(IComparable<&Tuple<T1>>, IEquatable<&Tuple<T1>>) 
-			where T1 is IComparable<T1>;
 		private
 			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
 		public
@@ -28,7 +27,7 @@ interface
 		&Tuple<T1, T2> = public record(IComparable<&Tuple<T1, T2>>, IEquatable<&Tuple<T1, T2>>)
 		private
 			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item1 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
 		public
 			constructor(aItem1: T1; aItem2: T2);
 			Item1: T1; readonly;
@@ -48,7 +47,7 @@ interface
 		&Tuple<T1, T2, T3> = public record(IComparable<&Tuple<T1, T2, T3>>, IEquatable<&Tuple<T1, T2, T3>>)
 		private
 			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item1 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
 			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3);
@@ -69,9 +68,9 @@ interface
 		&Tuple<T1, T2, T3, T4> = public record(IComparable<&Tuple<T1, T2, T3, T4>>, IEquatable<&Tuple<T1, T2, T3, T4>>)
 		private
 			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item1 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
 			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
-			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item3 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
 
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4);
@@ -91,6 +90,13 @@ interface
 
 		{$region 5-Tuple}
 		&Tuple<T1, T2, T3, T4, T5> = public record(IComparable<&Tuple<T1, T2, T3, T4, T5>>, IEquatable<&Tuple<T1, T2, T3, T4, T5>>)
+		private
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM5: nullable IComparable<T5> read (Item5 as IComparable<T5>); lazy;
+
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5);
 
@@ -113,6 +119,13 @@ interface
 
 		{$region 6-Tuple}
 		&Tuple<T1, T2, T3, T4, T5, T6> = public record(IComparable<&Tuple<T1, T2, T3, T4, T5, T6>>, IEquatable<&Tuple<T1, T2, T3, T4, T5, T6>>)
+		private
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM5: nullable IComparable<T5> read (Item5 as IComparable<T5>); lazy;
+			property COMPARABLE_ITEM6: nullable IComparable<T6> read (Item6 as IComparable<T6>); lazy;
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6);
 			 Item1: T1; readonly;
@@ -133,6 +146,15 @@ interface
 
 		{$region 7-Tuple}
 		&Tuple<T1, T2, T3, T4, T5, T6, T7> = public record(IComparable<&Tuple<T1, T2, T3, T4, T5, T6, T7>>, IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7>>)
+		private
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM5: nullable IComparable<T5> read (Item5 as IComparable<T5>); lazy;
+			property COMPARABLE_ITEM6: nullable IComparable<T6> read (Item6 as IComparable<T6>); lazy;
+			property COMPARABLE_ITEM7: nullable IComparable<T7> read (Item7 as IComparable<T7>); lazy;
+
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7);
 			 Item1: T1; readonly;
@@ -154,6 +176,16 @@ interface
 
 		{$region 8-Tuple}
 		&Tuple<T1, T2, T3, T4, T5, T6, T7, T8> = public record(IComparable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8>>, IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8>>)
+		private
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM5: nullable IComparable<T5> read (Item5 as IComparable<T5>); lazy;
+			property COMPARABLE_ITEM6: nullable IComparable<T6> read (Item6 as IComparable<T6>); lazy;
+			property COMPARABLE_ITEM7: nullable IComparable<T7> read (Item7 as IComparable<T7>); lazy;
+			property COMPARABLE_ITEM8: nullable IComparable<T8> read (Item8 as IComparable<T8>); lazy;
+
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7; aItem8: T8);
 			 Item1: T1; readonly;
@@ -498,31 +530,31 @@ implementation
 	begin
 	  result := 0;
 
-		var tmp := Item1.CompareTo(a.Item1);
+		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
 
 		if tmp <> 0 then
 		  result := tmp
 		else 
 		begin
-		  tmp := Item2.CompareTo(a.Item2);
+		  tmp := COMPARABLE_ITEM2.CompareTo(a.Item2);
 			if tmp <> 0 then 
 				result := tmp
 
 			else
 			begin
-				tmp := Item3.CompareTo(a.Item3);
+				tmp := COMPARABLE_ITEM3.CompareTo(a.Item3);
 
 				if tmp <> 0 then 
 					result := tmp
 				else
 				begin
-				  tmp := Item4.CompareTo(a.Item4);
+				  tmp := COMPARABLE_ITEM4.CompareTo(a.Item4);
 
 					if tmp <> 0 then 
 						result := tmp
 					else
 					begin
-						tmp := Item5.CompareTo(a.Item5);
+						tmp := COMPARABLE_ITEM5.CompareTo(a.Item5);
 
 						if tmp <> 0 then 
 							result := tmp
@@ -595,37 +627,37 @@ implementation
 	begin
 		result := 0;
 
-		var tmp := Item1.CompareTo(a.Item1);
+		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
 
 		if tmp <> 0 then
 		  result := tmp
 		else 
 		begin
-		  tmp := Item2.CompareTo(a.Item2);
+		  tmp := COMPARABLE_ITEM2.CompareTo(a.Item2);
 			if tmp <> 0 then 
 				result := tmp
 
 			else
 			begin
-				tmp := Item3.CompareTo(a.Item3);
+				tmp := COMPARABLE_ITEM3.CompareTo(a.Item3);
 
 				if tmp <> 0 then 
 					result := tmp
 				else
 				begin
-				  tmp := Item4.CompareTo(a.Item4);
+				  tmp := COMPARABLE_ITEM4.CompareTo(a.Item4);
 
 					if tmp <> 0 then 
 						result := tmp
 					else
 					begin
-						tmp := Item5.CompareTo(a.Item5);
+						tmp := COMPARABLE_ITEM5.CompareTo(a.Item5);
 
 						if tmp <> 0 then 
 							result := tmp
 						else
 						begin
-							tmp := Item6.CompareTo(a.Item6);
+							tmp := COMPARABLE_ITEM6.CompareTo(a.Item6);
 
 							if tmp <> 0 then 
 								result := tmp
@@ -704,44 +736,44 @@ implementation
 	begin
 		result := 0;
 
-		var tmp := Item1.CompareTo(a.Item1);
+		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
 
 		if tmp <> 0 then
 		  result := tmp
 		else 
 		begin
-		  tmp := Item2.CompareTo(a.Item2);
+		  tmp := COMPARABLE_ITEM2.CompareTo(a.Item2);
 
 			if tmp <> 0 then 
 				result := tmp
 
 			else
 			begin
-				tmp := Item3.CompareTo(a.Item3);
+				tmp := COMPARABLE_ITEM3.CompareTo(a.Item3);
 
 				if tmp <> 0 then 
 					result := tmp
 				else
 				begin
-				  tmp := Item4.CompareTo(a.Item4);
+				  tmp := COMPARABLE_ITEM4.CompareTo(a.Item4);
 
 					if tmp <> 0 then 
 						result := tmp
 					else
 					begin
-						tmp := Item5.CompareTo(a.Item5);
+						tmp := COMPARABLE_ITEM5.CompareTo(a.Item5);
 
 						if tmp <> 0 then 
 							result := tmp
 						else
 						begin
-							tmp := Item6.CompareTo(a.Item6);
+							tmp := COMPARABLE_ITEM6.CompareTo(a.Item6);
 
 							if tmp <> 0 then 
 								result := tmp
 							else
 							begin
-								tmp := Item7.CompareTo(a.Item7);
+								tmp := COMPARABLE_ITEM7.CompareTo(a.Item7);
 
 								if tmp <> 0 then 
 									result := tmp
@@ -822,52 +854,53 @@ implementation
 
 	method &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>.CompareTo(a: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Integer;
 	begin
-	result := 0;
+		result := 0;
 
-		var tmp := Item1.CompareTo(a.Item1);
+		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
 
 		if tmp <> 0 then
 		  result := tmp
 		else 
 		begin
-		  tmp := Item2.CompareTo(a.Item2);
+		  tmp := COMPARABLE_ITEM2.CompareTo(a.Item2);
 
 			if tmp <> 0 then 
 				result := tmp
 
 			else
 			begin
-				tmp := Item3.CompareTo(a.Item3);
+				tmp := COMPARABLE_ITEM3.CompareTo(a.Item3);
 
 				if tmp <> 0 then 
 					result := tmp
 				else
 				begin
-				  tmp := Item4.CompareTo(a.Item4);
+				  tmp := COMPARABLE_ITEM4.CompareTo(a.Item4);
 
 					if tmp <> 0 then 
 						result := tmp
 					else
 					begin
-						tmp := Item5.CompareTo(a.Item5);
+						tmp := COMPARABLE_ITEM5.CompareTo(a.Item5);
 
 						if tmp <> 0 then 
 							result := tmp
 						else
 						begin
-							tmp := Item6.CompareTo(a.Item6);
+							tmp := COMPARABLE_ITEM6.CompareTo(a.Item6);
 
 							if tmp <> 0 then 
 								result := tmp
 							else
 							begin
-								tmp := Item7.CompareTo(a.Item7);
+								tmp := COMPARABLE_ITEM7.CompareTo(a.Item7);
 
 								if tmp <> 0 then 
 									result := tmp
+
 								else
 								begin
-									tmp := Item8.CompareTo(a.Item8);
+									tmp := COMPARABLE_ITEM8.CompareTo(a.Item8);
 
 									if tmp <> 0 then 
 										result := tmp

@@ -62,7 +62,7 @@ begin
   if Destination = nil then raise new Exception('Destination is null');
   if not self.CanRead then raise new NotSupportedException;
   if not Destination.CanWrite then raise new NotSupportedException;
-  var buf: array [bufsize] of Byte := InternalCalls.Undefined<array [bufsize] of Byte>();
+  var buf: array [1..bufsize] of Byte := InternalCalls.Undefined<array [1..bufsize] of Byte>();
   while true do begin
     var rest := &Read(@buf[0],bufsize);
     if rest > 0 then rest := Destination.Write(@buf[0],rest);
