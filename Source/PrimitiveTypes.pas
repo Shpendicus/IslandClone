@@ -635,6 +635,15 @@
 				end;
 			{$ENDREGION}
 
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := Int16(self);
+				var tmp2 := Int16(a);				
+				exit tmp1 < tmp2;
+			end;			
+			{$ENDREGION}
+
       const MinValue: Int16 = $8000;
       const MaxValue: Int16 = $7fff;
     end;
