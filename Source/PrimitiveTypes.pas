@@ -728,6 +728,15 @@
 
 			{$ENDREGION}
 
+			{$REGION Logical Operators}
+			method &Less(const a: INumber): Boolean;
+			begin
+				var tmp1 := UInt16(self);
+				var tmp2 := UInt16(a);				
+				exit tmp1 < tmp2;
+			end;			
+			{$ENDREGION}
+
       const MinValue: UInt16 = $0;
       const MaxValue: UInt16 = $ffff;
     end;
