@@ -1112,7 +1112,7 @@
       begin
         var tmp1 := Int64(self);
         var tmp2 := Int64(a);
-        exit tmp1 < tmp2;
+        exit tmp1 <= tmp2;
       end;
       {$ENDREGION}
 
@@ -1213,6 +1213,13 @@
         var tmp1 := UInt64(self);
         var tmp2 := UInt64(a);
         exit tmp1 < tmp2;
+      end;
+
+      method &LessOrEqual(const a: INumber): Boolean;
+      begin
+        var tmp1 := UInt64(self);
+        var tmp2 := UInt64(a);
+        exit tmp1 <= tmp2;
       end;
       {$ENDREGION}
 
