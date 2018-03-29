@@ -1463,6 +1463,13 @@
         var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
         exit tmp1 < tmp2;
       end;
+
+      method &LessOrEqual(const a: INumber): Boolean;
+      begin
+        var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF})
+        var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF})
+        exit tmp1 <= tmp2;
+      end;
     {$ENDREGION}
 
     const MinValue: NativeInt = $0;
