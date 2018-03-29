@@ -1661,6 +1661,13 @@
         var tmp2 := Single(a);
         exit tmp1 < tmp2;
       end;
+
+      method &LessOrEqual(const a: INumber): Boolean;
+      begin
+        var tmp1 := Single(self);
+        var tmp2 := Single(a);
+        exit tmp1 <= tmp2;
+      end;
     {$ENDREGION}
     end;
 
@@ -1851,6 +1858,8 @@
         var tmp2 := Double(a);
         exit tmp1 < tmp2;
       end;
+
+
     {$ENDREGION}
   end;
 
