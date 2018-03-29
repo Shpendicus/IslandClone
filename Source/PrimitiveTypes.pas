@@ -569,6 +569,13 @@
         var tmp2 := Byte(a);
         exit tmp1 < tmp2;
       end;
+
+      method &LessOrEqual(const a: INumber): Boolean;
+      begin
+        var tmp1 := Byte(self);
+        var tmp2 := Byte(a);
+        exit tmp1 <= tmp2;
+      end;
       {$ENDREGION}
 
       const MinValue: Byte = $0;
@@ -662,6 +669,13 @@
 
       {$REGION Logical Operators}
       method &Less(const a: INumber): Boolean;
+      begin
+        var tmp1 := Int16(self);
+        var tmp2 := Int16(a);
+        exit tmp1 < tmp2;
+      end;
+
+      method &LessOrEqual(const a: INumber): Boolean;
       begin
         var tmp1 := Int16(self);
         var tmp2 := Int16(a);
