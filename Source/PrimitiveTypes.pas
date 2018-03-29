@@ -891,6 +891,13 @@
         var tmp2 := Int32(a);
         exit tmp1 < tmp2;
       end;
+
+      method &LessOrEqual(const a: INumber): Boolean;
+      begin
+        var tmp1 := Int32(self);
+        var tmp2 := Int32(a);
+        exit tmp1 < tmp2;
+      end;
       {$ENDREGION}
 
       const MinValue: Int32 = $80000000;
