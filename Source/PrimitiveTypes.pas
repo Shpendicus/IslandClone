@@ -1859,7 +1859,12 @@
         exit tmp1 < tmp2;
       end;
 
-
+      method &Less(const a: INumber): Boolean;
+      begin
+        var tmp1 := Double(self);
+        var tmp2 := Double(a);
+        exit tmp1 <= tmp2;
+      end;
     {$ENDREGION}
   end;
 
