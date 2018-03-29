@@ -374,6 +374,13 @@
         var tmp2 := ord(AnsiChar(a));
         exit tmp1 < tmp2;
       end;
+
+      method &LessOrEqual(const a: INumber): Boolean;
+      begin
+        var tmp1 := ord(self);
+        var tmp2 := ord(AnsiChar(a));
+        exit tmp1 <= tmp2;
+      end;
       {$ENDREGION}
   end;
 
