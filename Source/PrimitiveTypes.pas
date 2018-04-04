@@ -829,6 +829,12 @@
         var tmp2 := UInt16(a);
         exit tmp1 < tmp2;
       end;
+
+			method &Greater(const a: INumber): Boolean;
+			begin								
+        var tmp2 := UInt16(a);
+        exit self > tmp2;
+			end;
       {$ENDREGION}
 
       const MinValue: UInt16 = $0;
