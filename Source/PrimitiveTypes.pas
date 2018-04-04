@@ -1173,6 +1173,12 @@
         var tmp2 := Int64(a);
         exit tmp1 <= tmp2;
       end;
+
+			method &Greater(const a: INumber): Boolean;
+			begin								
+        var tmp2 := Int64(a);
+        exit self > tmp2;
+			end;
       {$ENDREGION}
 
       const MinValue: Int64 = $8000000000000000;
