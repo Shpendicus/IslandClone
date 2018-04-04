@@ -33,6 +33,7 @@
       method &Less(const a: not nullable INumber): Boolean;
       method &LessOrEqual(const a: not nullable INumber): Boolean;
 			method &Greater(const a: not nullable INumber): Boolean;
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
 
       class operator Less(const a, b: not nullable INumber): Boolean; inline;
       begin
@@ -49,6 +50,10 @@
 				exit a.&Greater(b);
 			end;
 
+			class operator GreaterOrEqual(const a, b: not nullable INumber): Boolean; inline;
+      begin
+        exit a.&GreaterOrEqual(b);
+      end;
       {$ENDREGION}
     end;
 
@@ -108,6 +113,12 @@
 			begin
 				var tmp := Integer(a);
         exit self > tmp;
+			end;
+
+			method &Greater(const a: not nullable INumber): Boolean;
+			begin
+				var tmp := Integer(a);
+        exit self >= tmp;
 			end;
       {$ENDREGION}
     end;
