@@ -7,6 +7,7 @@
         method &Subtract(const a: not nullable INumber): INumber;
         method &Multiply(const a: not nullable INumber): INumber;
         method &Divide(const a: not nullable INumber): INumber;
+				method &Modulus(const a: not nullable INumber): INumber;
 
         class operator Add(const a, b: not nullable INumber): INumber; inline;
         begin
@@ -26,6 +27,11 @@
         class operator Divide(const a, b: not nullable INumber): INumber; inline;
         begin
           exit a.&Divide(b);
+        end;
+
+				class operator Modulus(const a, b: not nullable INumber): INumber; inline;
+        begin
+          exit a.&Modulus(b);
         end;
         {$ENDREGION}
 
@@ -66,63 +72,6 @@
     Void = public record
     end;
 
-    IntegerExtension = public extension record(Integer, INumber)
-      {$Region Aritmethical Operators}
-        method &Add(const a: not nullable INumber): INumber;
-        begin
-          exit INumber(self + Integer(a));
-        end;
-
-        method &Subtract(const a: not nullable INumber): INumber;
-        begin
-          exit INumber(self - Integer(a));
-        end;
-
-        method &Multiply(const a: not nullable INumber): INumber;
-        begin
-          exit INumber(self * Integer(a));
-        end;
-
-        method &Divide(const a: not nullable INumber): INumber;
-        require
-          Integer(a) <> 0;
-        begin
-          exit INumber(Double(self / Integer(a)));
-        end;
-
-        class operator Implicit(const a: not nullable INumber): Integer;
-        begin
-          exit Integer(a);
-        end;
-      {$ENDREGION}
-
-      {$REGION Logical Operators}
-      method &Less(const a: not nullable INumber): Boolean;
-      begin
-        var tmp := Integer(a);
-        exit tmp < self;
-      end;
-
-      method &LessOrEqual(const a: not nullable INumber): Boolean;
-      begin
-        var tmp := Integer(a);
-        exit self <= tmp;
-      end;
-
-			method &Greater(const a: not nullable INumber): Boolean;
-			begin
-				var tmp := Integer(a);
-        exit self > tmp;
-			end;
-
-			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
-			begin
-				var tmp := Integer(a);
-        exit self >= tmp;
-			end;
-      {$ENDREGION}
-    end;
-
     Boolean = public record(IEquatable<Boolean>, IComparable<Boolean>)
     public
       method ToString: String; override;
@@ -161,6 +110,72 @@
         else
           exit False;
       end;
+    end;
+
+
+
+		IntegerExtension = public extension record(Integer, INumber)
+     {$Region Aritmethical Operators}
+        method &Add(const a: not nullable INumber): INumber;
+        begin
+          exit INumber(self + Integer(a));
+        end;
+
+        method &Subtract(const a: not nullable INumber): INumber;
+        begin
+          exit INumber(self - Integer(a));
+        end;
+
+        method &Multiply(const a: not nullable INumber): INumber;
+        begin
+          exit INumber(self * Integer(a));
+        end;
+
+        method &Divide(const a: not nullable INumber): INumber;
+        require
+          Integer(a) <> 0;
+        begin
+          exit INumber(Double(self / Integer(a)));
+        end;
+
+				method &Modulus(const a: not nullable INumber): INumber;
+        require
+          Integer(a) <> 0;
+        begin
+          exit INumber(Double(self mod Integer(a)));
+        end;
+
+        class operator Implicit(const a: not nullable INumber): Integer;
+        begin
+          exit Integer(a);
+        end;
+      {$ENDREGION} 
+
+     {$REGION Logical Operators}
+      method &Less(const a: not nullable INumber): Boolean;
+      begin
+        var tmp := Integer(a);
+        exit tmp < self;
+      end;
+
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
+      begin
+        var tmp := Integer(a);
+        exit self <= tmp;
+      end;
+
+			method &Greater(const a: not nullable INumber): Boolean;
+			begin
+				var tmp := Integer(a);
+        exit self > tmp;
+			end;
+
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
+			begin
+				var tmp := Integer(a);
+        exit self >= tmp;
+			end;
+      {$ENDREGION}
     end;
 
     Char = public record(INumber, IComparable<Char>, IEquatable<Char>)
