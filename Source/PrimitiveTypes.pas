@@ -32,7 +32,6 @@
       {$REGION Logical Operators}
       method &Less(const a: INumber): Boolean;
       method &LessOrEqual(const a: INumber): Boolean;
-      method &Greater(const a: INumber): Boolean;
 
       class operator Less(const a, b: INumber): Boolean; inline;
       begin
@@ -44,10 +43,6 @@
         exit a.&LessOrEqual(b);
       end;
 
-      class operator Greater(const a, b: INumber): Boolean; inline;
-      begin
-        exit a.&Greater(b);
-      end;
       {$ENDREGION}
     end;
 
@@ -104,12 +99,6 @@
       begin
         var tmp := Integer(a);
         exit tmp <= self;
-      end;
-
-      method &Greater(const a: INumber): Boolean;
-      begin
-        var tmp := Integer(a);
-        exit tmp > self;
       end;
       {$ENDREGION}
     end;
