@@ -723,6 +723,12 @@
         var tmp2 := Int16(a);
         exit tmp1 < tmp2;
       end;
+
+			method &Greater(const a: INumber): Boolean;
+			begin								
+        var tmp2 := Int16(a);
+        exit self > tmp2;
+			end;
       {$ENDREGION}
 
       const MinValue: Int16 = $8000;
