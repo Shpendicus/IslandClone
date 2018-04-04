@@ -3,48 +3,48 @@
   type
     INumber = public interface
       {$REGION Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
-        method &Subtract(const a: INumber): INumber;
-        method &Multiply(const a: INumber): INumber;
-        method &Divide(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
 
-        class operator Add(const a, b: INumber): INumber; inline;
+        class operator Add(const a, b: not nullable INumber): INumber; inline;
         begin
           exit a.&Add(b);
         end;
 
-        class operator Subtract(const a, b: INumber): INumber; inline;
+        class operator Subtract(const a, b: not nullable INumber): INumber; inline;
         begin
           exit a.&Subtract(b);
         end;
 
-        class operator Multiply(const a, b: INumber): INumber; inline;
+        class operator Multiply(const a, b: not nullable INumber): INumber; inline;
         begin
           exit a.&Multiply(b);
         end;
 
-        class operator Divide(const a, b: INumber): INumber; inline;
+        class operator Divide(const a, b: not nullable INumber): INumber; inline;
         begin
           exit a.&Divide(b);
         end;
         {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
-      method &LessOrEqual(const a: INumber): Boolean;
-			method &Greater(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 
-      class operator Less(const a, b: INumber): Boolean; inline;
+      class operator Less(const a, b: not nullable INumber): Boolean; inline;
       begin
         exit a.&Less(b);
       end;
 
-      class operator LessOrEqual(const a, b: INumber): Boolean; inline;
+      class operator LessOrEqual(const a, b: not nullable INumber): Boolean; inline;
       begin
         exit a.&LessOrEqual(b);
       end;
 
-			class operator &Greater(const a, b: INumber): Boolean;
+			class operator &Greater(const a, b: not nullable INumber): Boolean; inline;
 			begin
 				exit a.&Greater(b);
 			end;
@@ -63,48 +63,48 @@
 
     IntegerExtension = public extension record(Integer, INumber)
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + Integer(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - Integer(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * Integer(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           Integer(a) <> 0;
         begin
           exit INumber(Double(self / Integer(a)));
         end;
 
-        class operator Implicit(const a: INumber): Integer;
+        class operator Implicit(const a: not nullable INumber): Integer;
         begin
           exit Integer(a);
         end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp := Integer(a);
         exit tmp < self;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp := Integer(a);
         exit self <= tmp;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin
 				var tmp := Integer(a);
         exit self > tmp;
@@ -247,7 +247,7 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           var charCode1: Integer := ord(self);
           var charCode2: Integer := ord(Char(a));
@@ -255,7 +255,7 @@
           exit INumber(codeResult);
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           var charCode1: Integer := ord(self);
           var charCode2: Integer := ord(Char(a));
@@ -263,7 +263,7 @@
           exit INumber(codeResult);
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           var charCode1: Integer := ord(self);
           var charCode2: Integer := ord(Char(a));
@@ -271,7 +271,7 @@
           exit INumber(codeResult);
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           ord(Char(a)) <> 0;
         begin
@@ -281,7 +281,7 @@
           exit INumber(codeResult);
         end;
 
-        class operator Implicit(const a: INumber): Char;
+        class operator Implicit(const a: not nullable INumber): Char;
         begin
           exit Char(a);
         end;
@@ -293,21 +293,21 @@
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := ord(self);
         var tmp2 := ord(Char(a));
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := ord(self);
         var tmp2 := ord(Char(a));
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin
 				var tmp1 := ord(self);
         var tmp2 := ord(Char(a));
@@ -348,7 +348,7 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           var charCode1: Integer := ord(self);
           var charCode2: Integer := ord(AnsiChar(a));
@@ -356,7 +356,7 @@
           exit INumber(charCodeResult);
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           var charCode1: Integer := ord(self);
           var charCode2: Integer := ord(AnsiChar(a));
@@ -364,7 +364,7 @@
           exit INumber(charCodeResult);
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           var charCode1: Integer := ord(self);
           var charCode2: Integer := ord(AnsiChar(a));
@@ -372,7 +372,7 @@
           exit INumber(charCodeResult);
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           ord(AnsiChar(a)) <> 0;
         begin
@@ -384,21 +384,21 @@
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := ord(self);
         var tmp2 := ord(AnsiChar(a));
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := ord(self);
         var tmp2 := ord(AnsiChar(a));
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin
 				var tmp1 := ord(self);
         var tmp2 := ord(AnsiChar(a));
@@ -468,50 +468,50 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + SByte(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - SByte(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * SByte(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           SByte(a) <> 0;
         begin
           exit INumber(Double(self / SByte(a)));
         end;
 
-        class operator Implicit(const a: INumber): SByte;
+        class operator Implicit(const a: not nullable INumber): SByte;
         begin
           exit SByte(a);
         end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := SByte(self);
         var tmp2 := SByte(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := SByte(self);
         var tmp2 := SByte(a);
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := SByte(a);
         exit self > tmp2;
@@ -570,50 +570,50 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + Byte(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - Byte(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * Byte(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           Byte(a) <> 0;
         begin
           exit INumber(Double(self / Byte(a)));
         end;
 
-        class operator Implicit(const a: INumber): Byte;
+        class operator Implicit(const a: not nullable INumber): Byte;
         begin
           exit Byte(a);
         end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Byte(self);
         var tmp2 := Byte(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Byte(self);
         var tmp2 := Byte(a);
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := Byte(a);
         exit self > tmp2;
@@ -681,50 +681,50 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + Int16(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - Int16(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * Int16(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           Int16(a) <> 0;
         begin
           exit INumber(Double(self / Int16(a)));
         end;
 
-        class operator Implicit(const a: INumber): Int16;
+        class operator Implicit(const a: not nullable INumber): Int16;
         begin
           exit Int16(a);
         end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Int16(self);
         var tmp2 := Int16(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Int16(self);
         var tmp2 := Int16(a);
         exit tmp1 < tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := Int16(a);
         exit self > tmp2;
@@ -786,29 +786,29 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + Int16(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - UInt16(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * UInt16(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           UInt16(a) <> 0;
         begin
           exit INumber(Double(self / UInt16(a)));
         end;
 
-        class operator Implicit(const a: INumber): UInt16;
+        class operator Implicit(const a: not nullable INumber): UInt16;
         begin
           exit UInt16(a);
         end;
@@ -816,21 +816,21 @@
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := UInt16(self);
         var tmp2 := UInt16(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := UInt16(self);
         var tmp2 := UInt16(a);
         exit tmp1 < tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := UInt16(a);
         exit self > tmp2;
@@ -903,50 +903,50 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + Int32(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - Int32(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * Int32(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           Int32(a) <> 0;
         begin
           exit INumber(Double(self / Int32(a)));
         end;
 
-        class operator Implicit(const a: INumber): Int32;
+        class operator Implicit(const a: not nullable INumber): Int32;
         begin
           exit Int32(a);
         end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Int32(self);
         var tmp2 := Int32(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Int32(self);
         var tmp2 := Int32(a);
         exit tmp1 < tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := UInt16(a);
         exit self > tmp2;
@@ -1011,50 +1011,50 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + UInt32(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - UInt32(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * UInt32(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           UInt32(a) <> 0;
         begin
           exit INumber(Double(self / UInt32(a)));
         end;
 
-        class operator Implicit(const a: INumber): UInt32;
+        class operator Implicit(const a: not nullable INumber): UInt32;
         begin
           exit UInt32(a);
         end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := UInt32(self);
         var tmp2 := UInt32(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := UInt32(self);
         var tmp2 := UInt32(a);
         exit tmp1 < tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := UInt32(a);
         exit self > tmp2;
@@ -1131,50 +1131,50 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + Int64(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - Int64(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * Int64(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           Int64(a) <> 0;
         begin
           exit INumber(Double(self / Int64(a)));
         end;
 
-        class operator Implicit(const a: INumber): Int64;
+        class operator Implicit(const a: not nullable INumber): Int64;
         begin
           exit Int64(a);
         end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Int64(self);
         var tmp2 := Int64(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Int64(self);
         var tmp2 := Int64(a);
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := Int64(a);
         exit self > tmp2;
@@ -1244,50 +1244,50 @@
       end;
 
       {$Region Aritmethical Operators}
-        method &Add(const a: INumber): INumber;
+        method &Add(const a: not nullable INumber): INumber;
         begin
           exit INumber(self + UInt64(a));
         end;
 
-        method &Subtract(const a: INumber): INumber;
+        method &Subtract(const a: not nullable INumber): INumber;
         begin
           exit INumber(self - UInt64(a));
         end;
 
-        method &Multiply(const a: INumber): INumber;
+        method &Multiply(const a: not nullable INumber): INumber;
         begin
           exit INumber(self * UInt64(a));
         end;
 
-        method &Divide(const a: INumber): INumber;
+        method &Divide(const a: not nullable INumber): INumber;
         require
           UInt64(a) <> 0;
         begin
           exit INumber(Double(self / UInt64(a)));
         end;
 
-        class operator Implicit(const a: INumber): UInt64;
+        class operator Implicit(const a: not nullable INumber): UInt64;
         begin
           exit UInt64(a);
         end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := UInt64(self);
         var tmp2 := UInt64(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := UInt64(self);
         var tmp2 := UInt64(a);
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := UInt64(a);
         exit self > tmp2;
@@ -1374,50 +1374,50 @@
         end;
 
     {$Region Aritmethical Operators}
-      method &Add(const a: INumber): INumber;
+      method &Add(const a: not nullable INumber): INumber;
       begin
         exit INumber(self + ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}));
       end;
 
-      method &Subtract(const a: INumber): INumber;
+      method &Subtract(const a: not nullable INumber): INumber;
       begin
         exit INumber(self - ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}));
       end;
 
-      method &Multiply(const a: INumber): INumber;
+      method &Multiply(const a: not nullable INumber): INumber;
       begin
         exit INumber(self * ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}));
       end;
 
-      method &Divide(const a: INumber): INumber;
+      method &Divide(const a: not nullable INumber): INumber;
       require
         ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}) <> 0;
       begin
         exit INumber(Double(self / ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF})));
       end;
 
-      class operator Implicit(const a: INumber): NativeInt;
+      class operator Implicit(const a: not nullable INumber): NativeInt;
       begin
         exit ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF});
       end;
     {$ENDREGION}
 
     {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := ({$IFDEF cpu64}Int64(self){$ELSE}Int32(self){$ENDIF});
         var tmp2 := ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF});
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := ({$IFDEF cpu64}Int64(self){$ELSE}Int32(self){$ENDIF});
         var tmp2 := ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF});
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean; 
+			method &Greater(const a: not nullable INumber): Boolean; 
       begin
         var tmp1 := ({$IFDEF cpu64}Int64(self){$ELSE}Int32(self){$ENDIF});
         var tmp2 := ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF});
@@ -1506,50 +1506,50 @@
       end;
 
     {$Region Aritmethical Operators}
-      method &Add(const a: INumber): INumber;
+      method &Add(const a: not nullable INumber): INumber;
       begin
         exit INumber(self + ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF}));
       end;
 
-      method &Subtract(const a: INumber): INumber;
+      method &Subtract(const a: not nullable INumber): INumber;
       begin
         exit INumber(self - ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF}));
       end;
 
-      method &Multiply(const a: INumber): INumber;
+      method &Multiply(const a: not nullable INumber): INumber;
       begin
         exit INumber(self * ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF}));
       end;
 
-      method &Divide(const a: INumber): INumber;
+      method &Divide(const a: not nullable INumber): INumber;
       require
         ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF}) <> 0;
       begin
         exit INumber(Double(self / ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF})));
       end;
 
-      class operator Implicit(const a: INumber): NativeUInt;
+      class operator Implicit(const a: not nullable INumber): NativeUInt;
       begin
         exit ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
       end;
     {$ENDREGION}
 
     {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF});
         var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
-        var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF})
-        var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF})
+        var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF});
+        var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF});
         var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
@@ -1711,50 +1711,50 @@
       end;
 
       {$Region Aritmethical Operators}
-      method &Add(const a: INumber): INumber;
+      method &Add(const a: not nullable INumber): INumber;
       begin
         exit INumber(self + Single(a));
       end;
 
-      method &Subtract(const a: INumber): INumber;
+      method &Subtract(const a: not nullable INumber): INumber;
       begin
         exit INumber(self - Single(a));
       end;
 
-      method &Multiply(const a: INumber): INumber;
+      method &Multiply(const a: not nullable INumber): INumber;
       begin
         exit INumber(self * Single(a));
       end;
 
-      method &Divide(const a: INumber): INumber;
+      method &Divide(const a: not nullable INumber): INumber;
       require
         ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF}) <> 0;
       begin
         exit INumber(Single(self / Single(a)));
       end;
 
-      class operator Implicit(const a: INumber): Single;
+      class operator Implicit(const a: not nullable INumber): Single;
       begin
         exit Single(a);
       end;
     {$ENDREGION}
 
       {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Single(self);
         var tmp2 := Single(a);
         exit tmp1 < tmp2;
       end;
 
-      method &LessOrEqual(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Single(self);
         var tmp2 := Single(a);
         exit tmp1 <= tmp2;
       end;
 
-			method &Greater(const a: INumber): Boolean;
+			method &Greater(const a: not nullable INumber): Boolean;
 			begin								
         var tmp2 := Single(a);
         exit self > tmp2;
@@ -1914,48 +1914,54 @@
       end;
 
       {$Region Aritmethical Operators}
-      method &Add(const a: INumber): INumber;
+      method &Add(const a: not nullable INumber): INumber;
       begin
         exit INumber(self + Double(a));
       end;
 
-      method &Subtract(const a: INumber): INumber;
+      method &Subtract(const a: not nullable INumber): INumber;
       begin
         exit INumber(self - Double(a));
       end;
 
-      method &Multiply(const a: INumber): INumber;
+      method &Multiply(const a: not nullable INumber): INumber;
       begin
         exit INumber(self * Double(a));
       end;
 
-      method &Divide(const a: INumber): INumber;
+      method &Divide(const a: not nullable INumber): INumber;
       require
         Double(a) <> 0.0;  (*Needs proper floating-point-equal!*)
       begin
         exit INumber(Double(self / Double(a)));
       end;
 
-      class operator Implicit(const a: INumber): Double;
+      class operator Implicit(const a: not nullable INumber): Double;
       begin
         exit Double(a);
       end;
     {$ENDREGION}
 
     {$REGION Logical Operators}
-      method &Less(const a: INumber): Boolean;
+      method &Less(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Double(self);
         var tmp2 := Double(a);
         exit tmp1 < tmp2;
       end;
 
-      method &Less(const a: INumber): Boolean;
+      method &LessOrEqual(const a: not nullable INumber): Boolean;
       begin
         var tmp1 := Double(self);
         var tmp2 := Double(a);
         exit tmp1 <= tmp2;
       end;
+
+			method &Greater(const a: not nullable INumber): Boolean;
+			begin								
+        var tmp2 := Double(a);
+        exit self > tmp2;
+			end;
     {$ENDREGION}
   end;
 
