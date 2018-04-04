@@ -1497,7 +1497,7 @@
         exit tmp1 > tmp2;
       end;
 
-			method &LessOrEqual(const a: not nullable INumber): Boolean;
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean; 
       begin
         var tmp1 := ({$IFDEF cpu64}Int64(self){$ELSE}Int32(self){$ENDIF});
         var tmp2 := ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF});
@@ -1634,6 +1634,13 @@
         var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF});
         var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
         exit tmp1 < tmp2;
+      end;
+
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean; 
+      begin
+        var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF});
+        var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
+        exit tmp1 >= tmp2;
       end;
     {$ENDREGION}
 
