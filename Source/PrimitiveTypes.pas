@@ -1753,6 +1753,12 @@
         var tmp2 := Single(a);
         exit tmp1 <= tmp2;
       end;
+
+			method &Greater(const a: INumber): Boolean;
+			begin								
+        var tmp2 := Single(a);
+        exit self > tmp2;
+			end;
     {$ENDREGION}
     end;
 
