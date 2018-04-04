@@ -649,6 +649,12 @@
         var tmp2 := Byte(a);
         exit self > tmp2;
 			end;
+
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
+			begin								
+        var tmp2 := Byte(a);
+        exit self >= tmp2;
+			end;
       {$ENDREGION}
 
       const MinValue: Byte = $0;
