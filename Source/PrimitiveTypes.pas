@@ -512,13 +512,6 @@
         var tmp2 := SByte(a);
         exit tmp1 <= tmp2;
       end;
-
-      method &Greater(const a: INumber): Boolean;
-      begin
-        var tmp1 := SByte(self);
-        var tmp2 := SByte(a);
-        exit tmp1 <= tmp2;
-      end;
       {$ENDREGION}
     end;
 
