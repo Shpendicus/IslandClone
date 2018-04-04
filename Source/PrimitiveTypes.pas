@@ -324,6 +324,13 @@
         var tmp2 := ord(Char(a));
         exit tmp1 > tmp2;
 			end;
+
+			method &Greater(const a: not nullable INumber): Boolean;
+			begin
+				var tmp1 := ord(self);
+        var tmp2 := ord(Char(a));
+        exit tmp1 >= tmp2;
+			end;
       {$ENDREGION}
 
     end;
