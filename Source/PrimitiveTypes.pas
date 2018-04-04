@@ -1417,7 +1417,7 @@
         exit tmp1 <= tmp2;
       end;
 
-			method &Less(const a: INumber): Boolean;
+			method &Greater(const a: INumber): Boolean; 
       begin
         var tmp1 := ({$IFDEF cpu64}Int64(self){$ELSE}Int32(self){$ENDIF});
         var tmp2 := ({$IFDEF cpu64}Int64(a){$ELSE}Int32(a){$ENDIF});
@@ -1547,6 +1547,13 @@
         var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF})
         var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF})
         exit tmp1 <= tmp2;
+      end;
+
+			method &Greater(const a: INumber): Boolean;
+      begin
+        var tmp1 := ({$IFDEF cpu64}UInt64(self){$ELSE}UInt32(self){$ENDIF});
+        var tmp2 := ({$IFDEF cpu64}UInt64(a){$ELSE}UInt32(a){$ENDIF});
+        exit tmp1 < tmp2;
       end;
     {$ENDREGION}
 
