@@ -115,7 +115,7 @@
         exit self > tmp;
 			end;
 
-			method &Greater(const a: not nullable INumber): Boolean;
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
 			begin
 				var tmp := Integer(a);
         exit self >= tmp;
@@ -325,7 +325,7 @@
         exit tmp1 > tmp2;
 			end;
 
-			method &Greater(const a: not nullable INumber): Boolean;
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
 			begin
 				var tmp1 := ord(self);
         var tmp2 := ord(Char(a));
@@ -421,6 +421,13 @@
 				var tmp1 := ord(self);
         var tmp2 := ord(AnsiChar(a));
         exit tmp1 > tmp2;
+			end;
+
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
+			begin
+				var tmp1 := ord(self);
+        var tmp2 := ord(AnsiChar(a));
+        exit tmp1 >= tmp2;
 			end;
       {$ENDREGION}
   end;
