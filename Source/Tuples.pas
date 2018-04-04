@@ -6,7 +6,7 @@ interface
 		{$region 1-Tuple}
 		&Tuple<T1> = public record(IComparable<&Tuple<T1>>, IEquatable<&Tuple<T1>>) 
 		private
-			property COMPARABLE_ITEM1:IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
 		public
 			constructor(aItem1: T1);
 
@@ -26,8 +26,8 @@ interface
 	  {$region 2-Tuple}
 		&Tuple<T1, T2> = public record(IComparable<&Tuple<T1, T2>>, IEquatable<&Tuple<T1, T2>>)
 		private
-			property COMPARABLE_ITEM1:IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2:IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
 		public
 			constructor(aItem1: T1; aItem2: T2);
 			Item1: T1; readonly;
@@ -46,9 +46,9 @@ interface
 		{$region 3-Tuple}
 		&Tuple<T1, T2, T3> = public record(IComparable<&Tuple<T1, T2, T3>>, IEquatable<&Tuple<T1, T2, T3>>)
 		private
-			property COMPARABLE_ITEM1:IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2:IComparable<T2> read (Item2 as IComparable<T2>); lazy;
-			property COMPARABLE_ITEM3:IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3);
 			Item1: T1; readonly;
@@ -67,10 +67,10 @@ interface
 		{$region 4-Tuple}
 		&Tuple<T1, T2, T3, T4> = public record(IComparable<&Tuple<T1, T2, T3, T4>>, IEquatable<&Tuple<T1, T2, T3, T4>>)
 		private
-			property COMPARABLE_ITEM1:IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2:IComparable<T2> read (Item2 as IComparable<T2>); lazy;
-			property COMPARABLE_ITEM3:IComparable<T3> read (Item3 as IComparable<T3>); lazy;
-			property COMPARABLE_ITEM4:IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
 
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4);
@@ -91,11 +91,11 @@ interface
 		{$region 5-Tuple}
 		&Tuple<T1, T2, T3, T4, T5> = public record(IComparable<&Tuple<T1, T2, T3, T4, T5>>, IEquatable<&Tuple<T1, T2, T3, T4, T5>>)
 		private
-			property COMPARABLE_ITEM1:IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2:IComparable<T2> read (Item2 as IComparable<T2>); lazy;
-			property COMPARABLE_ITEM3:IComparable<T3> read (Item3 as IComparable<T3>); lazy;
-			property COMPARABLE_ITEM4:IComparable<T4> read (Item4 as IComparable<T4>); lazy;
-			property COMPARABLE_ITEM5:IComparable<T5> read (Item5 as IComparable<T5>); lazy;
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM5: nullable IComparable<T5> read (Item5 as IComparable<T5>); lazy;
 
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5);
@@ -112,7 +112,7 @@ interface
 			method CompareTo(a: &Tuple<T1, T2, T3, T4, T5>): Integer;
 			method ToString: String; override;
 
-			class operator Equal(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5>): Boolean;
+			class operator Equal(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5>): boolean;
 			class operator NotEqual(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5>): Boolean;
 		end;
 		{$ENDREGION}
@@ -120,12 +120,12 @@ interface
 		{$region 6-Tuple}
 		&Tuple<T1, T2, T3, T4, T5, T6> = public record(IComparable<&Tuple<T1, T2, T3, T4, T5, T6>>, IEquatable<&Tuple<T1, T2, T3, T4, T5, T6>>)
 		private
-			property COMPARABLE_ITEM1:IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2:IComparable<T2> read (Item2 as IComparable<T2>); lazy;
-			property COMPARABLE_ITEM3:IComparable<T3> read (Item3 as IComparable<T3>); lazy;
-			property COMPARABLE_ITEM4:IComparable<T4> read (Item4 as IComparable<T4>); lazy;
-			property COMPARABLE_ITEM5:IComparable<T5> read (Item5 as IComparable<T5>); lazy;
-			property COMPARABLE_ITEM6:IComparable<T6> read (Item6 as IComparable<T6>); lazy;
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM5: nullable IComparable<T5> read (Item5 as IComparable<T5>); lazy;
+			property COMPARABLE_ITEM6: nullable IComparable<T6> read (Item6 as IComparable<T6>); lazy;
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6);
 			 Item1: T1; readonly;
@@ -139,7 +139,7 @@ interface
 			method &Equals(other: &Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
 			method CompareTo(a: &Tuple<T1, T2, T3, T4, T5, T6>): Integer;
 			method ToString: String; override;
-			class operator Equal(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
+			class operator Equal(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6>): boolean;
 			class operator NotEqual(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
 		end;
 		{$ENDREGION}
@@ -147,13 +147,13 @@ interface
 		{$region 7-Tuple}
 		&Tuple<T1, T2, T3, T4, T5, T6, T7> = public record(IComparable<&Tuple<T1, T2, T3, T4, T5, T6, T7>>, IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7>>)
 		private
-			property COMPARABLE_ITEM1:IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2:IComparable<T2> read (Item2 as IComparable<T2>); lazy;
-			property COMPARABLE_ITEM3:IComparable<T3> read (Item3 as IComparable<T3>); lazy;
-			property COMPARABLE_ITEM4:IComparable<T4> read (Item4 as IComparable<T4>); lazy;
-			property COMPARABLE_ITEM5:IComparable<T5> read (Item5 as IComparable<T5>); lazy;
-			property COMPARABLE_ITEM6:IComparable<T6> read (Item6 as IComparable<T6>); lazy;
-			property COMPARABLE_ITEM7:IComparable<T7> read (Item7 as IComparable<T7>); lazy;
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM5: nullable IComparable<T5> read (Item5 as IComparable<T5>); lazy;
+			property COMPARABLE_ITEM6: nullable IComparable<T6> read (Item6 as IComparable<T6>); lazy;
+			property COMPARABLE_ITEM7: nullable IComparable<T7> read (Item7 as IComparable<T7>); lazy;
 
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7);
@@ -169,7 +169,7 @@ interface
 			method &Equals(other: &Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
 			method CompareTo(a: &Tuple<T1, T2, T3, T4, T5, T6, T7>): Integer;
 			method ToString: String; override;
-			class operator Equal(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
+			class operator Equal(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6, T7>): boolean;
 			class operator NotEqual(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
 		end;
 		{$ENDREGION}
@@ -177,14 +177,14 @@ interface
 		{$region 8-Tuple}
 		&Tuple<T1, T2, T3, T4, T5, T6, T7, T8> = public record(IComparable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8>>, IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8>>)
 		private
-			property COMPARABLE_ITEM1:IComparable<T1> read (Item1 as IComparable<T1>); lazy;
-			property COMPARABLE_ITEM2:IComparable<T2> read (Item2 as IComparable<T2>); lazy;
-			property COMPARABLE_ITEM3:IComparable<T3> read (Item3 as IComparable<T3>); lazy;
-			property COMPARABLE_ITEM4:IComparable<T4> read (Item4 as IComparable<T4>); lazy;
-			property COMPARABLE_ITEM5:IComparable<T5> read (Item5 as IComparable<T5>); lazy;
-			property COMPARABLE_ITEM6:IComparable<T6> read (Item6 as IComparable<T6>); lazy;
-			property COMPARABLE_ITEM7:IComparable<T7> read (Item7 as IComparable<T7>); lazy;
-			property COMPARABLE_ITEM8:IComparable<T8> read (Item8 as IComparable<T8>); lazy;
+			property COMPARABLE_ITEM1: nullable IComparable<T1> read (Item1 as IComparable<T1>); lazy;
+			property COMPARABLE_ITEM2: nullable IComparable<T2> read (Item2 as IComparable<T2>); lazy;
+			property COMPARABLE_ITEM3: nullable IComparable<T3> read (Item3 as IComparable<T3>); lazy;
+			property COMPARABLE_ITEM4: nullable IComparable<T4> read (Item4 as IComparable<T4>); lazy;
+			property COMPARABLE_ITEM5: nullable IComparable<T5> read (Item5 as IComparable<T5>); lazy;
+			property COMPARABLE_ITEM6: nullable IComparable<T6> read (Item6 as IComparable<T6>); lazy;
+			property COMPARABLE_ITEM7: nullable IComparable<T7> read (Item7 as IComparable<T7>); lazy;
+			property COMPARABLE_ITEM8: nullable IComparable<T8> read (Item8 as IComparable<T8>); lazy;
 
 		public
 			constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7; aItem8: T8);
@@ -203,7 +203,7 @@ interface
 			method CompareTo(a: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Integer;
 			method ToString: String; override;
 
-			class operator Equal(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
+			class operator Equal(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): boolean;
 			class operator NotEqual(const arg1, arg2: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
 		end;
 		{$ENDREGION}
@@ -261,7 +261,7 @@ implementation
 
 	method &Tuple<T1>.CompareTo(a: &&Tuple<T1>): Integer;
 	begin
-		result := COMPARABLE_ITEM1.CompareTo(a.Item1);		
+		result := COMPARABLE_ITEM1.CompareTo(a.Item1);
 	end;
 
 	method &Tuple<T1>.ToString: String;
@@ -309,7 +309,7 @@ implementation
 	method &Tuple<T1, T2>.CompareTo(a: &Tuple<T1, T2>): Integer;
 	begin	  
 		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
-		
+
 		if tmp <> 0 then
 		  result := tmp
 		else 
@@ -368,7 +368,6 @@ implementation
 	method &Tuple<T1, T2, T3>.CompareTo(a: &Tuple<T1, T2, T3>): Integer;
 	begin
 		var tmp := COMPARABLE_ITEM1.CompareTo(a.Item1);
-		
 
 		if tmp <> 0 then
 		  result := tmp
