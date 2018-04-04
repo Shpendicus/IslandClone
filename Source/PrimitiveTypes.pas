@@ -1053,6 +1053,12 @@
         var tmp2 := UInt32(a);
         exit tmp1 < tmp2;
       end;
+
+			method &Greater(const a: INumber): Boolean;
+			begin								
+        var tmp2 := UInt32(a);
+        exit self > tmp2;
+			end;
       {$ENDREGION}
 
       const MinValue: UInt32 = 0;
