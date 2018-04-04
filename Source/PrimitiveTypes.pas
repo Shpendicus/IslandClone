@@ -1359,6 +1359,12 @@
         var tmp2 := UInt64(a);
         exit self > tmp2;
 			end;
+
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
+			begin								
+        var tmp2 := UInt64(a);
+        exit self >= tmp2;
+			end;
       {$ENDREGION}
 
       const MinValue: UInt64 = $0;
