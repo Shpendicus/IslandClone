@@ -32,6 +32,7 @@
       {$REGION Logical Operators}
       method &Less(const a: INumber): Boolean;
       method &LessOrEqual(const a: INumber): Boolean;
+			method &Greater(const a: INumber): Boolean;
 
       class operator Less(const a, b: INumber): Boolean; inline;
       begin
@@ -43,11 +44,13 @@
         exit a.&LessOrEqual(b);
       end;
 
+			class operator &Greater(const a, b: INumber): Boolean;
+			begin
+				exit a.&Greater(b);
+			end;
+
       {$ENDREGION}
     end;
-
-//    IIntegerNumber = public interface(INumber)
-//    end;
 
     ValueType = public abstract class
     end;
@@ -98,8 +101,14 @@
       method &LessOrEqual(const a: INumber): Boolean;
       begin
         var tmp := Integer(a);
-        exit tmp <= self;
+        exit self <= tmp;
       end;
+
+			method &Greater(const a: INumber): Boolean;
+			begin
+				var tmp := Integer(a);
+        exit self > tmp;
+			end;
       {$ENDREGION}
     end;
 
