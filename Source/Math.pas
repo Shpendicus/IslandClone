@@ -418,7 +418,7 @@ begin
   //special case, p1 = 0.5
   //12.5 => 12 and 11.5 => 12
   //-12.5 => -12 and -11.5 => -12
-  var d1 := a + if a<0 then -0.5 else 0.5;
+  var d1: Double := a + (if a < 0 then -0.5 else 0.5);
   if d1 mod 2 <> 0 then begin
     exit Int64(d1) - if a<0 then -1 else 1
   end
