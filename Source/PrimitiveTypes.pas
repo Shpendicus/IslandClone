@@ -142,7 +142,7 @@
         require
           Integer(a) <> 0;
         begin
-          exit INumber(Double(self mod Integer(a)));
+          exit INumber(Integer(self mod Integer(a)));
         end;
 
         class operator Implicit(const a: not nullable INumber): Integer;
