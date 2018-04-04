@@ -136,7 +136,7 @@
           if self then 1 else 0;
       end;
 
-      method &Equals(other: Boolean): boolean;
+      method &Equals(other: Boolean): Boolean;
       begin
         result :=
           if self then
@@ -175,7 +175,7 @@
         exit ord(self);
       end;
 
-      method &Equals(const other: Char): boolean;
+      method &Equals(const other: Char): Boolean;
       begin
         result := (self = other);
       end;
@@ -347,7 +347,7 @@
         exit Integer(self);
       end;
 
-      method &Equals(const other: AnsiChar): boolean;
+      method &Equals(const other: AnsiChar): Boolean;
       begin
         result := (self = other);
       end;
@@ -689,7 +689,7 @@
         exit self;
       end;
 
-      method &Equals(const other: Int16): boolean;
+      method &Equals(const other: Int16): Boolean;
       begin
         result := (self = other);
       end;
@@ -1279,7 +1279,7 @@
         exit Integer(Self xor (Self shr 32) * 7);
       end;
 
-      method &Equals(const other: UInt64): boolean;
+      method &Equals(const other: UInt64): Boolean;
       begin
         result := (self = other);
       end;
@@ -1533,7 +1533,7 @@
         exit Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
       end;
 
-      method &Equals(const other: NativeUInt): boolean;
+      method &Equals(const other: NativeUInt): Boolean;
       begin
         result :=
           {$IFDEF cpu64}
@@ -1680,7 +1680,7 @@
       end;
 
     public
-      method ToString: String;
+      method ToString: String; override;
       begin
         exit ToString(Locale.Current);
       end;
@@ -1694,7 +1694,7 @@
         exit FloatToString.Convert(self, 8, aLocale);
       end;
 
-      method GetHashCode: Integer;
+      method GetHashCode: Integer; override;
       begin
         exit ^Integer(@self)[0];
       end;
@@ -1757,6 +1757,7 @@
 
       method &Equals(const other: Single): Boolean;
       begin
+				{$HINT Needs an optimized Equal-logic}
         raise new NotImplementedException('Needs an optimized Equal-logic');
       end;
 
@@ -1774,7 +1775,7 @@
                 1;
       end;
 
-      method &Equals(obj: Object): Boolean;
+      method &Equals(obj: Object): Boolean; override;
       begin
         if assigned(obj) and (obj is Single) then
           exit self = Single(obj)
@@ -1886,13 +1887,14 @@
       end;
 
     public
-      method ToString: String;
+      method ToString: String; override;
       begin
         exit ToString(Locale.Current);
       end;
 
-      method &Equals(const other: Double): boolean;
+      method &Equals(const other: Double): Boolean;
       begin
+				{$HINT Needs an optimized Equal-logic}
         raise new NotImplementedException('Needs an optimized Equal-logic');
       end;
 
@@ -1913,7 +1915,7 @@
         exit FloatToString.Convert(self, 16, aLocale);
       end;
 
-      method GetHashCode: Integer;
+      method GetHashCode: Integer; override;
       begin
         exit ^Integer(@self)[0] xor ^Integer(@self)[1];
       end;
@@ -1974,7 +1976,7 @@
         exit ^Double(@k)^;
       end;
 
-      method &Equals(obj: Object): Boolean;
+      method &Equals(obj: Object): Boolean; override;
       begin
         if assigned(obj) and (obj is Double) then
           exit self = Double(obj)
