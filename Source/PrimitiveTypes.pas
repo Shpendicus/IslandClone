@@ -1846,6 +1846,13 @@
         var tmp2 := Single(a);
         exit self > tmp2;
 			end;
+
+			method &GreaterOrEqual(const a: not nullable INumber): Boolean;
+      begin
+        var tmp1 := Single(self);
+        var tmp2 := Single(a);
+        exit tmp1 >= tmp2;
+      end;
     {$ENDREGION}
     end;
 
