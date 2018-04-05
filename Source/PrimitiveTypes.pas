@@ -422,6 +422,16 @@
           var charCodeResult := AnsiChar(charCode1 div charCode2);
           exit INumber(charCodeResult);
         end;
+
+				method &Modulus(const a: not nullable INumber): INumber;
+        require
+          Integer(a) <> 0;
+        begin
+          var charCode1: Integer := ord(self);
+          var charCode2: Integer := ord(AnsiChar(a));
+          var codeResult := Char(charCode1 mod charCode2);
+					exit INumber(codeResult);
+        end;
       {$ENDREGION}
 
       {$REGION Logical Operators}
