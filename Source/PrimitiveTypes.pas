@@ -305,6 +305,16 @@
           exit INumber(codeResult);
         end;
 
+				method &Modulus(const a: not nullable INumber): INumber;
+        require
+          Integer(a) <> 0;
+        begin
+          var charCode1: Integer := ord(self);
+          var charCode2: Integer := ord(Char(a));
+          var codeResult := Char(charCode1 mod charCode2);
+					exit INumber(codeResult);
+        end;
+
         class operator Implicit(const a: not nullable INumber): Char;
         begin
           exit Char(a);
