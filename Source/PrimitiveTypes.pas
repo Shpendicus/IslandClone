@@ -7,6 +7,7 @@
         method &Subtract(const a: not nullable INumber): INumber;
         method &Multiply(const a: not nullable INumber): INumber;
         method &Divide(const a: not nullable INumber): INumber;
+				method &Modulus(const a: not nullable INumber): INumber;
 
         class operator Add(const a, b: not nullable INumber): INumber; inline;
         begin
@@ -26,6 +27,11 @@
         class operator Divide(const a, b: not nullable INumber): INumber; inline;
         begin
           exit a.&Divide(b);
+        end;
+
+				class operator Modulus(const a, b: not nullable INumber): INumber; inline;
+        begin
+          exit a.&Modulus(b);
         end;
         {$ENDREGION}
 
@@ -88,6 +94,13 @@
           Integer(a) <> 0;
         begin
           exit INumber(Double(self / Integer(a)));
+        end;
+
+				method &Modulus(const a: not nullable INumber): INumber;
+        require
+          Integer(a) <> 0;
+        begin
+          exit INumber(self mod Integer(a));
         end;
 
         class operator Implicit(const a: not nullable INumber): Integer;
