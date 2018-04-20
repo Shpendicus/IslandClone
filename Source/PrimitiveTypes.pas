@@ -61,6 +61,10 @@
         exit a.&GreaterOrEqual(b);
       end;
       {$ENDREGION}
+
+			property isInt: Boolean read;
+
+			property TypeCode: TypeCode read;
     end;
 
     ValueType = public abstract class
@@ -528,7 +532,7 @@
       {$Region Aritmethical Operators}
         method &Add(const a: not nullable INumber): INumber;
         begin
-          exit INumber(self + SByte(a));
+          //...
         end;
 
         method &Subtract(const a: not nullable INumber): INumber;
@@ -546,6 +550,13 @@
           SByte(a) <> 0;
         begin
           exit INumber(Double(self / SByte(a)));
+        end;
+
+				method &Modulus(const a: not nullable INumber): INumber;
+        require
+          (a <> 0);
+        begin
+          exit INumber(self mod SByte(a));
         end;
 
         class operator Implicit(const a: not nullable INumber): SByte;
