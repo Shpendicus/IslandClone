@@ -7,6 +7,7 @@
 
 		[Union]
 		TNumeric = public record
+		private
 		var
 			a1: Int8;
 			a2: Int16;
@@ -19,7 +20,7 @@
 			a9: Single;
 			a10: Double;
 			kind: TNumericType;
-
+		public
 			{IMPLICIT CONVERSION FROM:  BaseType to TNumeric}
 			 //var myNumber : TNumber := 100;
 			operator Implicit(const operand: Int8): TNumeric;
@@ -255,6 +256,176 @@
 				exit operand.a10;
 			end;
 
+			//OPERATOR - SECTION
+			operator &Add(const operand1, operand2: TNumeric): TNumeric;
+			begin
+				//goal: var op1: TNumeric := 1000.0;          //is Double
+				//      var op2: TNumeric := 100;        //is byte
+				//var res := op1(i.e = Double) + op2 (i.e = integer); => 2000! (this case = Double);
+				if operand1.kind = TNumericType.Int8 then
+				begin
+					var tmp : Int64;
+					case operand2.kind of
+						TNumericType.Int8:  result := Int8(operand1) + Int8(operand2);
+						TNumericType.Int16: result := Int8(operand1) + Int16(operand2);
+						TNumericType.Int32: result := Int8(operand1) + Int32(operand2);
+						TNumericType.Int64: result := Int8(operand1) + Int64(operand2);
+						TNumericType.UInt8: result := Int8(operand1) + UInt8(operand2);
+						TNumericType.UInt16:result := Int8(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := Int8(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := Int8(operand1) + UInt64(operand2);
+						TNumericType.Single: result := Int8(operand1) + Single(operand2);
+						TNumericType.Double: result := Int8(operand1) + Double(operand2);
+					end;
+					result := TNumeric(tmp);
+				end;
+
+				if operand1.kind = TNumericType.Int16 then
+				begin
+					case operand2.kind of
+						TNumericType.Int8: result  := Int16(operand1) + Int8(operand2);
+						TNumericType.Int16: result := Int16(operand1) + Int16(operand2);
+						TNumericType.Int32: result := Int16(operand1) + Int32(operand2);
+						TNumericType.Int64: result := Int16(operand1) + Int64(operand2);
+						TNumericType.UInt8: result := Int16(operand1) + UInt8(operand2);
+						TNumericType.UInt16:result := Int16(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := Int16(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := Int16(operand1) + UInt64(operand2);
+						TNumericType.Single: result := Int16(operand1) + Single(operand2);
+						TNumericType.Double: result := Int16(operand1) + Double(operand2);
+					end;
+				end;
+
+				if operand1.kind = TNumericType.Int32 then
+				begin
+					case operand2.kind of
+						TNumericType.Int8: result  := Int32(operand1) + Int8(operand2);
+						TNumericType.Int16: result := Int32(operand1) + Int16(operand2);
+						TNumericType.Int32: result := Int32(operand1) + Int32(operand2);
+						TNumericType.Int64: result := Int32(operand1) + Int64(operand2);
+						TNumericType.UInt8: result := Int32(operand1) + UInt8(operand2);
+						TNumericType.UInt16:result := Int32(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := Int32(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := Int32(operand1) + UInt64(operand2);
+						TNumericType.Single: result := Int32(operand1) + Single(operand2);
+						TNumericType.Double: result := Int32(operand1) + Double(operand2);
+					end;
+				end;
+
+				if operand1.kind = TNumericType.Int64 then
+				begin
+					case operand2.kind of
+						TNumericType.Int8: result  := Int64(operand1) + Int8(operand2);
+						TNumericType.Int16: result := Int64(operand1) + Int16(operand2);
+						TNumericType.Int32: result := Int64(operand1) + Int32(operand2);
+						TNumericType.Int64: result := Int64(operand1) + Int64(operand2);
+						TNumericType.UInt8: result := Int64(operand1) + UInt8(operand2);
+						TNumericType.UInt16:result := Int64(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := Int64(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := Int64(operand1) + UInt64(operand2);
+						TNumericType.Single: result := Int64(operand1) + Single(operand2);
+						TNumericType.Double: result := Int64(operand1) + Double(operand2);
+					end;
+				end;
+
+				if operand1.kind = TNumericType.UInt8 then
+				begin
+					case operand2.kind of
+						TNumericType.Int8: result  := UInt8(operand1) + Int8(operand2);
+						TNumericType.Int16: result := UInt8(operand1) + Int16(operand2);
+						TNumericType.Int32: result := UInt8(operand1) + Int32(operand2);
+						TNumericType.Int64: result := UInt8(operand1) + Int64(operand2);
+						TNumericType.UInt8: result := UInt8(operand1) + UInt8(operand2);
+						TNumericType.UInt16:result := UInt8(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := UInt8(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := UInt8(operand1) + UInt64(operand2);
+						TNumericType.Single: result := UInt8(operand1) + Single(operand2);
+						TNumericType.Double: result := UInt8(operand1) + Double(operand2);
+					end;
+				end;
+
+				if operand1.kind = TNumericType.UInt16 then
+				begin
+					case operand2.kind of
+						TNumericType.Int8:   result := UInt16(operand1) + Int8(operand2);
+						TNumericType.Int16:  result := UInt16(operand1) + Int16(operand2);
+						TNumericType.Int32:  result := UInt16(operand1) + Int32(operand2);
+						TNumericType.Int64:  result := UInt16(operand1) + Int64(operand2);
+						TNumericType.UInt8:  result := UInt16(operand1) + UInt8(operand2);
+						TNumericType.UInt16: result := UInt16(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := UInt16(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := UInt16(operand1) + UInt64(operand2);
+						TNumericType.Single: result := UInt16(operand1) + Single(operand2);
+						TNumericType.Double: result := UInt16(operand1) + Double(operand2);
+					end;
+				end;
+
+				if operand1.kind = TNumericType.UInt32 then
+				begin
+					case operand2.kind of
+						TNumericType.Int8:   result := UInt32(operand1) + Int8(operand2);
+						TNumericType.Int16:  result := UInt32(operand1) + Int16(operand2);
+						TNumericType.Int32:  result := UInt32(operand1) + Int32(operand2);
+						TNumericType.Int64:  result := UInt32(operand1) + Int64(operand2);
+						TNumericType.UInt8:  result := UInt32(operand1) + UInt8(operand2);
+						TNumericType.UInt16: result := UInt32(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := UInt32(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := UInt32(operand1) + UInt64(operand2);
+						TNumericType.Single: result := UInt32(operand1) + Single(operand2);
+						TNumericType.Double: result := UInt32(operand1) + Double(operand2);
+					end;
+				end;
+
+				if operand1.kind = TNumericType.UInt64 then
+				begin
+					case operand2.kind of
+						TNumericType.Int8:   result := UInt64(operand1) + Int8(operand2);
+						TNumericType.Int16:  result := UInt64(operand1) + Int16(operand2);
+						TNumericType.Int32:  result := UInt64(operand1) + Int32(operand2);
+						TNumericType.Int64:  result := UInt64(operand1) + Int64(operand2);
+						TNumericType.UInt8:  result := UInt64(operand1) + UInt8(operand2);
+						TNumericType.UInt16: result := UInt64(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := UInt64(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := UInt64(operand1) + UInt64(operand2);
+						TNumericType.Single: result := UInt64(operand1) + Single(operand2);
+						TNumericType.Double: result := UInt64(operand1) + Double(operand2);
+					end;
+				end;
+
+				if operand1.kind = TNumericType.Single then
+				begin
+					case operand2.kind of
+						TNumericType.Int8:   result := UInt64(operand1) + Int8(operand2);
+						TNumericType.Int16:  result := UInt64(operand1) + Int16(operand2);
+						TNumericType.Int32:  result := UInt64(operand1) + Int32(operand2);
+						TNumericType.Int64:  result := UInt64(operand1) + Int64(operand2);
+						TNumericType.UInt8:  result := UInt64(operand1) + UInt8(operand2);
+						TNumericType.UInt16: result := UInt64(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := UInt64(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := UInt64(operand1) + UInt64(operand2);
+						TNumericType.Single: result := UInt64(operand1) + Single(operand2);
+						TNumericType.Double: result := UInt64(operand1) + Double(operand2);
+					end;
+				end;
+
+				if operand1.kind = TNumericType.Double then
+				begin
+					case operand2.kind of
+						TNumericType.Int8:   result := Double(operand1) + Int8(operand2);
+						TNumericType.Int16:  result := Double(operand1) + Int16(operand2);
+						TNumericType.Int32:  result := Double(operand1) + Int32(operand2);
+						TNumericType.Int64:  result := Double(operand1) + Int64(operand2);
+						TNumericType.UInt8:  result := Double(operand1) + UInt8(operand2);
+						TNumericType.UInt16: result := Double(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := Double(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := Double(operand1) + UInt64(operand2);
+						TNumericType.Single: result := Double(operand1) + Single(operand2);
+						TNumericType.Double: result := Double(operand1) + Double(operand2);
+					end;
+				end;
+			end;
+
+		end;
 
 		ValueType = public abstract class
 		end;
