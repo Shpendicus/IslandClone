@@ -64,7 +64,7 @@ type
       var hFind  := rtl.FindFirstFileW((FullName + '\*').ToFileName(),@find);
       if hFind = rtl.INVALID_HANDLE_VALUE then exit;
       repeat
-        if FileUtils.isFile(find.dwFileAttributes) then
+        if FileUtils.IsFile(find.dwFileAttributes) then
           result.Add(new File(Path.Combine(FullName,String.FromPChar(@find.cFileName[0]))));
       until (not rtl.FindNextFileW(hFind, @find));
       {$ELSEIF POSIX}
@@ -106,7 +106,7 @@ type
       var hFind  := rtl.FindFirstFileW((FullName + '\*').ToFileName(),@find);
       if hFind = rtl.INVALID_HANDLE_VALUE then exit;
       repeat
-        if FileUtils.isFolder(find.dwFileAttributes) then begin
+        if FileUtils.IsFolder(find.dwFileAttributes) then begin
           var fn := String.FromPChar(@find.cFileName[0]);
           // skip `.` and `..`
           if (fn='.') or (fn='..') then continue;
