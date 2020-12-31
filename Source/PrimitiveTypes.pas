@@ -4,6 +4,7 @@
 		TNumericType = public enum (Int8, Int16, Int32, Int64,
 															 UInt8, UInt32, UInt64, Single, Double) of byte;
 
+		TOperationToken = public enum (&Add, Subtract, Multiply, Divide); //can be expanded ofc with logical operators
 
 		[Union]
 		TNumeric = public record
@@ -19,7 +20,900 @@
 			a8: UInt64;
 			a9: Single;
 			a10: Double;
-			kind: TNumericType;
+			fType: TNumericType;
+
+			method ArithmeticOperation(const operand1, operand2: TNumeric; token: TOperationToken): TNumeric;
+			begin
+				if operand1.fType = TNumericType.Int8 then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + Int8(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int8(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := Int8(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := Int8(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := Int8(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+	 //---------------------------------------------------------------------------------//
+				if operand1.fType = TNumericType.Int16 then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + Int8(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int16(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := Int16(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := Int16(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := Int16(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+
+			//------------------------------------------------------------------------------------------//
+				if operand1.fType = TNumericType.Int32 then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + Int8(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int32(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := Int32(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := Int32(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := Int32(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+
+			 //------------------------------------------------------------------------------------------//
+				if operand1.fType = TNumericType.Int64 then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + Int8(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := Int64(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := Int64(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := Int64(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := Int64(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+
+			 //------------------------------------------------------------------------------------------//
+				if operand1.fType = TNumericType.UInt8 then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + Int8(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt8(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := UInt8(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := UInt8(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := UInt8(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+
+
+				if operand1.fType = TNumericType.UInt16 then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:   result := UInt16(operand1) + Int8(operand2);
+						TNumericType.Int16:  result := UInt16(operand1) + Int16(operand2);
+						TNumericType.Int32:  result := UInt16(operand1) + Int32(operand2);
+						TNumericType.Int64:  result := UInt16(operand1) + Int64(operand2);
+						TNumericType.UInt8:  result := UInt16(operand1) + UInt8(operand2);
+						TNumericType.UInt16: result := UInt16(operand1) + UInt16(operand2);
+						TNumericType.UInt32: result := UInt16(operand1) + UInt32(operand2);
+						TNumericType.UInt64: result := UInt16(operand1) + UInt64(operand2);
+						TNumericType.Single: result := UInt16(operand1) + Single(operand2);
+						TNumericType.Double: result := UInt16(operand1) + Double(operand2);
+					end;
+				end;
+
+				//------------------------------------------------------------------------------------------//
+				if operand1.fType = TNumericType.UInt32 then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + Int8(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt32(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := UInt32(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := UInt32(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := UInt32(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+
+			 //------------------------------------------------------------------------------------------//
+				if operand1.fType = TNumericType.UInt64 then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + Int8(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := UInt64(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := UInt64(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := UInt64(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := UInt64(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+
+
+				//------------------------------------------------------------------------------------------//
+				if operand1.fType = TNumericType.Single then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + Int8(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+
+				//------------------------------------------------------------------------------------------//
+				if operand1.fType = TNumericType.Double then
+				begin
+					case operand2.fType of
+						TNumericType.Int8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + Int8(operand2));
+								TOperationToken.Subtract: result := Double(operand1) - Int8(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * Int8(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / Int8(operand2);
+							end;
+						end;
+						TNumericType.Int16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + Int16(operand2);
+								TOperationToken.Subtract: result := Double(operand1) - Int16(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * Int16(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / Int16(operand2);
+							end;
+						end;
+						TNumericType.Int32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + Int32(operand2);
+								TOperationToken.Subtract: result := Double(operand1) - Int32(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * Int32(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / Int32(operand2);
+							end;
+						end;
+						TNumericType.Int64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + Int64(operand2);
+								TOperationToken.Subtract: result := Double(operand1) - Int64(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * Int64(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / Int64(operand2);
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: result := Double(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / UInt8(operand2);
+							end;
+						end;
+						TNumericType.UInt16:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: result := Double(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / UInt16(operand2);
+							end;
+						end;
+						TNumericType.UInt32:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: result := Double(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / UInt32(operand2);
+							end;
+						end;
+						TNumericType.UInt64:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: result := Double(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / UInt64(operand2);
+							end;
+						end;
+						TNumericType.Single:
+						begin
+							case token of
+								TOperationToken.Add:      result := Double(operand1) + Single(operand2);
+								TOperationToken.Subtract: result := Double(operand1) - Single(operand2);
+								TOperationToken.Multiply: result := Double(operand1) * Single(operand2);
+								TOperationToken.Divide:   result := Double(operand1) / Single(operand2);
+							end;
+						end;
+						TNumericType.Double:
+						begin
+							case token of
+								TOperationToken.Add:      result := Single(operand1) + Double(operand2);
+								TOperationToken.Subtract: result := Single(operand1) - Double(operand2);
+								TOperationToken.Multiply: result := Single(operand1) * Double(operand2);
+								TOperationToken.Divide:   result := Single(operand1) / Double(operand2);
+							end;
+						end;
+					end;
+				end;
+			end;
+
 		public
 			{IMPLICIT CONVERSION FROM:  BaseType to TNumeric}
 			 //var myNumber : TNumber := 100;
@@ -28,7 +922,7 @@
 
 				var nr : TNumeric;
 				nr.a1 := operand;
-				nr.kind := TNumericType.Int8;
+				nr.fType := TNumericType.Int8;
 				exit nr;
 			end;
 
@@ -37,7 +931,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a2 := operand;
-				nr.kind := TNumericType.Int16;
+				nr.fType := TNumericType.Int16;
 				exit nr;
 			end;
 
@@ -46,7 +940,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a3 := operand;
-				nr.kind := TNumericType.Int32;
+				nr.fType := TNumericType.Int32;
 				exit nr;
 			end;
 
@@ -55,7 +949,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a4 := operand;
-				nr.kind := TNumericType.Int64;
+				nr.fType := TNumericType.Int64;
 				exit nr;
 			end;
 
@@ -64,7 +958,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a5 := operand;
-				nr.kind := TNumericType.UInt8;
+				nr.fType := TNumericType.UInt8;
 				exit nr;
 			end;
 
@@ -73,7 +967,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a6 := operand;
-				nr.kind := TNumericType.UInt16;
+				nr.fType := TNumericType.UInt16;
 				exit nr;
 			end;
 
@@ -82,7 +976,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a7 := operand;
-				nr.kind := TNumericType.UInt32;
+				nr.fType := TNumericType.UInt32;
 				exit nr;
 			end;
 
@@ -91,7 +985,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a8 := operand;
-				nr.kind := TNumericType.UInt64;
+				nr.fType := TNumericType.UInt64;
 				exit nr;
 			end;
 
@@ -100,7 +994,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a9 := operand;
-				nr.kind := TNumericType.Single;
+				nr.fType := TNumericType.Single;
 				exit nr;
 			end;
 
@@ -109,7 +1003,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a10 := operand;
-				nr.kind := TNumericType.Double;
+				nr.fType := TNumericType.Double;
 				exit nr;
 			end;
 
@@ -119,7 +1013,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a1 := operand;
-				nr.kind := TNumericType.Int8;
+				nr.fType := TNumericType.Int8;
 				exit nr;
 			end;
 
@@ -129,7 +1023,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a2 := operand;
-				nr.kind := TNumericType.Int16;
+				nr.fType := TNumericType.Int16;
 				exit nr;
 			end;
 
@@ -138,7 +1032,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a3 := operand;
-				nr.kind := TNumericType.Int32;
+				nr.fType := TNumericType.Int32;
 				exit nr;
 			end;
 
@@ -147,7 +1041,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a4 := operand;
-				nr.kind := TNumericType.Int64;
+				nr.fType := TNumericType.Int64;
 				exit nr;
 			end;
 
@@ -156,7 +1050,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a5 := operand;
-				nr.kind := TNumericType.UInt8;
+				nr.fType := TNumericType.UInt8;
 				exit nr;
 			end;
 
@@ -165,7 +1059,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a6 := operand;
-				nr.kind := TNumericType.UInt16;
+				nr.fType := TNumericType.UInt16;
 				exit nr;
 			end;
 
@@ -174,7 +1068,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a7 := operand;
-				nr.kind := TNumericType.UInt32;
+				nr.fType := TNumericType.UInt32;
 				exit nr;
 			end;
 
@@ -183,7 +1077,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a8 := operand;
-				nr.kind := TNumericType.UInt64;
+				nr.fType := TNumericType.UInt64;
 				exit nr;
 			end;
 
@@ -192,7 +1086,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a9 := operand;
-				nr.kind := TNumericType.Single;
+				nr.fType := TNumericType.Single;
 				exit nr;
 			end;
 
@@ -201,7 +1095,7 @@
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
 				nr.a10 := operand;
-				nr.kind := TNumericType.Double;
+				nr.fType := TNumericType.Double;
 				exit nr;
 			end;
 
@@ -255,176 +1149,6 @@
 			begin
 				exit operand.a10;
 			end;
-
-			//OPERATOR - SECTION
-			operator &Add(const operand1, operand2: TNumeric): TNumeric;
-			begin
-				//goal: var op1: TNumeric := 1000.0;          //is Double
-				//      var op2: TNumeric := 100;        //is byte
-				//var res := op1(i.e = Double) + op2 (i.e = integer); => 2000! (this case = Double);
-				if operand1.kind = TNumericType.Int8 then
-				begin
-					var tmp : Int64;
-					case operand2.kind of
-						TNumericType.Int8:  result := Int8(operand1) + Int8(operand2);
-						TNumericType.Int16: result := Int8(operand1) + Int16(operand2);
-						TNumericType.Int32: result := Int8(operand1) + Int32(operand2);
-						TNumericType.Int64: result := Int8(operand1) + Int64(operand2);
-						TNumericType.UInt8: result := Int8(operand1) + UInt8(operand2);
-						TNumericType.UInt16:result := Int8(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := Int8(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := Int8(operand1) + UInt64(operand2);
-						TNumericType.Single: result := Int8(operand1) + Single(operand2);
-						TNumericType.Double: result := Int8(operand1) + Double(operand2);
-					end;
-					result := TNumeric(tmp);
-				end;
-
-				if operand1.kind = TNumericType.Int16 then
-				begin
-					case operand2.kind of
-						TNumericType.Int8: result  := Int16(operand1) + Int8(operand2);
-						TNumericType.Int16: result := Int16(operand1) + Int16(operand2);
-						TNumericType.Int32: result := Int16(operand1) + Int32(operand2);
-						TNumericType.Int64: result := Int16(operand1) + Int64(operand2);
-						TNumericType.UInt8: result := Int16(operand1) + UInt8(operand2);
-						TNumericType.UInt16:result := Int16(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := Int16(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := Int16(operand1) + UInt64(operand2);
-						TNumericType.Single: result := Int16(operand1) + Single(operand2);
-						TNumericType.Double: result := Int16(operand1) + Double(operand2);
-					end;
-				end;
-
-				if operand1.kind = TNumericType.Int32 then
-				begin
-					case operand2.kind of
-						TNumericType.Int8: result  := Int32(operand1) + Int8(operand2);
-						TNumericType.Int16: result := Int32(operand1) + Int16(operand2);
-						TNumericType.Int32: result := Int32(operand1) + Int32(operand2);
-						TNumericType.Int64: result := Int32(operand1) + Int64(operand2);
-						TNumericType.UInt8: result := Int32(operand1) + UInt8(operand2);
-						TNumericType.UInt16:result := Int32(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := Int32(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := Int32(operand1) + UInt64(operand2);
-						TNumericType.Single: result := Int32(operand1) + Single(operand2);
-						TNumericType.Double: result := Int32(operand1) + Double(operand2);
-					end;
-				end;
-
-				if operand1.kind = TNumericType.Int64 then
-				begin
-					case operand2.kind of
-						TNumericType.Int8: result  := Int64(operand1) + Int8(operand2);
-						TNumericType.Int16: result := Int64(operand1) + Int16(operand2);
-						TNumericType.Int32: result := Int64(operand1) + Int32(operand2);
-						TNumericType.Int64: result := Int64(operand1) + Int64(operand2);
-						TNumericType.UInt8: result := Int64(operand1) + UInt8(operand2);
-						TNumericType.UInt16:result := Int64(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := Int64(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := Int64(operand1) + UInt64(operand2);
-						TNumericType.Single: result := Int64(operand1) + Single(operand2);
-						TNumericType.Double: result := Int64(operand1) + Double(operand2);
-					end;
-				end;
-
-				if operand1.kind = TNumericType.UInt8 then
-				begin
-					case operand2.kind of
-						TNumericType.Int8: result  := UInt8(operand1) + Int8(operand2);
-						TNumericType.Int16: result := UInt8(operand1) + Int16(operand2);
-						TNumericType.Int32: result := UInt8(operand1) + Int32(operand2);
-						TNumericType.Int64: result := UInt8(operand1) + Int64(operand2);
-						TNumericType.UInt8: result := UInt8(operand1) + UInt8(operand2);
-						TNumericType.UInt16:result := UInt8(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := UInt8(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := UInt8(operand1) + UInt64(operand2);
-						TNumericType.Single: result := UInt8(operand1) + Single(operand2);
-						TNumericType.Double: result := UInt8(operand1) + Double(operand2);
-					end;
-				end;
-
-				if operand1.kind = TNumericType.UInt16 then
-				begin
-					case operand2.kind of
-						TNumericType.Int8:   result := UInt16(operand1) + Int8(operand2);
-						TNumericType.Int16:  result := UInt16(operand1) + Int16(operand2);
-						TNumericType.Int32:  result := UInt16(operand1) + Int32(operand2);
-						TNumericType.Int64:  result := UInt16(operand1) + Int64(operand2);
-						TNumericType.UInt8:  result := UInt16(operand1) + UInt8(operand2);
-						TNumericType.UInt16: result := UInt16(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := UInt16(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := UInt16(operand1) + UInt64(operand2);
-						TNumericType.Single: result := UInt16(operand1) + Single(operand2);
-						TNumericType.Double: result := UInt16(operand1) + Double(operand2);
-					end;
-				end;
-
-				if operand1.kind = TNumericType.UInt32 then
-				begin
-					case operand2.kind of
-						TNumericType.Int8:   result := UInt32(operand1) + Int8(operand2);
-						TNumericType.Int16:  result := UInt32(operand1) + Int16(operand2);
-						TNumericType.Int32:  result := UInt32(operand1) + Int32(operand2);
-						TNumericType.Int64:  result := UInt32(operand1) + Int64(operand2);
-						TNumericType.UInt8:  result := UInt32(operand1) + UInt8(operand2);
-						TNumericType.UInt16: result := UInt32(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := UInt32(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := UInt32(operand1) + UInt64(operand2);
-						TNumericType.Single: result := UInt32(operand1) + Single(operand2);
-						TNumericType.Double: result := UInt32(operand1) + Double(operand2);
-					end;
-				end;
-
-				if operand1.kind = TNumericType.UInt64 then
-				begin
-					case operand2.kind of
-						TNumericType.Int8:   result := UInt64(operand1) + Int8(operand2);
-						TNumericType.Int16:  result := UInt64(operand1) + Int16(operand2);
-						TNumericType.Int32:  result := UInt64(operand1) + Int32(operand2);
-						TNumericType.Int64:  result := UInt64(operand1) + Int64(operand2);
-						TNumericType.UInt8:  result := UInt64(operand1) + UInt8(operand2);
-						TNumericType.UInt16: result := UInt64(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := UInt64(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := UInt64(operand1) + UInt64(operand2);
-						TNumericType.Single: result := UInt64(operand1) + Single(operand2);
-						TNumericType.Double: result := UInt64(operand1) + Double(operand2);
-					end;
-				end;
-
-				if operand1.kind = TNumericType.Single then
-				begin
-					case operand2.kind of
-						TNumericType.Int8:   result := UInt64(operand1) + Int8(operand2);
-						TNumericType.Int16:  result := UInt64(operand1) + Int16(operand2);
-						TNumericType.Int32:  result := UInt64(operand1) + Int32(operand2);
-						TNumericType.Int64:  result := UInt64(operand1) + Int64(operand2);
-						TNumericType.UInt8:  result := UInt64(operand1) + UInt8(operand2);
-						TNumericType.UInt16: result := UInt64(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := UInt64(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := UInt64(operand1) + UInt64(operand2);
-						TNumericType.Single: result := UInt64(operand1) + Single(operand2);
-						TNumericType.Double: result := UInt64(operand1) + Double(operand2);
-					end;
-				end;
-
-				if operand1.kind = TNumericType.Double then
-				begin
-					case operand2.kind of
-						TNumericType.Int8:   result := Double(operand1) + Int8(operand2);
-						TNumericType.Int16:  result := Double(operand1) + Int16(operand2);
-						TNumericType.Int32:  result := Double(operand1) + Int32(operand2);
-						TNumericType.Int64:  result := Double(operand1) + Int64(operand2);
-						TNumericType.UInt8:  result := Double(operand1) + UInt8(operand2);
-						TNumericType.UInt16: result := Double(operand1) + UInt16(operand2);
-						TNumericType.UInt32: result := Double(operand1) + UInt32(operand2);
-						TNumericType.UInt64: result := Double(operand1) + UInt64(operand2);
-						TNumericType.Single: result := Double(operand1) + Single(operand2);
-						TNumericType.Double: result := Double(operand1) + Double(operand2);
-					end;
-				end;
-			end;
-
 		end;
 
 		ValueType = public abstract class
