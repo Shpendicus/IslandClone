@@ -13,18 +13,33 @@ type
     func: atexitfunc;
     next: ^atexitrec;
   end;
+
   UserEntryPointType =public method (args: array of String): Integer;
-  dliteratecb = function (info :^__struct_dl_phdr_info; size: size_t; data: ^Void): Integer;
-  {$IFDEF ARM}rtl.__struct__Unwind_Exception = rtl.__struct__Unwind_Control_Block;{$ENDIF}
+  {$IFNDEF DARWIN}
+  dliteratecb = public function (info :^__struct_dl_phdr_info; size: size_t; data: ^Void): Integer;
+  {$ENDIF}
+
+  {$IFDEF ARM and not ARM64 and not DARWIN}
+  rtl.__struct__Unwind_Exception = rtl.__struct__Unwind_Control_Block;
+  {$ELSEIF not exists('rtl.__struct__Unwind_Exception')}
+  rtl.__struct__Unwind_Exception = rtl._Unwind_Exception;
+  {$ENDIF}
+
   ExternalCalls = public static class
   private
+    [ThreadLocal]
+    HandlerSwitch: Integer; assembly;
+    [ThreadLocal]
+    Target: IntPtr; assembly;
+
     class var atexitlist: ^atexitrec;
+
     {$IFDEF ANDROID}
-//[SymbolName('__executable_start')]
-//var __executable_start: ^Void; external;
+    //[SymbolName('__executable_start')]
+    //var __executable_start: ^Void; external;
     [SymbolName("dl_iterate_phdr"), &Weak]
-    method dl_iterate_phdr(info: dliteratecb; data: ^Void): Integer;  
-    begin 
+    method dl_iterate_phdr(info: dliteratecb; data: ^Void): Integer; public;
+    begin
       exit; (*
       var ehdr := @__executable_start;
       if ^Byte(ehdr)[0] <> $7f then exit;
@@ -38,11 +53,11 @@ type
       ^IntPtr(@exe_info.dlpi_phdr)^ := (IntPtr(ehdr) + {$IFDEF CPU64}^Elf64_Ehdr(ehdr)^.e_phoff{$ELSE} ^Elf32_Ehdr(ehdr)^.e_phoff{$ENDIF});
       exe_info.dlpi_phnum := {$IFDEF CPU64}^Elf64_Ehdr(ehdr)^.e_phnum{$ELSE} ^Elf32_Ehdr(ehdr)^.e_phnum{$ENDIF};
       result := info(@exe_info, sizeof(exe_info), data);
-      if result <> 0 then 
+      if result <> 0 then
         exit;
       {$IFNDEF ARM}
       var ehdr_vdso := getauxval(AT_SYSINFO_EHDR);
-      if ehdr_vdso = 0 then begin 
+      if ehdr_vdso = 0 then begin
         exit;
       end;
       var vdso_info: __struct_dl_phdr_info;
@@ -61,21 +76,22 @@ type
       {$ENDIF}*)
     end;
     {$ENDIF}
+
   public
 
-    
-    {$IFDEF ARM}
-    [SymbolName('_elements_posix_exception_handler')] // 32bits windows only!!
-    {$ENDIF}
+    {$IFDEF ARM and not arm64 and not DARWIN}
+    [SymbolName('_elements_posix_exception_handler')]
+    method ExceptionHandler(aState: rtl._Unwind_Action; aECB: ^rtl.__struct__Unwind_Control_Block; aCtx: ^Void): rtl._Unwind_Reason_Code;
+    {$ELSE}
+    [SymbolName('_elements_posix_exception_handler')]
     method ExceptionHandler(aVersion: Integer; aState: rtl._Unwind_Action; aClass: UInt64; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void): rtl._Unwind_Reason_Code;
-    {$IFNDEF ARM}
-    [SymbolName('_elements_posix_exception_handler')] // 32bits windows only!!
     {$ENDIF}
-    method ExceptionHandler(aState: rtl._Unwind_Action; aClass: UInt64; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void): rtl._Unwind_Reason_Code;
+
     [SymbolName('ElementsRaiseException')]
     method RaiseException(aRaiseAddress: ^Void; aRaiseFrame: ^Void; aRaiseObject: Object);
 
     const ElementsExceptionCode: UInt64 = $E042881952454d4f;
+    const CocoaExceptionCode: UInt64 = $434C4E47432B2B00;
 
     //{$IFNDEF xANDROID}
     [SymbolName('atexit')]
@@ -95,18 +111,102 @@ type
     //[SymbolName('__elements_entry_point'), &Weak]
     //method UserEntryPoint(args: array of String): Integer; external;
 
-    {$IF NOT EMSCRIPTEN AND NOT ANDROID}
-    [SymbolName('_start'), Naked]
-    method _start;
+    {$IFDEF ARM and not arm64 and not DARWIN}
+    [Used, SymbolName('_GLOBAL_OFFSET_TABLE_')]
+    class var _GLOBAL_OFFSET_TABLE_: Integer; private; external;
+    {$ENDIF}
+
+    {$IF NOT EMSCRIPTEN AND NOT ANDROID and not DARWIN}
+    [SymbolName('_start'), InlineAsm(
+    {$IFDEF ARM64}"
+       mov  x29, #0x0
+       mov  x30, #0x0
+       mov  x5, x0
+       ldr  x1, [sp]
+      add  x2, sp, #0x8
+      mov  x6, sp
+      adrp  x0, __elements_entry_point_helper
+      add x0, x0, :lo12:__elements_entry_point_helper
+      adrp  x3, __elements_init
+      add x3, x3, :lo12:__elements_init
+      adrp  x4, __elements_fini
+      add x4, x4, :lo12:__elements_fini
+      bl  __libc_start_main
+
+      "
+    {$ELSEIF ARM}
+        "
+      // r0 contains the rtld fini
+      // sp contains: argc, argc (data), null, envp (data), null (rev order)
+        mov     fp, #0
+        mov     lr, #0
+
+        pop     {r1}    // argc
+        mov     r2, sp
+        mov     r11, r0
+        ldr     r4, .l4
+    .l4a: // we use GOT/PCREL to accomodate dylib compiling.
+        add     r4, pc, r4
+        ldr     r0, .l1
+        ldr     r0, [r0, r4]
+        ldr     r3, .l2
+        ldr     r3, [r3, r4]
+        ldr     r12, .l3
+        ldr     r12, [r12, r4]
+
+        push    {r2}
+        push    {r11}
+        push    {r12}
+      // main: r0
+      // argc: r1
+      // argc: r2
+      // fini: r3
+      // stacktop: stackfini,
+      /* __libc_start_main (main, argc, argv, init, fini, rtld_fini, stack_end) */
+        bl     __libc_start_main
+        bl abort
+    .l1:
+        .long __elements_entry_point_helper(GOT)
+    .l2:
+        .long __elements_init(GOT)
+    .l3:
+        .long __elements_fini(GOT)
+    .l4:
+        .long   _GLOBAL_OFFSET_TABLE_-(.l4a+8)
+
+      "
+    {$ELSE}
+        "xor %ebp, %ebp
+        movq %rdx, %r9
+        popq %rsi
+        movq %rsp, %rdx
+        and $$0xfffffffffffffff0, %rsp
+        pushq %rax
+        pushq %rsp
+        movq __elements_fini@GOTPCREL(%rip), %r8
+        movq __elements_init@GOTPCREL(%rip), %rcx
+        movq __elements_entry_point_helper@GOTPCREL(%rip), %rdi
+        callq  __libc_start_main@PLT
+        hlt
+      "
+    {$ENDIF}, '', false, false
+    )]
+    method _start; external;
     [SymbolName('__libc_start_main', 'libc.so.6'), &weak]
     method libc_main(main: LibCEntryHelper; argc: Integer; argv: ^^Char; aInit: LibCEntryHelper; aFini: LibCFinalizerHelper); external;
     {$ENDIF}
+
+    {$IFDEF DARWIN}
+    [SymbolName('main')]
+    method main(argc: Integer; argv: ^^AnsiChar; env: ^^AnsiChar): Integer;
+    {$ENDIF}
+
     [SymbolName('__elements_init'), Used]
     method init(_nargs: Integer; _args: ^^AnsiChar; _envp: ^^AnsiChar): Integer;
-    [SymbolName('__elements_fini'), Used]
+    [SymbolName('__elements_fini'), Used, GlobalDestructor(0)]
     method fini;
 
-    method Parselsda(aAction: rtl._Unwind_Action; aNative: Boolean; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void;
+    method Parselsda(aAction: rtl._Unwind_Action; aNative, aObjc: Boolean; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void;
       out aTypeIndex: rtl.int64_t; out aLandingPadPointer: rtl.uintptr_t): Boolean;
     method DwarfEHReadPointer(var aData: ^Byte; aEncoding: DwarfEHEncodingType): rtl.uintptr_t;
     method DwarfEHReadPointer(var aData: ^Byte): rtl.uintptr_t;
@@ -116,83 +216,189 @@ type
     class var nargs: Integer;
     class var args: ^^AnsiChar;
     class var envp: ^^AnsiChar;
-    class var
-      [SymbolName('__init_array_start')]
-      __init_array_start: Integer; external;
-      [SymbolName('__init_array_end')]
-      __init_array_end: Integer; external;
+    {$IFNDEF DARWIN}
+    [SymbolName('__init_array_start')] class var __init_array_start: Integer; external;
+    [SymbolName('__init_array_end')] class var __init_array_end: Integer; external;
+    {$ENDIF}
 
-{$IFNDEF ANDROID}
+{$IF NOT ANDROID AND NOT DARWIN}
+
     [SymbolName('stat64')]
     class method stat64(file: ^AnsiChar; var buf: rtl.__struct_stat64): Integer;
-    begin 
+    begin
       exit rtl.__xstat64(0, file, var buf);
     end;
     [SymbolName('fstat64')]
     class method fstat64(fd: Integer; var buf: rtl.__struct_stat64): Integer;
-    begin 
+    begin
       exit rtl.__fxstat64(0, fd, var buf);
     end;
     [SymbolName('lstat64')]
     class method lstat64(file: ^AnsiChar; var buf: rtl.__struct_stat64): Integer;
-    begin 
+    begin
       exit rtl.__lxstat64(0, file, var buf);
     end;
 
 {$ELSE}
 
-
-
+    {$IF NOT ANDROID}
     [SymbolName("__atomic_store_4")]
     class method __atomic_store_4(var mem: Int32; val: Int32);
     begin
       InternalCalls.VolatileWrite(var mem, val);
     end;
+    {$ENDIF}
 
-   [SymbolName("__atomic_fetch_add_4")]
-   class method __atomic_fetch_add_4(var mem: Int32; val: Int32): Int32;
-   begin
-     exit InternalCalls.Add(var mem, val);
-   end;
+    [SymbolName("__atomic_fetch_add_4")]
+    class method __atomic_fetch_add_4(var mem: Int32; val: Int32): Int32;
+    begin
+      exit InternalCalls.Add(var mem, val);
+    end;
 
- 
-   [SymbolName("__atomic_compare_exchange_4")]
-   class method __atomic_compare_exchange_4(var mem: Int32; exp: Int32; val: Int32): Int32;
-   begin
-     exit InternalCalls.CompareExchange(var mem, val, exp);
-   end;
+    [SymbolName("__atomic_compare_exchange_4")]
+    class method __atomic_compare_exchange_4(var mem: Int32; exp: Int32; val: Int32): Int32;
+    begin
+      exit InternalCalls.CompareExchange(var mem, val, exp);
+    end;
 
-    
     [SymbolName("__atomic_store_8")]
     class method __atomic_store_8(var mem: Int64; val: Int64);
     begin
       InternalCalls.VolatileWrite(var mem, val);
     end;
 
-   [SymbolName("__atomic_fetch_add_8")]
-   class method __atomic_fetch_add_8(var mem: Int64; val: Int64): Int64;
-   begin
-     exit InternalCalls.Add(var mem, val);
-   end;
+    [SymbolName("__atomic_fetch_add_8")]
+    class method __atomic_fetch_add_8(var mem: Int64; val: Int64): Int64;
+    begin
+      exit InternalCalls.Add(var mem, val);
+    end;
 
- 
-   [SymbolName("__atomic_compare_exchange_8")]
-   class method __atomic_compare_exchange_8(var mem: Int64; exp: Int64; val: Int64): Int64;
-   begin
-    exit InternalCalls.CompareExchange(var mem, val, exp);
-   end;
+    [SymbolName("__atomic_compare_exchange_8")]
+    class method __atomic_compare_exchange_8(var mem: Int64; exp: Int64; val: Int64): Int64;
+    begin
+      exit InternalCalls.CompareExchange(var mem, val, exp);
+    end;
 
+    {$IFDEF LINUX AND NOT ANDROID}
+    [SymbolNameAttribute('mknod')]
+    class method mknod(path: ^AnsiChar; mode: mode_t; dev: dev_t): Integer;
+    begin
+      exit __xmknod (0, path, mode, @dev);
+    end;
+    {$ENDIF}
+
+    {$IFDEF DARWIN}
+    [SymbolName('bzero')]
+    class method bzero(p: ^Void; s: size_t); public;
+    begin
+      while s ≥ 8 do begin
+        ^Int64(p)^ := 0;
+        p := ^Void(^Byte(p) + 8);
+        dec(s, 8);
+      end;
+      if s ≥ 4 then begin
+        ^Int32(p)^ := 0;
+        p := ^Void(^Byte(p) + 4);
+        dec(s, 4);
+      end;
+      if s ≥ 2 then begin
+        ^Int16(p)^ := 0;
+        p := ^Void(^Byte(p) + 2);
+        dec(s, 2);
+      end;
+      if s ≥ 1 then begin
+        ^Byte(p)^ := 0;
+      end;
+    end;
+
+    [SymbolName('__bzero')]
+    class method __bzero(p: ^Void; s: size_t); public;
+    begin
+      while s ≥ 8 do begin
+        ^Int64(p)^ := 0;
+        p := ^Void(^Byte(p) + 8);
+        dec(s, 8);
+      end;
+      if s ≥ 4 then begin
+        ^Int32(p)^ := 0;
+        p := ^Void(^Byte(p) + 4);
+        dec(s, 4);
+      end;
+      if s ≥ 2 then begin
+        ^Int16(p)^ := 0;
+        p := ^Void(^Byte(p) + 2);
+        dec(s, 2);
+      end;
+      if s ≥ 1 then begin
+        ^Byte(p)^ := 0;
+      end;
+    end;
+    {$ENDIF}
+
+    {$IFDEF DARWIN}
     [SymbolName('__stack_chk_fail')]
-    method __stack_chk_fail(); external;
+    class method __stack_chk_fail();
+    begin
+    end;
+    {$ELSE}
+    [SymbolName('__stack_chk_fail')]
+    class method __stack_chk_fail(); external;
+    {$ENDIF}
+
     {$IFNDEF i386}
     [SymbolName('__stack_chk_fail_local')]
-    method __stack_chk_fail_local(); 
-    begin 
+    class method __stack_chk_fail_local();
+    begin
       __stack_chk_fail();
     end;
     {$ENDIF}
-  {$ENDIF}
+
+{$ENDIF}
+
+    {$IFDEF DARWIN}
+    [SymbolNameAttribute('memset_pattern4')]
+    class method memset_pattern4(ptr: ^Int32; pattern: ^Int32; len: Integer);
+    begin
+      var p := pattern^;
+      for i: Integer := 0 to (len div 4) -1 do
+        ptr[i] := p;
+      memcpy(@ptr[len div 4], pattern, len mod 4);
+    end;
+
+    [SymbolNameAttribute('memset_pattern8')]
+    class method memset_pattern8(ptr: ^Int64; pattern: ^Int64; len: Integer);
+    begin
+      var p := pattern^;
+      for i: Integer := 0 to (len div 8) -1 do
+        ptr[i] := p;
+      memcpy(@ptr[len div 4], pattern, len mod 8);
+    end;
+
+    [SymbolNameAttribute('memset_pattern16')]
+    class method memset_pattern16(ptr: ^Int64Pair; pattern: ^Int64Pair; len: Integer);
+    begin
+      var p := pattern^;
+      for i: Integer := 0 to (len div 16) -1 do
+        ptr[i] := p;
+      memcpy(@ptr[len div 4], pattern, len mod 16);
+    end;
+
+    [SymbolNameAttribute('__memmove_chk')]
+    class method __memmove_chk(dest: ^Void; src: ^Void; len: size_t; destlength: size_t): ^Void;
+    begin
+      exit memmove(dest, src, len);
+    end;
+
+    [SymbolNameAttribute('__memset_chk')]
+    class method __memset_chk (dest: ^Void; c: Integer; n, dest_len: size_t ): ^Void;
+    begin
+      exit memset(dest, c, n);
+    end;
+    {$ENDIF}
+
   end;
+
+  Int64Pair = public packed record public a,b: Int64; end;
 
   DwarfEHEncodingType = public enum (
     DW_EH_PE_absptr = $00,
@@ -218,37 +424,74 @@ type
 
   ElementsException = public record
   public
-    handlerSwitchValue: Integer;
-    landingPad: rtl.uintptr_t;
-
     Unwind: rtl.__struct__Unwind_Exception;
     Object: Object;
+  end;
+
+  CocoaExceptionRecord = public record
+  public
+    Unwind: rtl.__struct__Unwind_Exception;
+    Object: IntPtr;
+  end;
+
+  CXXException = public record
+  public
+    exceptionType,
+    dtor,
+    unexpected,
+    terminated,
+    nextexception: IntPtr;
+    hc: Integer;
+    sw: Integer;
+    ar, spd: IntPtr;
+    catchTemp: IntPtr;
+    adjustedPtr: IntPtr;
+
+    Unwind: rtl.__struct__Unwind_Exception;
+    Object: IntPtr;
   end;
 
 method CheckForLastError(aMessage: String := '');
 method CheckForIOError(value: Integer);
 
 method malloc(size: NativeInt): ^Void; inline;
-begin 
+begin
   exit rtl.malloc(size);
 end;
- 
+
 method realloc(ptr: ^Void; size: NativeInt): ^Void;inline;
-begin 
+begin
   exit rtl.realloc(ptr, size);
 end;
 
 method free(v: ^Void);inline;
-begin 
+begin
    rtl.Free(v);
 end;
 
+{$IFDEF DARWIN}
+[SymbolName('__stack_chk_guard')]
+var __stack_chk_guard: ^Void := ^Void($DEADBEEF);  public;
+[SymbolNameAttribute('__sprintf_chk')]
+method __sprintf_chk; public; begin end;
+[SymbolNameAttribute('__snprintf_chk')]
+method _snprintf_chk; public; begin end;
+[SymbolNameAttribute('__vsnprintf_chk')]
+method __vsnprintf_chk; public; begin end;
+{$ENDIF}
 
-method DefaultUserEntryPoint(aArgs: array of String): Integer; empty;
-  
-var
-[Alias, SymbolName('__elements_entry_point'), &Weak]
-UserEntryPoint: UserEntryPointType := @DefaultUserEntryPoint;
+[SymbolName("__builtin_inf")]
+method builtin_inf: Double; public; begin exit RemObjects.Elements.System.__builtin_inf; end;
+[SymbolName("__builtin_inff")]
+method builtin_inff: Single; public; begin exit RemObjects.Elements.System.__builtin_inff; end;
+[SymbolName("__builtin_fabs")]
+method builtin_fabs(d: Double): Double; public; begin exit RemObjects.Elements.System.__builtin_fabs(d); end;
+[SymbolName("__builtin_fabsf")]
+method builtin_fabsf(d: Single): Single; public; begin exit RemObjects.Elements.System.__builtin_fabsf(d); end;
+
+
+[SymbolName('__elements_entry_point')]
+method UserEntryPoint(aArgs: array of String): Integer; external;
 
 [SymbolName({$IF EMSCRIPTEN OR ANDROID}'_start'{$ELSE}'__elements_entry_point_helper'{$ENDIF}), Used]
 method Entrypoint(argc: Integer; argv: ^^AnsiChar; _envp: ^^AnsiChar): Integer;
@@ -292,93 +535,6 @@ begin
   exit InternalCalls.Cast(^ElementsException(val)^.Object);
 end;
 
-method ExternalCalls.ExceptionHandler(aState: rtl._Unwind_Action; aClass: UInt64; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void): rtl._Unwind_Reason_Code;
-begin 
-  exit ExceptionHandler(1, aState, aClass, aEx, aCtx);
-end;
-
-method ExternalCalls.ExceptionHandler(aVersion: Integer; aState: rtl._Unwind_Action; aClass: UInt64; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void): rtl._Unwind_Reason_Code;
-begin
-  if (aVersion <> 1) or (aEx = nil) or (aCtx = nil) then exit {$IFNDEF ARM}rtl._Unwind_Reason_Code._URC_FATAL_PHASE1_ERROR{$ELSE}rtl._Unwind_Reason_Code._URC_FAILURE{$ENDIF};
-  var lMine := aClass = ElementsExceptionCode;
-  {$IFDEF ARM}
-  if (aState  and rtl._Unwind_State._US_ACTION_MASK) <> rtl._Unwind_State._US_UNWIND_FRAME_STARTING then begin
-     if rtl.__gnu_unwind_frame (aEx, aCtx) <> rtl._Unwind_Reason_Code._URC_OK  then
-      exit rtl._Unwind_Reason_Code._URC_FAILURE;
-    exit rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND;
-  end;
-  rtl._Unwind_SetGR (aCtx, UNWIND_POINTER_REG, rtl._Unwind_Word(aEx));
-  {$ENDIF}
-  var lTypeInfo: rtl.int64_t;
-  var lLandingPad: rtl.uintptr_t;
-  if 0 <> (aState and {$IFDEF EMSCRIPTEN OR x86_64}rtl._Unwind_Action._UA_SEARCH_PHASE{$ELSE}rtl._UA_SEARCH_PHASE{$ENDIF})  then begin
-    if Parselsda(aState, lMine, aEx, aCtx, out lTypeInfo, out lLandingPad) then begin
-      if lMine then begin
-        var lRecord := ^ElementsException(aEx);
-        lRecord := ^ElementsException(@^Byte(lRecord)[-Int32((^Byte(@lRecord^.Unwind) - ^Byte(lRecord)))]);
-
-        lRecord^.handlerSwitchValue := lTypeInfo;
-        lRecord^.landingPad := lLandingPad;
-      end;
-      exit rtl._Unwind_Reason_Code._URC_HANDLER_FOUND;
-    end;
-    {$IFDEF ARM}
-     if rtl.__gnu_unwind_frame (aEx, aCtx) <> rtl._Unwind_Reason_Code._URC_OK  then
-      exit rtl._Unwind_Reason_Code._URC_FAILURE;
-    {$ENDIF}
-    exit rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND;
-  end;
-
-  if 0 <> (aState and {$IFDEF EMSCRIPTEN  OR x86_64}rtl._Unwind_Action._UA_CLEANUP_PHASE{$ELSE}rtl._UA_CLEANUP_PHASE{$ENDIF}) then begin
-    // This is either unwinding OR catching
-    if (0 = (aState and {$IFDEF EMSCRIPTEN OR x86_64}rtl._Unwind_Action._UA_HANDLER_FRAME{$ELSE}rtl._UA_HANDLER_FRAME{$ENDIF}))  then begin
-      // finally, always parse
-      if Parselsda(aState, lMine, aEx, aCtx, out lTypeInfo, out lLandingPad) then begin
-        rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aEx));
-        rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(lTypeInfo));
-        {$IFDEF ARM}
-        rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
-        {$ELSE}
-        rtl._Unwind_SetIP(aCtx, lLandingPad);
-        {$ENDIF}
-        exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
-      end;
-
-      {$IFDEF ARM}
-       if rtl.__gnu_unwind_frame (aEx, aCtx) <> rtl._Unwind_Reason_Code._URC_OK  then
-        exit rtl._Unwind_Reason_Code._URC_FAILURE;
-      {$ENDIF}
-      exit rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND;
-    end;
-    // exception
-    if not lMine then begin
-      if Parselsda(aState, lMine, aEx, aCtx, out lTypeInfo, out lLandingPad) then begin
-        rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aEx));
-        rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(lTypeInfo));
-        {$IFDEF ARM}
-        rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
-        {$ELSE}
-        rtl._Unwind_SetIP(aCtx, lLandingPad);
-        {$ENDIF}
-        exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
-      end;
-      // we can't parse the LSDA table and the exception isn't ours, touble.
-      exit {$IFNDEF ARM}rtl._Unwind_Reason_Code._URC_FATAL_PHASE1_ERROR{$ELSE}rtl._Unwind_Reason_Code._URC_FAILURE{$ENDIF};
-    end;
-    var lRecord := ^ElementsException(aEx);
-    lRecord := ^ElementsException(@^Byte(lRecord)[-Int32((^Byte(@lRecord^.Unwind) - ^Byte(lRecord)))]);
-    rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aEx));
-    rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(lRecord^.handlerSwitchValue));
-    {$IFDEF ARM}
-    rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
-    {$ELSE}
-    rtl._Unwind_SetIP(aCtx, lRecord^.landingPad);
-    {$ENDIF}
-    free(lRecord);
-    exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
-  end;
-  exit {$IFNDEF ARM}rtl._Unwind_Reason_Code._URC_FATAL_PHASE1_ERROR{$ELSE}rtl._Unwind_Reason_Code._URC_FAILURE{$ENDIF};
-end;
 
 method ExternalCalls.ElementsBeginCatch(obj: ^Void): ^Void;
 begin
@@ -387,7 +543,14 @@ begin
   if ^UInt64(@lRecord^.Unwind.exception_class)^ = ElementsExceptionCode then begin
     exit InternalCalls.Cast(lRecord^.Object);
   end;
-  exit @lRecord^.Object;
+  {$IFDEF DARWIN}
+  if ^UInt64(@lRecord^.Unwind.exception_class)^ = CocoaExceptionCode then begin
+    var lObj := ^Foundation.NSException(@^CocoaExceptionRecord(lRecord)^.Object)^;
+    ^Foundation.NSException(@^CocoaExceptionRecord(lRecord)^.Object)^ := nil;
+    exit InternalCalls.Cast(new IslandWrappedCocoaException(lObj));
+  end;
+  {$ENDIF}
+  exit InternalCalls.Cast(lRecord^.Object);
 end;
 
 method ExternalCalls.ElementsEndCatch;
@@ -400,69 +563,13 @@ begin
   // FAIL
 end;
 
-{$IF NOT EMSCRIPTEN AND NOT ANDROID}
-method ExternalCalls._start;
+{$IFDEF DARWIN}
+method ExternalCalls.main(argc: Integer; argv: ^^AnsiChar; env: ^^AnsiChar): Integer;
 begin
-{$IFDEF ARM}
-  InternalCalls.VoidAsm(
-    "
-  // r0 contains the rtld fini
-  // sp contains: argc, argc (data), null, envp (data), null (rev order)
-    mov     fp, #0
-    mov     lr, #0
-
-    pop     {r1}    // argc
-    mov     r2, sp
-    mov     r11, r0
-    ldr     r4, .l4
-.l4a: // we use GOT/PCREL to accomodate dylib compiling.
-    add     r4, pc, r4
-    ldr     r0, .l1
-    ldr     r0, [r0, r4]
-    ldr     r3, .l2
-    ldr     r3, [r3, r4]
-    ldr     r12, .l3
-    ldr     r12, [r12, r4]
-
-    push    {r2}
-    push    {r11}
-    push    {r12}
-  // main: r0
-  // argc: r1
-  // argc: r2
-  // fini: r3
-  // stacktop: stackfini,
-  /* __libc_start_main (main, argc, argv, init, fini, rtld_fini, stack_end) */
-    bl     __libc_start_main
-    bl abort
-.l1:
-    .long __elements_entry_point_helper(GOT)
-.l2:
-    .long __elements_init(GOT)
-.l3:
-    .long __elements_fini(GOT)
-.l4:
-    .long   _GLOBAL_OFFSET_TABLE_-(.l4a+8)
-    
-  ", "", false, false);
-{$ELSE}
-  InternalCalls.VoidAsm(
-    "xor %ebp, %ebp
-    movq %rdx, %r9
-    popq %rsi
-    movq %rsp, %rdx
-    and $$0xfffffffffffffff0, %rsp
-    pushq %rax
-    pushq %rsp
-    movq __elements_fini@GOTPCREL(%rip), %r8
-    movq __elements_init@GOTPCREL(%rip), %rcx
-    movq __elements_entry_point_helper@GOTPCREL(%rip), %rdi
-    callq  __libc_start_main@PLT
-    hlt
-  ", "", false, false);
-{$ENDIF}
+  exit Entrypoint(argc, argv, env);
 end;
 {$ENDIF}
+
 {$HIDE W27}
 method Entrypoint(argc: Integer; argv: ^^AnsiChar; _envp: ^^AnsiChar): Integer;
 begin
@@ -470,8 +577,11 @@ begin
   ExternalCalls.args := argv;
   ExternalCalls.envp := _envp;
   Utilities.Initialize;
-  exit UserEntryPoint([]);
-  {$IF NOT EMSCRIPTEN AND NOT ANDROID}
+  var lArgs := new String[argc - 1];
+  for i: Integer := 1 to argc - 1 do
+    lArgs[i - 1] := String.FromPAnsiChars(argv[i]);
+  exit UserEntryPoint(lArgs);
+  {$IF NOT EMSCRIPTEN AND NOT ANDROID and not DARWIN}
   {$HIDE H14}
   ExternalCalls.libc_main(nil, 0, nil, nil, nil); // do not remove, this is there to ensure it's linked in.
   {$SHOW H14}
@@ -483,10 +593,12 @@ begin
   ExternalCalls.nargs := _nargs;
   ExternalCalls.args := _args;
   ExternalCalls.envp := _envp;
+  {$IFNDEF DARWIN}
   var n := (@__init_array_end) - (@__init_array_start);
   for i: Integer := 0 to (n) -1 do begin
     ^LibCEntryHelper(@__init_array_start)[i](nargs, args, envp);
   end;
+  {$ENDIF}
   exit 0;
 end;
 {$SHOW W27}
@@ -497,15 +609,21 @@ begin
     atexitlist^.func();
     atexitlist := atexitlist^.next;
   end;
-
+  BoehmGC.UnloadGC;
 end;
 
-method ExternalCalls.Parselsda(aAction: rtl._Unwind_Action; aNative: Boolean; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void;
+method ReadTarget2Value(p: IntPtr): ^Void;
+begin
+  if ^IntPtr(p)^ = 0 then exit nil;
+  exit ^Void(^IntPtr(p + ^IntPtr(p)^)^);
+end;
+
+method ExternalCalls.Parselsda(aAction: rtl._Unwind_Action; aNative, aObjc: Boolean; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void;
       out aTypeIndex: rtl.int64_t; out aLandingPadPointer: rtl.uintptr_t): Boolean;
 begin
   var lLSD := ^Byte(rtl._Unwind_GetLanguageSpecificData(aCtx));
   if lLSD = nil then exit false;
-  {$IFDEF ARM}
+  {$IFDEF ARM and not ARM64}
   var lOffset := Integer ((^Byte(rtl._Unwind_GetGR(aCtx, 15) and not 1) - ^Byte(rtl._Unwind_GetRegionStart(aCtx)))-1 );
   {$ELSE}
   var lOffset := Integer ((^Byte(rtl._Unwind_GetIP(aCtx)) - ^Byte(rtl._Unwind_GetRegionStart(aCtx)))-1 );
@@ -565,7 +683,11 @@ begin
             DwarfEHEncodingType.DW_EH_PE_udata8, DwarfEHEncodingType.DW_EH_PE_sdata8: 8;
             else 1;
           end];
+          {$IFDEF ARM and not arm64 and not DARWIN}
+          var catchType := ReadTarget2Value(IntPtr(lTypeReadOffset));
+          {$ELSE}
           var catchType := ^Void(DwarfEHReadPointer(var lTypeReadOffset, lTypeEncoding));
+          {$ENDIF}
           if catchType = nil then begin
             // catch all
             if ((aAction and {$IFDEF EMSCRIPTEN  OR x86_64}_Unwind_Action._UA_SEARCH_PHASE{$ELSE}_UA_SEARCH_PHASE{$ENDIF}) <> 0) or ((aAction and {$IFDEF EMSCRIPTEN  OR x86_64}_Unwind_Action._UA_HANDLER_FRAME{$ELSE}_UA_HANDLER_FRAME{$ENDIF}) <>0) then begin
@@ -577,20 +699,35 @@ begin
               exit false;
             end;
           end;
-
           if aNative then begin
             var exception_header := ^ElementsException(aEx);
             exception_header := ^ElementsException(@^Byte(exception_header)[-Int32((^Byte(@exception_header^.Unwind) - ^Byte(exception_header)))]);
-
-            if Utilities.IsInstance(exception_header^.Object, catchType) <> nil then begin
-              if 0 <> (aAction and {$IFDEF EMSCRIPTEN  OR x86_64}_Unwind_Action._UA_SEARCH_PHASE{$ELSE}_UA_SEARCH_PHASE{$ENDIF}) then begin
-                aTypeIndex := lIndexInTypeInfoTable;
-                exit true;
-              end
-              else begin
-                if 0 = (aAction and {$IFDEF EMSCRIPTEN  OR x86_64}_Unwind_Action._UA_FORCE_UNWIND{$ELSE}_UA_FORCE_UNWIND{$ENDIF}) then begin
-                  //call_terminate(native_exception, unwind_exception);
-                  exit false;
+            if aObjc then begin
+            {$IFDEF DARWIN}
+              if new &Type(^IslandTypeInfo(catchType)).IsAssignableFrom(typeOf(IslandWrappedCocoaException)) then begin
+                if 0 <> (aAction and {$IFDEF EMSCRIPTEN  OR x86_64}_Unwind_Action._UA_SEARCH_PHASE{$ELSE}_UA_SEARCH_PHASE{$ENDIF}) then begin
+                  aTypeIndex := lIndexInTypeInfoTable;
+                  exit true;
+                end
+                else begin
+                  if 0 = (aAction and {$IFDEF EMSCRIPTEN  OR x86_64}_Unwind_Action._UA_FORCE_UNWIND{$ELSE}_UA_FORCE_UNWIND{$ENDIF}) then begin
+                    //call_terminate(native_exception, unwind_exception);
+                    exit false;
+                  end;
+                end;
+              end;
+            {$ENDIF}
+            end else begin
+              if Utilities.IsInstance(exception_header^.Object, catchType) <> nil then begin
+                if 0 <> (aAction and {$IFDEF EMSCRIPTEN  OR x86_64}_Unwind_Action._UA_SEARCH_PHASE{$ELSE}_UA_SEARCH_PHASE{$ENDIF}) then begin
+                  aTypeIndex := lIndexInTypeInfoTable;
+                  exit true;
+                end
+                else begin
+                  if 0 = (aAction and {$IFDEF EMSCRIPTEN  OR x86_64}_Unwind_Action._UA_FORCE_UNWIND{$ELSE}_UA_FORCE_UNWIND{$ENDIF}) then begin
+                    //call_terminate(native_exception, unwind_exception);
+                    exit false;
+                  end;
                 end;
               end;
             end;
@@ -610,7 +747,7 @@ end;
 
 method ExternalCalls.DwarfEHReadPointer(var aData: ^Byte; aEncoding: DwarfEHEncodingType): rtl.uintptr_t;
 begin
-  var lStart := @aData;
+  var lStart := aData;
   case DwarfEHEncodingType(aEncoding and $f) of
     (DwarfEHEncodingType.DW_EH_PE_omit and $f): exit 0;
     DwarfEHEncodingType.DW_EH_PE_absptr: begin
@@ -683,5 +820,192 @@ begin
   rec^.next := atexitlist;
   atexitlist := rec;
 end;
+
+{$IFDEF ARM and not arm64 and not DARWIN}
+method ExternalCalls.ExceptionHandler(aState: rtl._Unwind_Action; aECB: ^rtl.__struct__Unwind_Control_Block; aCtx: ^Void): rtl._Unwind_Reason_Code;
+begin
+  var lSearching: Boolean;
+  if (aState  and rtl._Unwind_State._US_ACTION_MASK) = rtl._Unwind_State._US_VIRTUAL_UNWIND_FRAME  then begin
+    lSearching := true;
+    // Searching, but if it's a forced unwind, then unwind.
+    if (aState and rtl._Unwind_State._US_FORCE_UNWIND) <> 0 then
+      exit if rtl.__gnu_unwind_frame(aECB, aCtx) = rtl._URC_NO_REASON then rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND else rtl._Unwind_Reason_Code._URC_FAILURE;
+  end else if (aState  and rtl._Unwind_State._US_ACTION_MASK) = rtl._Unwind_State._US_UNWIND_FRAME_STARTING  then begin
+    lSearching := false;
+
+    aState := rtl._UA_CLEANUP_PHASE;
+    if ((aState  and rtl._Unwind_State._US_FORCE_UNWIND) = 0) and (aECB^.barrier_cache.sp = _Unwind_GetGR(aCtx, 13)) then
+      aState := aState or rtl._UA_HANDLER_FRAME;
+  end else // Just unwind, no idea what to do here.
+    exit if rtl.__gnu_unwind_frame(aECB, aCtx) = rtl._URC_NO_REASON then rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND else rtl._Unwind_Reason_Code._URC_FAILURE;
+
+  if (aECB = nil) or (aCtx = nil) then exit rtl._Unwind_Reason_Code._URC_FAILURE;
+  var lMine := ^UInt64(@aECB.exception_class)^ = ElementsExceptionCode;
+  var lObjc := false;
+  if not lMine and (^UInt64(@aECB.exception_class)^ = 4849336966747728640) then begin
+    lMine := true;
+    lObjc := true;
+  end;
+  rtl._Unwind_SetGR (aCtx, UNWIND_POINTER_REG, rtl._Unwind_Word(aECB));
+
+  var lTypeInfo: rtl.int64_t;
+  var lLandingPad: rtl.uintptr_t;
+  if lSearching then begin
+    if Parselsda(_UA_SEARCH_PHASE, lMine, lObjc, aECB, aCtx, out lTypeInfo, out lLandingPad) then begin
+      if lMine then begin
+        var lRecord := ^ElementsException(aECB);
+        lRecord := ^ElementsException(@^Byte(lRecord)[-Int32((^Byte(@lRecord^.Unwind) - ^Byte(lRecord)))]);
+
+        ExternalCalls.HandlerSwitch := lTypeInfo;
+        ExternalCalls.Target := lLandingPad;
+      // Save r13.
+        aECB^.barrier_cache.sp := rtl._Unwind_GetGR(aCtx, 13);
+
+      // Save barrier.
+        aECB^.barrier_cache.bitpattern[0] := 0;
+        aECB^.barrier_cache.bitpattern[1] := 0;
+        aECB^.barrier_cache.bitpattern[2] := uint32_t(rtl._Unwind_GetLanguageSpecificData(aCtx));
+        aECB^.barrier_cache.bitpattern[3] := uint32_t(lLandingPad);
+        aECB^.barrier_cache.bitpattern[4] := 0;
+
+      end;
+      exit rtl._Unwind_Reason_Code._URC_HANDLER_FOUND;
+    end;
+    exit if rtl.__gnu_unwind_frame(aECB, aCtx) = rtl._URC_NO_REASON then rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND else rtl._Unwind_Reason_Code._URC_FAILURE;
+  end else begin
+    if lMine then begin
+      var lRecord := ^ElementsException(aECB);
+      lRecord := ^ElementsException(@^Byte(lRecord)[-Int32((^Byte(@lRecord^.Unwind) - ^Byte(lRecord)))]);
+      lTypeInfo := ExternalCalls.HandlerSwitch;
+      lLandingPad := ExternalCalls.Target;
+    end;
+  end;
+
+  if 0 <> (aState and {$IFDEF EMSCRIPTEN  OR x86_64}rtl._Unwind_Action._UA_CLEANUP_PHASE{$ELSE}rtl._UA_CLEANUP_PHASE{$ENDIF}) then begin
+    // This is either unwinding OR catching
+    if (0 = (aState and {$IFDEF EMSCRIPTEN OR x86_64}rtl._Unwind_Action._UA_HANDLER_FRAME{$ELSE}rtl._UA_HANDLER_FRAME{$ENDIF}))  then begin
+      // finally, always parse
+      if Parselsda(aState, lMine, lObjc, aECB, aCtx, out lTypeInfo, out lLandingPad) then begin
+        rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aECB));
+        rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(lTypeInfo));
+        {$IFDEF ARM and not arm64}
+        rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
+        {$ELSE}
+        rtl._Unwind_SetIP(aCtx, lLandingPad);
+        {$ENDIF}
+        exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
+      end;
+
+      exit if rtl.__gnu_unwind_frame(aECB, aCtx) = rtl._URC_NO_REASON then rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND else rtl._Unwind_Reason_Code._URC_FAILURE;
+    end;
+    // exception
+    if not lMine then begin
+      if Parselsda(aState, lMine, lObjc, aECB, aCtx, out lTypeInfo, out lLandingPad) then begin
+        rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aECB));
+        rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(lTypeInfo));
+        {$IFDEF ARM and not arm64}
+        rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
+        {$ELSE}
+        rtl._Unwind_SetIP(aCtx, lLandingPad);
+        {$ENDIF}
+        exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
+      end;
+      // we can't parse the LSDA table and the exception isn't ours, touble.
+      exit {$IFNDEF ARM and not arm64 and not DARWIN}rtl._Unwind_Reason_Code._URC_FATAL_PHASE1_ERROR{$ELSE}rtl._Unwind_Reason_Code._URC_FAILURE{$ENDIF};
+    end;
+    var lRecord := ^ElementsException(aECB);
+    lRecord := ^ElementsException(@^Byte(lRecord)[-Int32((^Byte(@lRecord^.Unwind) - ^Byte(lRecord)))]);
+    rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aECB));
+    rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(ExternalCalls.HandlerSwitch));
+    {$IFDEF ARM and not arm64}
+    rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
+    {$ELSE}
+    rtl._Unwind_SetIP(aCtx, ExternalCalls.Target);
+    {$ENDIF}
+    free(lRecord);
+    exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
+  end;
+  exit {$IFNDEF ARM and not DARWIN}rtl._Unwind_Reason_Code._URC_FATAL_PHASE1_ERROR{$ELSE}rtl._Unwind_Reason_Code._URC_FAILURE{$ENDIF};
+end;
+{$ELSE}
+method ExternalCalls.ExceptionHandler(aVersion: Integer; aState: rtl._Unwind_Action; aClass: UInt64; aEx: ^rtl.__struct__Unwind_Exception; aCtx: ^Void): rtl._Unwind_Reason_Code;
+begin
+  if (aVersion <> 1) or (aEx = nil) or (aCtx = nil) then exit rtl._Unwind_Reason_Code._URC_FATAL_PHASE1_ERROR;
+  var lMine := aClass = ElementsExceptionCode;
+  var lObjc: Boolean := false;
+  if not lMine and (aClass = 4849336966747728640) then begin
+    lMine := true;
+    lObjc := true;
+  end;
+  var lTypeInfo: rtl.int64_t;
+    var lLandingPad: rtl.uintptr_t;
+    if 0 <> (aState and {$IFDEF EMSCRIPTEN OR x86_64}rtl._Unwind_Action._UA_SEARCH_PHASE{$ELSE}rtl._UA_SEARCH_PHASE{$ENDIF})  then begin
+      if Parselsda(aState, lMine, lObjc, aEx, aCtx, out lTypeInfo, out lLandingPad) then begin
+        if lMine then begin
+          var lRecord := ^ElementsException(aEx);
+          lRecord := ^ElementsException(@^Byte(lRecord)[-Int32((^Byte(@lRecord^.Unwind) - ^Byte(lRecord)))]);
+
+          ExternalCalls.HandlerSwitch := lTypeInfo;
+          ExternalCalls.Target := lLandingPad;
+
+
+        end;
+        exit rtl._Unwind_Reason_Code._URC_HANDLER_FOUND;
+      end;
+      exit rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND;
+    end;
+
+    if 0 <> (aState and {$IFDEF EMSCRIPTEN  OR x86_64}rtl._Unwind_Action._UA_CLEANUP_PHASE{$ELSE}rtl._UA_CLEANUP_PHASE{$ENDIF}) then begin
+      // This is either unwinding OR catching
+      if (0 = (aState and {$IFDEF EMSCRIPTEN OR x86_64}rtl._Unwind_Action._UA_HANDLER_FRAME{$ELSE}rtl._UA_HANDLER_FRAME{$ENDIF}))  then begin
+        // finally, always parse
+        if Parselsda(aState, lMine, lObjc, aEx, aCtx, out lTypeInfo, out lLandingPad) then begin
+          rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aEx));
+          rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(lTypeInfo));
+          {$IFDEF ARM and not arm64}
+          rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
+          {$ELSE}
+          rtl._Unwind_SetIP(aCtx, lLandingPad);
+          {$ENDIF}
+          exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
+        end;
+
+        exit rtl._Unwind_Reason_Code._URC_CONTINUE_UNWIND;
+      end;
+      // exception
+      if not lMine then begin
+        if Parselsda(aState, lMine, lObjc, aEx, aCtx, out lTypeInfo, out lLandingPad) then begin
+          rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aEx));
+          rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(lTypeInfo));
+          {$IFDEF ARM and not arm64}
+          rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
+          {$ELSE}
+          rtl._Unwind_SetIP(aCtx, lLandingPad);
+          {$ENDIF}
+          exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
+        end;
+        // we can't parse the LSDA table and the exception isn't ours, touble.
+        exit  {$IFNDEF ARM and not arm64 and not DARWIN}rtl._Unwind_Reason_Code._URC_FATAL_PHASE1_ERROR{$ELSE}rtl._Unwind_Reason_Code._URC_FAILURE{$ENDIF};
+      end;
+      var lRecord := ^ElementsException(aEx);
+      lRecord := ^ElementsException(@^Byte(lRecord)[-Int32((^Byte(@lRecord^.Unwind) - ^Byte(lRecord)))]);
+      rtl._Unwind_SetGR(aCtx, 0, rtl.uintptr_t(aEx));
+      rtl._Unwind_SetGR(aCtx, 1, rtl.uintptr_t(ExternalCalls.HandlerSwitch));
+      {$IFDEF ARM and not arm64}
+      rtl._Unwind_SetGR(aCtx, 15, lLandingPad or (rtl._Unwind_GetGR(aCtx, 15)and 1));
+      {$ELSE}
+      rtl._Unwind_SetIP(aCtx, ExternalCalls.Target);
+      {$ENDIF}
+      if lObjc then begin
+        var lRec := ^CXXException(aEx);
+        lRec := ^CXXException(@^Byte(lRec)[-Int32((^Byte(@lRec^.Unwind) - ^Byte(lRec))) - (sizeOf(IntPtr) * 2)]);
+        free(lRec)
+      end else
+        free(lRecord);
+      exit rtl._Unwind_Reason_Code._URC_INSTALL_CONTEXT;
+    end;
+  exit  {$IFNDEF ARM and not arm64 and not DARWIN}rtl._Unwind_Reason_Code._URC_FATAL_PHASE1_ERROR{$ELSE}rtl._Unwind_Reason_Code._URC_FAILURE{$ENDIF};
+end;
+{$ENDIF}
 
 end.

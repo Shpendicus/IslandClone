@@ -9,15 +9,20 @@ type
   FileMode = public enum(CreateNew, &Create, Open, OpenOrCreate, Truncate);
   FileAccess = public enum(&Read, &Write, ReadWrite);
   FileShare = public enum(None, &Read, &Write, ReadWrite, Delete);
+  {$IF WINDOWS}
+  PlatformHandle = rtl.HANDLE;
+  {$ELSEIF ANDROID OR DARWIN or ARM64}
+  PlatformHandle = ^rtl.FILE;
+  {$ELSEIF POSIX}
+  PlatformHandle = ^rtl._IO_FILE;
+  {$ENDIF}
 
   FileStream = public class(Stream)
   private
     {$IFDEF WINDOWS}
-    fHandle: rtl.HANDLE := rtl.INVALID_HANDLE_VALUE;
-    {$ELSEIF ANDROID}
-    fHandle: ^rtl.FILE;
-    {$ELSEIF POSIX}
-    fHandle: ^rtl._IO_FILE;
+    fHandle: PlatformHandle := rtl.INVALID_HANDLE_VALUE;
+    {$ELSE}
+    fHandle: PlatformHandle;
     {$ENDIF}
     fAccess: FileAccess;
     method GetLength: Int64;
@@ -25,6 +30,7 @@ type
     method IsValid: Boolean; override;
   public
     constructor(FileName: String; Mode: FileMode; Access: FileAccess; Share: FileShare := FileShare.Read);
+    constructor(aHandle: PlatformHandle; Access: FileAccess);
     finalizer;
     property CanRead: Boolean read (fAccess ≠ FileAccess.Write) and IsValid; override;
     property CanSeek: Boolean read IsValid; override;
@@ -32,8 +38,8 @@ type
     method Seek(Offset: Int64; Origin: SeekOrigin): Int64; override;
     method Flush; override;
     method Close; override;
-    method &Read(const buf: ^Void; Count: Int32): Int32; override;
-    method &Write(const buf: ^Void; Count: Int32): Int32;override;
+    method &Read(aSpan: Span<Byte>): Int32; override;
+    method &Write(aSpan: ImmutableSpan<Byte>): Int32; override;
     property Length: Int64 read GetLength; override;
     method SetLength(value: Int64); override;
     property Name: String; readonly;
@@ -50,7 +56,7 @@ begin
   var lAccess: UInt32 :=  case Access of
                             FileAccess.Read: rtl.GENERIC_READ;
                             FileAccess.Write: rtl.GENERIC_WRITE;
-                            FileAccess.ReadWrite: rtl.GENERIC_READ and rtl.GENERIC_WRITE;
+                            FileAccess.ReadWrite: rtl.GENERIC_READ or rtl.GENERIC_WRITE;
                           end;
 
   var lmode: UInt32 :=    case Mode of
@@ -78,7 +84,7 @@ begin
                                 FileMode.OpenOrCreate: 'a';
                                 FileMode.Truncate: 'w';
                               end);
-  {$IFDEF ANDROID}
+  {$IFDEF ANDROID or DARWIN}
   fHandle := rtl.fopen(FileName.ToFileName(),@s);
   {$ELSE}
   fHandle := rtl.fopen64(FileName.ToFileName(),@s);
@@ -87,6 +93,12 @@ begin
   {$ELSE}
     {$ERROR}
   {$ENDIF}
+end;
+
+constructor FileStream(aHandle: PlatformHandle; Access: FileAccess);
+begin
+  fAccess := Access;
+  fHandle := aHandle;
 end;
 
 finalizer FileStream;
@@ -130,9 +142,10 @@ begin
                           SeekOrigin.Current: rtl.SEEK_CUR;
                           SeekOrigin.End:  rtl.SEEK_END;
                         end;
-  {$IFDEF ANDROID}
+  {$IFDEF ANDROID or DARWIN}
   result := rtl.fseek(fHandle, Offset, lOrigin);
   CheckForIOError(result);
+  result := rtl.ftell(fHandle);
   {$ELSE}
   CheckForIOError(rtl.fseeko64(fHandle, Offset, lOrigin));
   var pos: rtl._G_fpos64_t;
@@ -166,6 +179,10 @@ begin
   Seek(value, SeekOrigin.Begin);
   {$IFDEF WINDOWS}
   CheckForIOError(rtl.SetEndOfFile(fHandle));
+  {$ELSEIF DARWIN}
+  {$HINT POSIX FileStream.SetLength. it may not work correctly, because _IO_FILE could be no updated }
+  var fd := rtl.fileno(fHandle);
+  CheckForIOError(rtl.ftruncate(fd, value));
   {$ELSEIF POSIX}
   {$HINT POSIX FileStream.SetLength. it may not work correctly, because _IO_FILE could be no updated }
   var fd := rtl.fileno(fHandle);
@@ -177,37 +194,34 @@ end;
 
 method FileStream.GetLength: Int64;
 begin
-  {$HINT implement properly}
   result := inherited Length;
 end;
 
-method FileStream.Read(const buf: ^Void; Count: Int32): Int32;
+method FileStream.&Read(aSpan: Span<Byte>): Int32;
 begin
   if not CanRead then raise new NotSupportedException;
-  if buf = nil then raise new Exception("argument is null");
-  if Count = 0 then exit 0;
+  if aSpan.Length = 0 then exit 0;
   {$IFDEF WINDOWS}
   var res: rtl.DWORD;
-  CheckForIOError(rtl.ReadFile(fHandle,buf,Count,@res,nil));
+  CheckForIOError(rtl.ReadFile(fHandle, aSpan.Pointer, aSpan.Length, @res, nil));
   exit res;
   {$ELSEIF POSIX}
-  exit rtl.fread(buf, 1, Count, fHandle);
+  exit rtl.fread(aSpan.Pointer, 1, aSpan.Length, fHandle);
   {$ELSE}
     {$ERROR}
   {$ENDIF}
 end;
 
-method FileStream.Write(const buf: ^Void; Count: Int32): Int32;
+method FileStream.&Write(aSpan: ImmutableSpan<Byte>): Int32;
 begin
   if not CanWrite then raise new NotSupportedException;
-  if buf = nil then raise new Exception("argument is null");
-  if Count = 0 then exit 0;
+  if aSpan.Length = 0 then exit 0;
   {$IFDEF WINDOWS}
   var res: rtl.DWORD;
-  CheckForIOError(rtl.WriteFile(fHandle,buf,Count,@res,nil));
+  CheckForIOError(rtl.WriteFile(fHandle, aSpan.Pointer, aSpan.Length, @res, nil));
   exit res;
   {$ELSEIF POSIX}
-  exit rtl.fwrite(buf, 1, Count, fHandle);
+  exit rtl.fwrite(aSpan.Pointer, 1, aSpan.Length, fHandle);
   {$ELSE}
     {$ERROR}
   {$ENDIF}

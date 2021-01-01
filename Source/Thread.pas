@@ -63,7 +63,174 @@ type
     Highest
   );
 
+
+  ReadWriteLock = public class(IDisposable)
+  private
   {$IFDEF WINDOWS}
+    fLock: rtl.SRWLOCK;
+  {$ELSE}
+    fLock: rtl.pthread_rwlock_t;
+  {$ENDIF}
+  public
+    constructor;
+    begin
+      {$IFDEF WINDOWS}
+      rtl.InitializeSRWLock(@fLock);
+      {$ELSE}
+      rtl.pthread_rwlock_init(@fLock, nil);
+      {$ENDIF}
+    end;
+
+    finalizer;
+    begin
+      {$IFDEF WINDOWS}
+      {$ELSE}
+      rtl.pthread_rwlock_destroy(@fLock);
+      {$ENDIF}
+    end;
+
+    method Dispose;
+    begin
+      {$IFDEF WINDOWS}
+      {$ELSE}
+      rtl.pthread_rwlock_destroy(@fLock);
+      {$ENDIF}
+    end;
+
+    method EnterReadLock;
+    begin
+      {$IFDEF WINDOWS}
+      rtl.AcquireSRWLockShared(@fLock);
+      {$ELSE}
+      if rtl.pthread_rwlock_rdlock(@fLock) <> 0 then raise new ArgumentException('Unable to acquire read lock');
+      {$ENDIF}
+    end;
+
+    method TryEnterReadLock: Boolean;
+    begin
+      {$IFDEF WINDOWS}
+      exit rtl.TryAcquireSRWLockShared(@fLock) <> 0;
+      {$ELSE}
+      exit rtl.pthread_rwlock_tryrdlock(@fLock) = 0;
+      {$ENDIF}
+    end;
+
+    method ExitReadLock;
+    begin
+      {$IFDEF WINDOWS}
+      rtl.ReleaseSRWLockShared(@fLock);
+      {$ELSE}
+      if rtl.pthread_rwlock_unlock(@fLock) <> 0 then raise new ArgumentException('Unable to release read lock');
+      {$ENDIF}
+    end;
+
+    method EnterWriteLock;
+    begin
+      {$IFDEF WINDOWS}
+      rtl.AcquireSRWLockExclusive(@fLock);
+      {$ELSE}
+      if rtl.pthread_rwlock_wrlock(@fLock) <> 0 then raise new ArgumentException('Unable to acquire write lock');
+      {$ENDIF}
+    end;
+
+    method TryEnterWriteLock: Boolean;
+    begin
+      {$IFDEF WINDOWS}
+      exit rtl.TryAcquireSRWLockExclusive(@fLock) <> 0;
+      {$ELSE}
+      exit rtl.pthread_rwlock_trywrlock(@fLock) = 0;
+      {$ENDIF}
+    end;
+
+    method ExitWriteLock;
+    begin
+      {$IFDEF WINDOWS}
+      rtl.ReleaseSRWLockExclusive(@fLock);
+      {$ELSE}
+      if rtl.pthread_rwlock_unlock(@fLock) <> 0 then raise new ArgumentException('Unable to release write lock');
+      {$ENDIF}
+    end;
+
+  end;
+
+  ConditionalVariable = public class(IDisposable)
+  private
+  {$IFDEF WINDOWS}
+    fCond: rtl.CONDITION_VARIABLE;
+  {$ELSEIF POSIX}
+    fCond: rtl.pthread_cond_t;
+  {$ELSE}
+  {$ERROR NOT IMPLEMENTED}
+  {$ENDIF}
+  public
+    constructor;
+    begin
+      {$IFDEF WINDOWS}
+      rtl.InitializeConditionVariable(@fCond);
+      {$ELSEIF POSIX}
+      rtl.pthread_cond_init(@fCond, nil);
+      {$ENDIF}
+    end;
+
+    finalizer;
+    begin
+      {$IFDEF WINDOWS}
+      {$ELSEIF POSIX}
+      rtl.pthread_cond_destroy(@fCond);
+      {$ENDIF}
+    end;
+
+    method Dispose;
+    begin
+      {$IFDEF WINDOWS}
+      {$ELSEIF POSIX}
+      rtl.pthread_cond_destroy(@fCond);
+      {$ENDIF}
+    end;
+
+    method Signal;
+    begin
+      {$IFDEF WINDOWS}
+      rtl.WakeConditionVariable(@fCond);
+      {$ELSEIF POSIX}
+      rtl.pthread_cond_signal(@fCond);
+      {$ENDIF}
+    end;
+
+    method Broadcast;
+    begin
+      {$IFDEF WINDOWS}
+      rtl.WakeAllConditionVariable(@fCond);
+      {$ELSEIF POSIX}
+      rtl.pthread_cond_broadcast(@fCond);
+      {$ENDIF}
+    end;
+
+    method Wait(cs: Monitor);
+    begin
+      {$IFDEF WINDOWS}
+      rtl.SleepConditionVariableCS(@fCond, @cs.fCS, rtl.INFINITE);
+      {$ELSEIF POSIX}
+      rtl.pthread_cond_wait(@fCond, @cs.fCS);
+      {$ENDIF}
+    end;
+
+    method Wait(cs: Monitor; aTimeMS: Integer): Boolean;
+    begin
+      {$IFDEF WINDOWS}
+      exit rtl.SleepConditionVariableCS(@fCond, @cs.fCS, aTimeMS);
+      {$ELSEIF POSIX}
+      var ts: rtl.__struct_timespec;
+      rtl.clock_gettime({$IFDEF DARWIN}rtl.clockid_t._CLOCK_REALTIME{$ELSE}rtl.CLOCK_REALTIME{$ENDIF}, @ts);
+      ts.tv_nsec := ts.tv_nsec + ((aTimeMS mod 1000)  *1000);
+      ts.tv_sec := ts.tv_sec + (aTimeMS /1000);
+      exit rtl.pthread_cond_timedwait(@fCond, @cs.fCS, @ts) = 0;
+      {$ENDIF}
+    end;
+  end;
+
+  {$IFDEF WINDOWS}
+
   WaitHandle = public abstract class(IDisposable)
   protected
     fHandle: rtl.HANDLE;
@@ -112,7 +279,7 @@ type
   public
     constructor(aInitialValue: Boolean);
     method Release;
-    finalizer;    
+    finalizer;
   end;
 
   EventWaitHandle = public class(WaitHandle)
@@ -152,7 +319,7 @@ begin
   var pol: Int32;
   var sched: rtl.__struct_sched_param;
   rtl. pthread_getschedparam(fthread, @pol, @sched);
-  var pri := {$IFDEF EMSCRIPTEN}sched.sched_priority{$ELSE}sched.__sched_priority{$ENDIF};
+  var pri := {$IFDEF EMSCRIPTEN or DARWIN or ARM64}sched.sched_priority{$ELSE}sched.__sched_priority{$ENDIF};
   if pri < -1 then exit ThreadPriority.Lowest
   else if pri = -1 then exit ThreadPriority.BelowNormal
   else if pri =  0 then exit ThreadPriority.Normal
@@ -326,7 +493,9 @@ begin
     end;
     {$ELSE}
     {$IFNDEF EMSCRIPTEN}
+    {$IFNDEF DARWIN}
     rtl.pthread_setname_np(fthread, @Name.ToAnsiChars[0])
+    {$ENDIF}
     {$ENDIF}
     {$ENDIF}
   end;
@@ -416,11 +585,22 @@ end;
 
 method Mutex.DoWait(aTimeMS: Integer): Boolean;
 begin
-  var ts: rtl.__struct_timespec;
-  rtl.clock_gettime(rtl.CLOCK_REALTIME , @ts);
+  var ts, ts2, tswait: rtl.__struct_timespec;
+  rtl.clock_gettime({$IFDEF DARWIN}rtl.clockid_t._CLOCK_REALTIME{$ELSE}rtl.CLOCK_REALTIME{$ENDIF}, @ts);
   ts.tv_nsec := ts.tv_nsec + ((aTimeMS mod 1000)  *1000);
   ts.tv_sec := ts.tv_sec + (aTimeMS /1000);
+  tswait.tv_nsec := 10000000;
+  {$IFDEF DARWIN}
+  loop begin
+    if rtl.pthread_mutex_trylock(@fMutex) = 0 then exit true;
+    rtl.nanosleep(@ts, @ts);
+    rtl.clock_gettime(
+    {$IFDEF DARWIN}rtl.clockid_t._CLOCK_REALTIME{$ELSE}rtl.CLOCK_REALTIME{$ENDIF}, @ts2);
+    if (ts2.tv_sec > ts.tv_sec) or (ts2.tv_nsec > ts.tv_nsec) then exit false;
+  end;
+  {$ELSE}
   exit rtl.pthread_mutex_timedlock(@fMutex, @ts) = 0;
+  {$ENDIF}
 end;
 
 method Mutex.DoWait;
@@ -470,7 +650,7 @@ end;
 method EventWaitHandle.DoWait(aTimeMS: Integer): Boolean;
 begin
   var ts, ts2: rtl.__struct_timespec;
-  rtl.clock_gettime(rtl.CLOCK_REALTIME , @ts);
+  rtl.clock_gettime({$IFDEF DARWIN}rtl.clockid_t._CLOCK_REALTIME{$ELSE}rtl.CLOCK_REALTIME{$ENDIF}, @ts);
   ts.tv_nsec := ts.tv_nsec + ((aTimeMS mod 1000)  *1000);
   ts.tv_sec := ts.tv_sec + (aTimeMS /1000);
   rtl.pthread_mutex_lock(@fMutex);
@@ -482,7 +662,7 @@ begin
       break;
     end;
 
-    rtl.clock_gettime(rtl.CLOCK_REALTIME , @ts2);
+    rtl.clock_gettime({$IFDEF DARWIN}rtl.clockid_t._CLOCK_REALTIME{$ELSE}rtl.CLOCK_REALTIME{$ENDIF}, @ts2);
     if (ts2.tv_sec > ts.tv_sec) or (ts2.tv_nsec > ts.tv_nsec) then break;
   end;
   rtl.pthread_mutex_unlock(@fMutex);

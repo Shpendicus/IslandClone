@@ -69,6 +69,11 @@ type
         var lPars := lMeth.Arguments.ToArray;
         if length(lPars) <> length(aArgs) then continue;
         for j: Integer := 0 to lPars.Length -1 do begin
+          var lType := lPars[j].Type;
+          if lType = nil then begin
+            lPars := nil;
+            break;
+          end;
           if aArgs[j] = nil then begin
             if lPars[j].Type.IsValueType then begin
               lPars := nil;
@@ -78,6 +83,9 @@ type
           if not lPars[j].Type.IsAssignableFrom(aArgs[j].GetType)  then begin
             if lPars[j].Type.IsFloat and aArgs[j].GetType.IsIntegerOrFloat then begin
             end else if lPars[j].Type.IsInteger and aArgs[j].GetType.IsInteger then begin
+
+            end else if lPars[j].Type.IsEnum and aArgs[j].GetType.IsInteger then begin
+
             end else begin
               lPars := nil;
               break;
@@ -130,7 +138,7 @@ type
           for each el in lCL.Fields do begin
             if (not lStatic or el.IsStatic)
              and if DynamicGetFlags.CaseSensitive in DynamicGetFlags(aGetFlags) then el.Name = aName else el.Name.EqualsIgnoreCase(aName) then begin
-               exit el.GetValue(aInstance);
+               exit el.GetValue(if el.IsStatic then nil else aInstance);
             end;
           end;
           if (DynamicGetFlags.CallDefault in DynamicGetFlags(aGetFlags)) and (DynamicGetFlags.FollowedByCall not in DynamicGetFlags(aGetFlags))  then
@@ -161,6 +169,10 @@ type
             exit lMethod.Invoke(aInstance, aArgs);
           end;
         end;
+        var lEvents := lCL.Events.Where(el ->(not lStatic or el.IsStatic) and (el.Name = aName));
+        if lEvents.Count = 1 then
+          exit new DynamicEventInfo(aInstance, lEvents.First);
+
         lCL := if lCL.fValue^.ParentType <> nil then new &Type(lCL.fValue^.ParentType) else nil;
       end;
 
@@ -235,6 +247,13 @@ type
       if lDyn <> nil then exit lDyn.Invoke(nil, aGetFlags, aArgs);
       if aInstance is &Type then begin
         aInstance := new DynamicMethodGroup(nil, &Type(aInstance).Methods.Where(a -> MethodFlags.Constructor in a.Flags).ToList);
+      end;
+      var lEvent := DynamicEventInfo(aInstance);
+      if lEvent ≠ nil then begin
+        var lMeth := lEvent.ResolveEvent;
+        if lMeth = nil then
+          raise new DynamicInvokeException('No event found');
+        exit lMeth.Invoke(if lEvent.Inst is &Type then nil else lEvent.Inst, aArgs);
       end;
       var lGroup := DynamicMethodGroup(aInstance);
       if lGroup = nil then
@@ -464,6 +483,7 @@ type
               exit aLeft.ToString = aRight.ToString;
             if (lL.Code = TypeCodes.Boolean) or (lR.Code = TypeCodes.Boolean) then
               exit Boolean(aLeft) = Boolean(aRight);
+            exit Object.ReferenceEquals(aLeft, aRight);
         end;
         DynamicBinaryOperator.NotEqual: begin
             if (aLeft = nil) or (aRight = nil) then exit not ((aLeft = nil) and (aRight = nil));
@@ -480,11 +500,12 @@ type
               exit aLeft.ToString <> aRight.ToString;
             if (lL.Code = TypeCodes.Boolean) or (lR.Code = TypeCodes.Boolean) then
               exit Boolean(aLeft) <> Boolean(aRight);
+          exit not Object.ReferenceEquals(aLeft, aRight);
         end;
-
       end;
 
-      raise new Exception('Binary operator '+aOp.ToString+' not supported on these type');
+      raise new Exception('Binary operator '+aOp+' not supported on these type');
+
     end;
 
     method Unary(aLeft: Object; aOp: Integer): Object;
@@ -532,14 +553,18 @@ type
     method Invoke(aName: String; aGetFlags: Integer; aArgs: array of Object): Object;
     method Unary(aOp: DynamicUnaryOperator; out aResult: Object): Boolean;
     method Binary(aOther: Object; aSelfIsLeftSide: Boolean; aOp: DynamicBinaryOperator; out aResult: Object): Boolean;
+    method IsType(aType: String): Boolean;
+    begin
+      exit false;
+    end;
   end;
 
   DynamicMethodGroup = public class
   private
-    fItems: List<&MethodInfo>;
+    fItems: ImmutableList<&MethodInfo>;
     fInst: Object;
   public
-    constructor(aInst: Object; aItems: List<&MethodInfo>);
+    constructor(aInst: Object; aItems: ImmutableList<&MethodInfo>);
     begin
       fItems := aItems;
       fInst := aInst;
@@ -547,6 +572,27 @@ type
     property Inst: Object read fInst;
     property Count: Integer read fItems.Count;
     property Item[i: Integer]: &MethodInfo read fItems[i]; default;
+  end;
+
+  DynamicEventInfo = public class
+  private
+    fEvent: EventInfo;
+    fInst: Object;
+  public
+    constructor(aInst: Object; aEvent: EventInfo);
+    begin
+      fEvent := aEvent;
+      fInst := aInst;
+    end;
+
+    method ResolveEvent: MethodInfo;
+    begin
+      var lRM := fEvent.FireMethod;
+      if lRM = nil then exit nil;
+      exit fEvent.DeclaringType.Methods.FirstOrDefault(a -> a.Pointer = lRM);
+    end;
+    property Inst: Object read fInst;
+    property &Event: EventInfo read fEvent;
   end;
 
 end.

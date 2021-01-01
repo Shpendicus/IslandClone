@@ -1,4 +1,4 @@
-﻿///<reference path="webassembly.es6.d.ts" />
+///<reference path="webassembly.es6.d.ts" />
 // __elements_debug_wasm_loaded; Keep this on line 3 for debugging purposes
 function __elements_debug_wasm_loaded(url: string, bytes: ArrayBuffer, data: WebAssembly.ResultObject, importObject: any, memory: WebAssembly.Memory) {
 }
@@ -6,18 +6,25 @@ function __elements_debug_wasm_loaded(url: string, bytes: ArrayBuffer, data: Web
 // Globals needed for debugging purposes
 
 var __elements_debug_globals = []; // needed for debugging purposes.
+declare var global: any;
+var glob: any;
+declare function require(id: string): any;
+if (typeof window === 'undefined') 
+    glob = global;
+else 
+    glob = window;
 
-function __elements_debug_setglobal(id: string, value: any)
+export function __elements_debug_setglobal(id: string, value: any)
 {
     __elements_debug_globals[id] = value
 }
 
-function __elements_debug_getglobal(id: string)
+export function __elements_debug_getglobal(id: string)
 {
     return __elements_debug_globals[id];
 }
 
-function __elements_debug_wasm_toHexString(orgByteArray: ArrayBuffer, start: number, len: number) {
+export function __elements_debug_wasm_toHexString(orgByteArray: ArrayBuffer, start: number, len: number) {
     var byteArray = new Int8Array(orgByteArray);
     var s = "";
     var ch = "";
@@ -35,7 +42,7 @@ function __elements_debug_wasm_toHexString(orgByteArray: ArrayBuffer, start: num
     return s;
 }
 
-function __elements_debug_wasm_fromHexString(orgByteArray: ArrayBuffer, start: number, val: string) {
+export function __elements_debug_wasm_fromHexString(orgByteArray: ArrayBuffer, start: number, val: string) {
     var byteArray = new Int8Array(orgByteArray);
     if (!start) start = 0;
     var len = val.length;
@@ -96,7 +103,7 @@ function __elements_debug_wasm_fromHexString(orgByteArray: ArrayBuffer, start: n
 }
 
 
-module ElementsWebAssembly {
+export module ElementsWebAssembly {
     var inst: any;
     var result: WebAssembly.ResultObject;
     var mem: WebAssembly.Memory;
@@ -176,16 +183,25 @@ module ElementsWebAssembly {
         result.instance.exports["__island_force_release"](val);
     }
 
+    export function destroyDelegate(val: () => any)
+    {
+        if (val && (val as any).__elements_instance) {
+            ReleaseReference((val as any).__elements_instance);
+        }
+    }
+
     function createDelegate(objectptr: number): () => any
     {
         AddReference(objectptr);
-        return function () {
+        var res = function () {
             (arguments as any).this = this;
             var h = createHandle(arguments);
             result.instance.exports["__island_call_delegate"](objectptr, h);
-            releaseHandle(h);
             return (arguments as any).result;
-        }
+        };
+
+        (res as any).__elements_instance = objectptr;
+        return res;
     }
 
     function defineElementsSystemFunctions(imp: any) {
@@ -234,12 +250,12 @@ module ElementsWebAssembly {
         imp.env.__island_crypto_safe_random = function(target: number, len: number) 
         {
             var tmp = new Uint8Array(imp.env.memory.buffer, target, len);
-            window.crypto.getRandomValues(tmp);
+            glob.crypto.getRandomValues(tmp);
         };
         imp.env.__island_getutctime = function(): number { return Date.now(); }
-        imp.env.__island_getlocaltime = function(): number { return Date.now(); }
+        imp.env.__island_getlocaltime = function(): number { var lDate = Date.now(); var lLocal = new Date(); return (lDate + (lLocal.getTimezoneOffset() * 60 * 1000 * (-1))); }
         imp.env.__island_eval = function(str: number): number {
-            return eval(readStringFromMemory(str));
+            return createHandle(eval(readStringFromMemory(str)));
         };
         imp.env.__island_get_typeof = function(handle: number): number {
             var ht = handletable[handle];
@@ -292,8 +308,12 @@ module ElementsWebAssembly {
             }
             var v = handletable[thisval];
             var org = v;
-            if (name != null && name != 0)
-                v = v[readStringFromMemory(name)];
+            if (name != null && name != 0) {
+                var realname = readStringFromMemory(name);
+                if (v == null || typeof(v) == "undefined") throw "Calling " + realname + " on null object";
+                v = v[realname];
+                if (v == null || typeof (v) == "undefined") throw "Member " + realname + " on "+org+" does not exist";
+            }
             return createHandle((v as Function).apply(org, nargs));
         };
         imp.env.__island_set = function(thisval, name, value: number, releaseArgs: boolean) {
@@ -327,6 +347,12 @@ module ElementsWebAssembly {
         imp.env.__island_createTextNode = function(name: number): number {
             return createHandle(document.createTextNode(readStringFromMemory(name)));
         };
+        imp.env.__island_new_XMLHttpRequest  = function(): number {
+            return createHandle(new XMLHttpRequest());
+        };
+        imp.env.__island_new_WebSocket = function(name: number): number {
+            return createHandle(new WebSocket(readStringFromMemory(name)));
+        };
         imp.env.__island_createObject = function(): number {
             var obj = {};
             return createHandle(obj);
@@ -335,14 +361,18 @@ module ElementsWebAssembly {
             var obj = [];
             return createHandle(obj);
         };
+        imp.env.__island_require = function(name: number): number {
+            var obj = [];
+            return createHandle(require(readStringFromMemory(name)));
+        };
         imp.env.__island_setTimeout = function(fn, timeout: number): number {
-            return window.setTimeout(createDelegate(fn), timeout);
+            return glob.setTimeout(createDelegate(fn), timeout);
         };
         imp.env.__island_setInterval = function(fn, timeout: number): number {
-            return window.setInterval(createDelegate(fn), timeout);
+            return glob.setInterval(createDelegate(fn), timeout);
         };
         imp.env.__island_ClearInterval = function(handle: number) {
-             window.clearInterval(handle);
+            glob.clearInterval(handle);
         };
         imp.env.__island_DefineValueProperty = function (obj: number, name: number, value: number, flags: number) {
             Object.defineProperty(handletable[obj], readStringFromMemory(name),
@@ -421,23 +451,127 @@ module ElementsWebAssembly {
                 return createHandle(navigator.language);
         };
         imp.env.__island_alert = function (message: number, messageLen: number) {
-            window.alert(readCharsFromMemory(message, messageLen));
+            glob.alert(readCharsFromMemory(message, messageLen));
         };
         imp.env.__island_getWindow = function (): number {
             return createHandle(window);
         };
+        imp.env.__island_ajaxRequest = function (url: number, urlLength: number): number {
+            var lurl = readCharsFromMemory(url, urlLength);
+            var xhttp = new XMLHttpRequest();
+            xhttp.open('GET', lurl, false);
+            xhttp.send();
+            return createHandle(xhttp.responseText);
+        };
+        imp.env.__island_ajaxRequestBinary = function (url: number, urlLength: number): number {
+            var lurl = readCharsFromMemory(url, urlLength);
+            var xhttp = new XMLHttpRequest();
+            xhttp.open('GET', lurl, false);
+            xhttp.overrideMimeType('text/plain; charset=x-user-defined');
+            xhttp.send(null);
+            return createHandle(xhttp.responseText);
+        };
+        imp.env.__island_responseBinaryTextToArray = function (val: number, tar: number): number {
+            var stream = handletable[val] as string;
+            var dest = new Uint8Array(imp.env.memory.buffer, tar, stream.length);            
+            for (var i = 0; i < stream.length; i++) {
+              dest[i] = stream.charCodeAt(i) & 0xff;
+            }
+            return stream.length;                    
+        };    
+        imp.env.__island_enumerate_known_types = function(obj: number, cb: number) {
+            var func = (imp.env.table as WebAssembly.Table).get(cb);
+            for (var name in inst.instance.exports) {
+                if ((name as any).startsWith("_rtti")) {
+                    var val = inst.instance.exports[name];
+                    func(obj, val.value);
+                }
+            }
+        };
+        imp.env.__island_node_new_TextEncoder = function(): number {
+            // TextEncoder and TextDecoder are globals in Node >= 11
+            let util = require('util');
+            if (util)
+                return createHandle(new util.TextEncoder());
+        };
+        imp.env.__island_node_new_TextDecoder = function(str: number): number {
+            let util = require('util');
+            if (util) {
+                var par1 = readStringFromMemory(str);
+                if (par1 == '')
+                    return createHandle(new util.TextDecoder())
+                else
+                    return createHandle(new util.TextDecoder(par1))
+            }
+        };
+        imp.env.__island_node_new_URL = function(str: number, str2: number): number {
+            let url = require('url');
+            if (url) {
+                var par1 = readStringFromMemory(str);
+                var par2 = readStringFromMemory(str2);
+                if (par2 == '')
+                    return createHandle(new URL(par1));
+                else
+                    return createHandle(new URL(par1, par2));
+            }
+        };
+        imp.env.__island_isArray = function(aArray: number): boolean {
+            var par1 = handletable[aArray] as object;
+			return par1 instanceof Array;
+        };		
+        imp.env.__island_isNodeList = function(aNodeList: number): boolean {
+            var par1 = handletable[aNodeList] as object;
+			return par1 instanceof NodeList;
+        };
+        imp.env.__island_getNodeListItem = function(aNodeList: number, aIndex: number): number {
+            var par1 = handletable[aNodeList] as NodeList;
+			return createHandle(par1[aIndex]);
+        };
+        imp.env.__island_isHTMLCollection = function(aCollection: number): boolean {
+            var par1 = handletable[aCollection] as object;
+			return par1 instanceof HTMLCollection;
+        };
+        imp.env.__island_getHTMLCollectionItem = function(aCollection: number, aIndex: number): number {
+            var par1 = handletable[aCollection] as HTMLCollection;
+			return createHandle(par1[aIndex]);
+        };				
+        imp.env.__island_reflect_construct = function (name: number, args: number, argcount: number): number {            
+			var reflect = require("reflect-metadata");
+			var nargs = [];
+            if (argcount > 0) {
+                var data = new Int32Array(mem.buffer, args);
+                for (var i = 0; i < argcount; i++) {
+                    var val = handletable[data[i]];
+                    releaseHandle(data[i]);
+                    if (val instanceof Object && '__elements_handle' in val)
+                        val = val.__elements_handle;
+                    nargs[i] = val;
+                }
+            }
+            var classname = readStringFromMemory(name);
+			var func = eval(classname);
+            return createHandle(reflect.Reflect.construct(func, nargs));
+        };		
+        imp.env.__island_node_require = function(str: number): number {
+            return createHandle(require(readStringFromMemory(str)));
+        }
     }
 
 
-    export function fetchAndInstantiate(url: string, importObject: any, memorySize: number = 64, tableSize: number = 4096): Promise<WebAssembly.ResultObject> {
+    export function fetchAndInstantiate(url: any, importObject: any, memorySize: number = 64, tableSize: number = 4096): Promise<WebAssembly.ResultObject> {
         if (!importObject) importObject = {};
         if (!importObject.env) importObject.env = {};
-        var bytedata: ArrayBuffer;
-        return fetch(url).then(response => {
-            if (response.status >= 400)
-                throw new Error("Invalid response to request: " + response.statusText);
-            return response.arrayBuffer();
-        }).then(bytes => {
+        var bytedata: Uint8Array;
+        var input: Promise<Uint8Array>;
+        if (url instanceof Uint8Array)
+            input = Promise.resolve(url);
+        else 
+            input = fetch(url).then(response => {
+                if (response.status >= 400)
+                    throw new Error("Invalid response to request: " + response.statusText);
+                return response.arrayBuffer() as any;
+        });
+        return input.then(bytes => {
             bytedata = bytes;
             defineElementsSystemFunctions(importObject);
             if (!importObject.env.memory)
@@ -449,14 +583,17 @@ module ElementsWebAssembly {
                     initial: tableSize,
                     element:"anyfunc"
                 });
+                importObject.env.__indirect_function_table = importObject.env.table;
             }
             return WebAssembly.instantiate(bytes, importObject);
         }
         ).then(results => {
-            __elements_debug_wasm_loaded(url, bytedata, results, importObject, importObject.env.memory);
+            __elements_debug_wasm_loaded(url, bytedata as any, results, importObject, importObject.env.memory);
             mem = importObject.env.memory;
             result = results;
             inst = importObject;
+            inst.instance = result.instance;
+            result.instance.exports["__initialize_GC"]();
             return {
                 module: results.module,
                 instance: result.instance,
@@ -467,3 +604,9 @@ module ElementsWebAssembly {
     }
 
 }
+
+// this is required for the debugger to function
+glob.__elements_debug_setglobal = __elements_debug_setglobal;
+glob.__elements_debug_getglobal = __elements_debug_getglobal;
+glob.__elements_debug_wasm_toHexString = __elements_debug_wasm_toHexString;
+glob.__elements_debug_wasm_fromHexString = __elements_debug_wasm_fromHexString;

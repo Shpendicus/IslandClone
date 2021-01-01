@@ -2,12 +2,10 @@
 
 interface
 
-[assembly: InlineAsm(".globl _tls_array
-_tls_array = 44
-.globl __tls_array
-__tls_array = 44")]
-
 type
+  FILEHANDLE = GCHandle;
+  BeginThreadFunc = public procedure(aVal: ^Void);
+
   VersionResourceAttribute = public class(Attribute)
   public
     property Copyright: String;
@@ -21,22 +19,270 @@ type
   end;
 
   atexitfunc = public procedure();
+
   atexitrec = record
   public
     func: atexitfunc;
     next: ^atexitrec;
   end;
+
   ExternalCalls = public static class
   private
-    class var atexitlist: ^atexitrec;
+
+    class var atexitlist: ^atexitrec; assembly;
     class var processheap: rtl.HANDLE;
-    class var fModuleHandle: rtl.HMODULE;
+    class var fModuleHandle: rtl.HMODULE; assembly;
     class method getModuleHandle: rtl.HMODULE;
     begin
       if fModuleHandle = nil then fModuleHandle := rtl.GetModuleHandleW(nil);
       exit fModuleHandle;
     end;
+
   public
+
+    [SymbolName('_beginthread')]
+    class method _beginthread( // NATIVE CODE
+    start: BeginThreadFunc;
+    stack: Integer;
+    arg: ^Void): rtl.HANDLE;
+    begin
+      var lStart: Object := new Tuple<BeginThreadFunc, ^Void>(start, arg);
+      exit rtl.CreateThread(nil, stack, method (lpThreadParameter: rtl.LPVOID): rtl.DWORD
+        begin
+          BoehmGC.RegisterThread();
+          var lVal := Tuple<BeginThreadFunc, ^Void>(InternalCalls.Cast<Object>(lpThreadParameter));
+          lVal.Item1(lVal.Item2);
+        end, InternalCalls.Cast(lStart), 0, nil);
+    end;
+
+    {$IFDEF I386}
+    [SymbolName(#1'__allmul'), CallingConvention(CallingConvention.Stdcall)]
+    class method __allmul(aVal: rtl.ULONGLONG; aVal2: rtl.ULONGLONG): rtl.LONGLONG;
+    begin
+      exit aVal * aVal2;
+    end;
+
+    [SymbolName(#1'__allshl'), CallingConvention(CallingConvention.Stdcall), InlineAsmAttribute("
+    pushl %ecx
+    pushl %edx
+    pushl %eax
+    calll org__allshl
+    ret", '', false, false)]
+    class method _allshl(aVal: rtl.LONGLONG; aVal2: rtl.LONG): rtl.LONGLONG; external;
+
+    [SymbolName(#1'__allshr'), CallingConvention(CallingConvention.Stdcall), InlineAsmAttribute("
+    pushl %ecx
+    pushl %edx
+    pushl %eax
+    calll org__allshr
+    ret", '', false, false)]
+    class method _allshr(aVal: rtl.LONGLONG; aVal2: rtl.LONG): rtl.LONGLONG; external;
+
+    [SymbolName(#1'__aullshr'), CallingConvention(CallingConvention.Stdcall), InlineAsmAttribute("
+    pushl %ecx
+    pushl %edx
+    pushl %eax
+    calll org__aullshr
+    ret", '', false, false)]
+    class method _aullshr(aVal: rtl.ULONGLONG; aVal2: rtl.LONG): rtl.ULONGLONG; external;
+
+    [SymbolName(#1'org__allshl'), CallingConvention(CallingConvention.Stdcall)]
+    class method org_allshl(aVal: rtl.LONGLONG; aVal2: rtl.LONG): rtl.LONGLONG;
+    begin
+      exit aVal shl Byte(aVal2);
+    end;
+
+    [SymbolName(#1'org__allshr'), CallingConvention(CallingConvention.Stdcall)]
+    class method org_allshr(aVal: rtl.LONGLONG; aVal2: rtl.LONG): rtl.LONGLONG;
+    begin
+      exit aVal shr Byte(aVal2);
+    end;
+
+    [SymbolName(#1'org__aullshr'), CallingConvention(CallingConvention.Stdcall)]
+    class method org_aullshr(aVal: rtl.ULONGLONG; aVal2: rtl.LONG): rtl.ULONGLONG;
+    begin
+      exit aVal shr Byte(aVal2);
+    end;
+    {$ENDIF}
+
+    [SymbolName('strstr')]
+    class method strstr(str1, str2: ^AnsiChar): ^AnsiChar;
+    begin
+      if str1 = nil then exit nil;
+      while str2 <> nil do begin
+        if str2^ = str1^ then begin
+          var lTmp1 := str2;
+          var lTmp2 := str1;
+          loop begin
+            if lTmp1^ = #0 then exit str1;
+            if lTmp2^ = #0 then exit nil;
+            if lTmp2^ <> lTmp1^ then break;
+            inc(lTmp1);
+            inc(lTmp2);
+          end;
+        end;
+        str1 := str1 + 1;
+      end;
+      exit nil;
+    end;
+
+    [SymbolName('__GSHandlerCheck')]
+    class method _GSHandlerCheck;
+    begin
+      raise new NotSupportedException;
+    end;
+
+    [SymbolName('fclose')]
+    class method fclose(afn: FILEHANDLE);
+    begin
+      afn.Dispose();
+    end;
+
+    [SymbolName('__stdio_common_vfprintf')]
+    class method ___stdio_common_vfprintf(
+    _Options: UInt64;
+    _Stream: ^FILE;
+    _Format: ^AnsiChar;
+    _Locale: ^Void;
+    _ArgList: ^Void): Integer;
+    begin
+      // empty.
+    end;
+
+    [SymbolName('__security_check_cookie'), Inlineasm('ret', '', false, false)]
+    class method __security_check_cookie(_StackCookie: UIntPtr);  external;
+
+    [SymbolName('__stdio_common_vsnprintf_s')]
+    class method __stdio_common_vsnprintf_s( _Options: UInt64; _Buffer: ^AnsiChar; _BufferCount: IntPtr; _MaxCount: IntPtr; _Format: ^AnsiChar; _Locale: ^Void; _ArgList: ^Void): Integer;
+    begin
+      memcpy(_Buffer, _Format, Math.Min(ExternalCalls.strlen(_Format), Integer(_BufferCount)));
+    end;
+
+    [SymbolName('__acrt_iob_func')]
+    class method __acrt_iob_func(a: Integer): FILEHANDLE;
+    begin
+      case a of
+        0: exit GCHandle.Allocate(new FileStream(rtl.GetStdHandle(rtl.STD_INPUT_HANDLE), FileAccess.Read));
+        1: exit GCHandle.Allocate(new FileStream(rtl.GetStdHandle(rtl.STD_OUTPUT_HANDLE), FileAccess.Write));
+        2: exit GCHandle.Allocate(new FileStream(rtl.GetStdHandle(rtl.STD_ERROR_HANDLE), FileAccess.Write));
+      end;
+      exit &default(FILEHANDLE);
+    end;
+
+    [SymbolName('_time64')]
+    class method _time64(aVal: ^Int64): Int64;
+    begin
+      result := (DateTime.UtcNow.Ticks - DateTime.Now.UnixDateOffset) / DateTime.TicksPerSecond;
+      if aVal <> nil then
+        aVal^ := result;
+    end;
+
+    [SymbolName('_gmtime64_s')]
+    class method _gmtime64_s(tmdest: ^__struct_tm; aVal: ^Int64): Integer;
+    begin
+      var lValue := aVal^;
+      var DT := new DateTime(lValue * DateTime.TicksPerSecond + DateTime.UnixDateOffset);
+
+      tmdest^.tm_sec := DT.Second;
+      tmdest^.tm_min := DT.Minute;
+      tmdest^.tm_hour := DT.Hour;
+      tmdest^.tm_mday := DT.Day;
+      tmdest^.tm_wday := DT.DayOfWeek;
+      tmdest^.tm_mon := DT.Month - 1;
+      tmdest^.tm_year := DT.Year - 1900;
+      var lD := (DT.Date.Ticks - new DateTime(DT.Year, 1,1).Ticks);
+      tmdest^.tm_yday := lD / DateTime.TicksPerDay;
+    end;
+
+    [SymbolName('ferror')]
+    class method ferror: Integer; empty;
+
+    [SymbolName('fopen')]
+    class method fopen(afn: ^AnsiChar; aMode: ^AnsiChar): FILEHANDLE;
+    begin
+      var lMode := FileMode.Open;
+      var lAcc := FileAccess.ReadWrite;
+      var lModeStr := String.FromPAnsiChars(aMode);
+      if lModeStr.Contains('w') then begin
+        lMode := FileMode.OpenOrCreate;
+      end else begin
+        lMode := FileMode.Open;
+        lAcc := FileAccess.Read;
+      end;
+
+      try
+        var lFN := new FileStream(String.FromPAnsiChars(afn), lMode, lAcc);
+        if lModeStr.Contains('a') then
+          lFN.Seek(0, SeekOrigin.End);
+        exit GCHandle.Allocate(lFN);
+      except
+        exit default(GCHandle);
+      end;
+    end;
+
+    [SymbolName('fwrite')]
+    class method fwrite(aPtr: ^Byte; aSize: IntPtr; aCount: IntPtr; aFS: GCHandle): IntPtr;
+    begin
+      exit FileStream(aFS.Target).Write(aPtr, aSize * aCount);
+    end;
+
+
+    [SymbolName('fread')]
+    class method fread(aPtr: ^Byte; aSize: IntPtr; aCount: IntPtr; aFS: GCHandle): IntPtr;
+    begin
+      exit FileStream(aFS.Target).Read(aPtr, aSize * aCount);
+    end;
+
+    [SymbolName('fgets')]
+    class method fgets(aStr: ^Byte; aNum: Integer; aFS: GCHandle): ^Byte;
+    begin
+      dec(aNum);
+      var lRes := FileStream(aFS.Target).Read(aStr, aNum);
+      if lRes = 0 then exit nil;
+
+      aStr[lRes] := 0;
+
+      exit aStr;
+    end;
+
+    [SymbolName('fseek')]
+    class method fseek(aFS: GCHandle; aOffset: IntPtr; aOrg: Integer): IntPtr;
+    begin
+      exit FileStream(aFS.Target).Seek(aOffset, if aOrg = rtl.SEEK_SET then SeekOrigin.Begin else if aOrg = rtl.SEEK_END then SeekOrigin.End else SeekOrigin.Current);
+    end;
+
+
+    [SymbolName('ftell')]
+    class method ftell(aFS: GCHandle): IntPtr;
+    begin
+      exit FileStream(aFS.Target).Position;
+    end;
+
+    class var fRan: Random;
+
+    [SymbolName('rand')]
+    class method rand: Integer;
+    begin
+      if fRan = nil then fRan := new Random();
+      exit fRan.Random();
+    end;
+
+    [SymbolName(#1'@__security_check_cookie@4'), CallingConvention(CallingConvention.Stdcall), Inlineasm('ret', '', false, false)]
+    class method __security_check_cookie(v: Integer); external;
+
+    [SymbolName('__report_rangecheckfailure')]
+    method __report_rangecheckfailure();
+    begin
+      raise new Exception('Range check failure!');
+    end;
+
+    [SymbolName('calloc')]
+    class method calloc(anum, asize: IntPtr): ^Void;
+    begin
+      result := malloc(anum * asize);
+      memset(result, 0, anum * asize);
+    end;
+
     [SymbolName('getenv')]
     class method getenv(name: ^AnsiChar): ^AnsiChar; empty;
     [SymbolName('atoi')]
@@ -52,13 +298,7 @@ type
     [SymbolName('_fltused'), Used]
     class var _fltused: Integer;
     [SymbolName('_beginthreadex')]
-    class method _beginthreadex(
-       security: ^Void;
-       stack_size: Int32;
-       proc: rtl.PTHREAD_START_ROUTINE;
-       arglist: ^Void;
-       initflag: Cardinal;
-       thrdaddr: rtl.LPDWORD): rtl.HANDLE;
+    class method _beginthreadex( security: ^Void; stack_size: Int32; proc: rtl.PTHREAD_START_ROUTINE; arglist: ^Void; initflag: Cardinal; thrdaddr: rtl.LPDWORD): rtl.HANDLE;
     [SymbolName('_endthreadex')]
     class method _endthreadex(aval: Cardinal);
     [SymbolName('atexit')]
@@ -125,32 +365,114 @@ type
 
     {$IFDEF _WIN64}
     [SymbolName('_elements_exception_handler'), DisableInliningAttribute] // 32bits windows only!!
-  method ExceptionHandler(arec: ^rtl.EXCEPTION_RECORD; EstablisherFrame: UInt64; context: rtl.PCONTEXT; dispatcher: rtl.PDISPATCHER_CONTEXT ): Integer;
+    method ExceptionHandler(arec: ^rtl.EXCEPTION_RECORD; EstablisherFrame: UInt64; context: rtl.PCONTEXT; dispatcher: rtl.PDISPATCHER_CONTEXT ): Integer;
     {$ELSE}
     [SymbolName('_elements_exception_handler'), CallingConvention(CallingConvention.Stdcall), DisableInliningAttribute] // 32bits windows only!!
-    method ExceptionHandler([InReg]inmsvcinfo: ^MSVCExceptionInfo; arec: ^rtl.EXCEPTION_RECORD; aOrgregFrame: ^ElementsRegistrationFrame;
-      context: rtl.PCONTEXT; dispatcher: ^Void): Integer;
+    method ExceptionHandler([InReg]inmsvcinfo: ^MSVCExceptionInfo; arec: ^rtl.EXCEPTION_RECORD; aOrgregFrame: ^ElementsRegistrationFrame; context: rtl.PCONTEXT; dispatcher: ^Void): Integer;
     {$ENDIF}
-    [SymbolName('ElementsRaiseException')]
+
+    [SymbolName('ElementsRaiseException'), DllExport]
     class method RaiseException(aRaiseAddress: ^Void; aRaiseFrame: ^Void; aRaiseObject: Object);
 
-    [SymbolName('mainCRTStartup')]
-    class method mainCRTStartup: Integer;
-    [SymbolName('_DllMainCRTStartup'), CallingConvention(CallingConvention.Stdcall)]
-    class method DllMainCRTStartup(aModule: rtl.HMODULE; aReason: rtl.DWORD; aReserved: ^Void): Boolean;
-
     class property ModuleHandle: rtl.HMODULE read fModuleHandle;
-
 
     const ElementsExceptionCode = $E0428819;
 
 
+    [SymbolName('fmaxf')]
+    class method fmaxf(x, y: Single): Single;
+    begin
+      exit if x > y then x else y;
+    end;
+
+    [SymbolName('strtod')]
+    class method strtod(str: ^AnsiChar; aEndPtr: ^^AnsiChar): Double;
+    begin
+      Convert.TryParseDouble(String.FromPAnsiChars(str), out result, false);
+    end;
+
+    [SymbolName('strtol')]
+    class method strtol(str: ^AnsiChar; aEndPtr: ^^AnsiChar; aBase: Integer): Integer;
+    begin
+      var lStr := String.FromPAnsiChars(str);
+      if lStr.StartsWith('0x') then begin
+        Convert.TryHexStringToUInt64(lStr.Substring(2), out var lVal);
+        exit lVal;
+      end else begin
+        Convert.TryParseInt64(lStr, out var lVal, false);
+        exit lVal;
+      end;
+    end;
+
+    [SymbolName('toupper')]
+    class method ToUpper(c: AnsiChar): AnsiChar;
+    begin
+      if c in ['a'..'z'] then
+        c := AnsiChar((Integer(c) - Integer('a')) + Integer('A'));
+      exit c;
+    end;
+
+    [SymbolName('tolower')]
+    class method ToLower(c: AnsiChar): AnsiChar;
+    begin
+      if c in ['A'..'Z'] then
+        c := AnsiChar((Integer(c) - Integer('A')) + Integer('a'));
+      exit c;
+    end;
+
+    [SymbolName('frexp')]
+    class method frexp(x: Double; e: ^Integer): Double;
+    begin
+      var lVal := ^Int64(@x)^;
+      var exp := (lVal shr 52) and ($7ff);
+      if exp = 0 then begin
+        if x = 0 then begin
+          e^ := 0;
+          exit x;
+        end;
+        x := frexp(1.8446744073709552E+19 * x, e);
+        e := e - 64;
+        exit x;
+      end;
+      e^ := exp - $3fe;
+      lVal := (lVal and $800fffffffffffff) or $3fe0000000000000;
+      exit ^Double(@lVal)^;
+    end;
+
+
+    [SymbolName('fminf')]
+    class method fminf(x, y: Single): Single;
+    begin
+      exit if x < y then x else y;
+    end;
+
+    [SymbolName('fmax')]
+    class method fmax(x, y: Double): Double;
+    begin
+      exit if x > y then x else y;
+    end;
+
+    [SymbolName('fmin')]
+    class method fmin(x, y: Double): Double;
+    begin
+      exit if x < y then x else y;
+    end;
+
+
+
+    [SymbolName('roundf')]
+    class method roundf(x: Single): Single;
+    begin
+      exit Math.Round(x);
+    end;
+
+
     [SymbolName('strcmp')]
     class method strcmp(a, b: ^AnsiChar): Integer;
-    begin 
+    begin
       if (a = nil) and (b = nil) then exit 0;
       if (a = nil) or (b = nil) then exit if a = nil then 1 else -1;
-      loop begin 
+      loop begin
         if a^ > b^ then exit 1;
         if a^ < b^ then exit -1;
         if a^ = #0 then exit 0;
@@ -158,13 +480,14 @@ type
         inc(b);
       end;
     end;
+
     [SymbolName('strncmp')]
     class method strncmp(a, b: ^AnsiChar; num: NativeInt): Integer;
-    begin 
+    begin
       if (a = nil) and (b = nil) then exit 0;
       if (a = nil) or (b = nil) then exit if a = nil then 1 else -1;
       if num = 0 then exit 0;
-      loop begin 
+      loop begin
         if a^ > b^ then exit 1;
         if a^ < b^ then exit -1;
         if a^ = #0 then exit 0;
@@ -174,14 +497,14 @@ type
         if num = 0 then exit 0;
       end;
     end;
-        
+
     [SymbolName('memcmp')]
     class method memcmp(a, b: ^Byte; num: NativeInt): Integer;
-    begin 
+    begin
       if (a = nil) and (b = nil) then exit 0;
       if (a = nil) or (b = nil) then exit if a = nil then 1 else -1;
       if num = 0 then exit 0;
-      loop begin 
+      loop begin
         if a^ > b^ then exit 1;
         if a^ < b^ then exit -1;
         inc(a);
@@ -193,7 +516,7 @@ type
 
     [SymbolName('_localtime64_s')]
     class method _localtime64_s(var x: __struct_tm; aTime: Int64);
-    begin 
+    begin
       var dt := new DateTime(DateTime.UnixDateOffset + (aTime * DateTime.TicksPerSecond));
       x.tm_sec := dt.Second;
       x.tm_min := dt.Minute;
@@ -207,12 +530,13 @@ type
 
     class var fRandom: Random; volatile;
     class var fRandomLock: Integer;
+
     [SymbolName('rand_s')]
     class method rand_s(out x: UInt32): Integer;
-    begin 
+    begin
       Utilities.SpinLockEnter(var fRandomLock);
       var lRandom := fRandom;
-      if lRandom = nil then begin 
+      if lRandom = nil then begin
         lRandom := new Random;
         fRandom := lRandom;
       end;
@@ -220,39 +544,135 @@ type
       Utilities.SpinLockExit(var fRandomLock);
       exit 0;
     end;
+
+    [SymbolName('system')]
+    class method system(aVal: ^AnsiChar): Integer;
+    begin
+      var lCmd := String.FromPAnsiChars(aVal).Trim;
+      var lArgs := new List<String>;
+      while length(lCmd) > 0 do begin
+        if lCmd[0] ='"' then begin
+          var n := lCmd.IndexOf('"');
+          lArgs.Add(lCmd.Substring(1, -1));
+          lCmd := lCmd.Substring(n+1).Trim;
+        end else begin
+          var n := lCmd.IndexOf(' ');
+          lArgs.Add(lCmd.Substring(0, n));
+          lCmd := lCmd.Substring(n+1).Trim;
+        end;
+      end;
+      lCmd := lArgs.FirstOrDefault;
+      if lArgs.Count > 0 then lArgs.RemoveAt(0);
+      exit Process.Run(lCmd, lArgs, out var lStdOut, out var lStdErr);
+    end;
+    [SymbolName('_getcwd')]
+    class method _getcwd(aDest: ^AnsiChar; aLen: Integer): ^AnsiChar;
+    begin
+      var lDir := Environment.CurrentDirectory.ToAnsiChars;
+      if length(lDir) +1 > aLen then exit nil;
+      strncpy(aDest, @lDir[0], lDir.Length + 1);
+      exit aDest;
+    end;
+
+    [SymbolName('_chdir')]
+    class method _chdir(aDest: ^AnsiChar): Integer;
+    begin
+      exit Integer(rtl.SetCurrentDirectoryA(String.FromPAnsiChars(aDest)));
+    end;
+
+    [SymbolName('strpbrk')]
+    class method strpbrk(str1, str2: ^AnsiChar): ^AnsiChar;
+    begin
+      while str1^ <> #0 do begin
+        var lTest := str2;
+        while lTest^ <> #0 do begin
+          if lTest^ = str1^ then exit str1;
+          inc(lTest);
+        end;
+      end;
+      exit nil;
+    end;
+
+    [SymbolName('strncpy')]
+    class method strncpy(aDest, aSrc: ^AnsiChar; n: Integer): ^AnsiChar;
+    begin
+      while (n > 0) and (aSrc^ <> #0) do begin
+        aDest^ := aSrc^;
+        aDest := aDest + 1;
+        aSrc := aSrc + 1;
+        dec(n);
+      end;
+      while n > 0 do begin
+        aDest^ := #0;
+        aDest  := aDest + 1;
+        dec(n);
+      end;
+      result := aDest;
+    end;
+
+    [SymbolName('strchr')]
+    class method strchr(str: ^AnsiChar; c: Integer): ^AnsiChar;
+    begin
+      while str^ <> #0 do begin
+        if Integer(str^) = c then exit str;
+      end;
+      exit nil;
+    end;
+
+    [SymbolName('strrchr')]
+    class method strrchr(str: ^AnsiChar; c: Integer): ^AnsiChar;
+    begin
+      var lHit: ^AnsiChar := nil;
+      while str^ <> #0 do begin
+        if Integer(str^) = c then lHit := str;
+      end;
+      exit lHit;
+    end;
+
+    [SymbolName('srand')]
+    class method srand(val: UInt32);
+    begin
+      fRandom.Set(val);
+    end;
+
     [SymbolName('_byteswap_ulong')]
     class method _byteswap_ulong(i: UInt32): UInt32;
-    begin 
+    begin
       exit (i shl 24) or (i shr 24) or ((i shr 8) and $FF00) or ((i shl 8) and $FF0000);
     end;
+
     [SymbolName('_byteswap_ushort')]
     class method _byteswap_ushort(i: UInt16): UInt16;
-    begin 
+    begin
       exit (i shl 8) or (i shr 8);
     end;
+
   end;
-{$G+}
-{$HIDE H7}{$HIDE H6}
+
+  {$G+}
+  {$HIDE H7}{$HIDE H6}
   __struct_tm = public record
+  public
     tm_sec,
-    tm_min,   
-    tm_hour,  
-    tm_mday,  
-    tm_mon,   
-    tm_year,  
-    tm_wday,  
-    tm_yday,  
+    tm_min,
+    tm_hour,
+    tm_mday,
+    tm_mon,
+    tm_year,
+    tm_wday,
+    tm_yday,
     tm_isdst: Integer;
   end;
-{$SHOW H7}{$SHOW H6}
+  {$SHOW H7}{$SHOW H6}
 
-  UserEntryPointType =public method (args: array of String): Integer;
   DllMainType = public method (aModule: rtl.HMODULE; aReason: rtl.DWORD; aReserved: ^Void): Boolean;
+
   ThreadRec = public class
   public
     property Call: rtl.PTHREAD_START_ROUTINE;
     property Arg: ^Void;
   end;
+
   ElementsRegistrationFrame = public record
   public
     ESP: ^Void;
@@ -260,6 +680,7 @@ type
     Handler: ^Void;
     TryLevel: Cardinal;
   end;
+
   MSVCExceptionInfo = public record
   public
     MagicNumber: UInt32; // 429065506
@@ -273,7 +694,7 @@ type
     UnwindHelp: UInt32;
     ESTypeList: ^Void;
     EHFlags: Int32;
-   {$ENDIF}
+    {$ENDIF}
     // From LLVM
     //   uint32_t           IPMapEntries; // always 0 for x86
     //   IPToStateMapEntry *IPToStateMap; // always 0 for x86
@@ -284,18 +705,20 @@ type
     // EHFlags & 1 -> Synchronous exceptions only, no async exceptions.
     // EHFlags & 2 -> ???
     // EHFlags & 4 -> The function is noexcept(true), unwinding can't continue.
-
   end;
+
   MSVCIpToSate = public record
   public
     IP: UInt32;
     State: Integer;
   end;
+
   MSVCUnwindMap = public record
   public
     ToState: Int32;
     Cleanup: {$IFDEF _WIN64}Int32{$ELSE}MSVCCleanup{$ENDIF};
   end;
+
   MSVCTryMap = public record
   public
     TryLow,
@@ -304,12 +727,15 @@ type
     NumCatches: Int32;
     HandlerType: {$IFDEF _WIN64}Int32{$ELSE}^MSVCHandlerType{$ENDIF};
   end;
+
   ElementsExceptionType = public record
   public
     &Type: ^Void;
     &Filter: ElementsFilter;
   end;
+
   ElementsFilter = public function(FP: ^Void): Boolean;
+
   MSVCHandlerType = public record
   public
     Adjectives: Int32; // from the exception record
@@ -318,71 +744,135 @@ type
     Handler: {$IFDEF _WIN64}Int32{$ELSE}MSVCCleanup{$ENDIF};
     {$IFDEF _WIN64}ParentFrameOffset: Int32;{$ENDIF}
   end;
+
   MSVCCleanup = public procedure();
 
+  method HResultCheck(aVal: rtl.HRESULT); public;
+  begin
+    if aVal = rtl.S_OK then exit;
+    raise new ArgumentException('HResult error: '+aVal);
+  end;
 
+  [SymbolName('__elements_entry_point'), &Weak]
+  method UserEntryPoint(args: array of String): Integer; external;
 
-method DefaultUserEntryPoint(args: array of String): Integer; empty;
-method DefaultDllMain(aModule: rtl.HMODULE; aReason: rtl.DWORD; aReserved: ^Void): Boolean; 
-  
+  [SymbolName('__elements_dll_main'), &Weak]
+  method DllMain(aModule: rtl.HMODULE; aReason: rtl.DWORD; aReserved: ^Void): Boolean; external;
+
 // This is needed by anything msvc compiled; it's the offset in fs for the tls array
 var
-  [Alias, SymbolName('__elements_entry_point'), &Weak]
-  UserEntryPoint: UserEntryPointType := @DefaultUserEntryPoint;
-  [Alias, SymbolName('__elements_dll_main'), &Weak]
-  DllMain: DllMainType := @DefaultDllMain;
-  [SymbolName('_tls_index')]
+  [Used, StaticallyInitializedField]
+  _dllmain: DllMainType := @DllMain; public;
+  [SymbolName('_tls_index'), Used, StaticallyInitializedField]
   _tls_index: Cardinal; public;
-  [SectionName('.tls'), SymbolName('_tls_start')]
-  _tls_start: NativeInt := 0;public;
-  [SectionName('.tls$ZZZ'), SymbolName('_tls_end')]
+  [SectionName('.tls'), SymbolName('_tls_start'), StaticallyInitializedField]
+  _tls_start: NativeInt := 0; public;
+  [SectionName('.tls$ZZZ'), SymbolName('_tls_end'), StaticallyInitializedField]
   _tls_end: NativeInt := 0; public;
 
-  [SectionName(".CRT$XLA"), SymbolName('__xl_a')]
-  __xl_a: rtl.PIMAGE_TLS_CALLBACK := nil;public;
-  [SectionName(".CRT$XLEL"), SymbolName('__elements_tls_callback'), Used()]
-  __elements_tls_callback: rtl.PIMAGE_TLS_CALLBACK := @elements_tls_callback;public;
-  [SectionName(".CRT$XLZ"), SymbolName('__xl_z')]
-  __xl_z: rtl.PIMAGE_TLS_CALLBACK := nil;public;
-  
-  [SectionName('.rdata$T'), SymbolName('_tls_used'), Used]
+  [SectionName(".CRT$XLA"), SymbolName('__xl_a'), StaticallyInitializedField]
+  __xl_a: rtl.PIMAGE_TLS_CALLBACK := nil; public;
+  [SectionName(".CRT$XLEL"), SymbolName('__elements_tls_callback'), Used(), StaticallyInitializedField]
+  __elements_tls_callback: rtl.PIMAGE_TLS_CALLBACK := @elements_tls_callback; public;
+  [SectionName(".CRT$XLZ"), SymbolName('__xl_z'), StaticallyInitializedField]
+  __xl_z: rtl.PIMAGE_TLS_CALLBACK := nil; public;
+
+  [SectionName('.rdata$T'), SymbolName('_tls_used'), Used, StaticallyInitializedField]
   _tls_used: {$IFDEF _WIN64}rtl.IMAGE_TLS_DIRECTORY64{$ELSE}rtl.IMAGE_TLS_DIRECTORY {$ENDIF}:=
     new {$IFDEF _WIN64}rtl.IMAGE_TLS_DIRECTORY64{$ELSE}rtl.IMAGE_TLS_DIRECTORY {$ENDIF}(
-      StartAddressOfRawData := NativeUInt(@_tls_start),
-      EndAddressOfRawData := NativeUInt (@_tls_end),
-      AddressOfIndex := NativeUInt(@_tls_index),
-      AddressOfCallbacks := NativeInt(^NativeInt(@__xl_a)+1),
-      SizeOfZeroFill := 0
-    ); readonly;public;
+    StartAddressOfRawData := NativeUInt(@_tls_start),
+    EndAddressOfRawData := NativeUInt (@_tls_end),
+    AddressOfIndex := NativeUInt(@_tls_index),
+    AddressOfCallBacks := NativeInt(^NativeInt(@__xl_a)+1 ),
+    SizeOfZeroFill := 0
+    ); readonly; public;
+
+  {$IFDEF _WIN64}
+  [Used, SymbolName('_load_config_used'), StaticallyInitializedField]
+  _load_config_used: rtl.IMAGE_LOAD_CONFIG_DIRECTORY :=
+    new rtl.IMAGE_LOAD_CONFIG_DIRECTORY(
+    size := sizeOf(rtl.IMAGE_LOAD_CONFIG_DIRECTORY),
+    SecurityCookie := UIntPtr(^UIntPtr(@__security_cookie)),
+    //GuardCFCheckFunctionPointer := UIntPtr(^UIntPtr(@__guard_check_icall_fptr)),
+    //GuardCFDispatchFunctionPointer := UIntPtr(^UIntPtr(@__guard_dispatch_icall_fptr)),
+    GuardCFFunctionTable := UIntPtr(^UIntPtr(@__guard_fids_table)),
+    GuardCFFunctionCount := UIntPtr(^UIntPtr(@__guard_fids_count)),
+    //GuardFlags := UIntPtr(^UIntPtr(@__guard_flags)),
+    GuardAddressTakenIatEntryTable := UIntPtr(^UIntPtr(@__guard_iat_table)),
+    GuardAddressTakenIatEntryCount := UIntPtr(^UIntPtr(@__guard_iat_count)),
+    GuardLongJumpTargetTable := UIntPtr(^UIntPtr(@__guard_longjmp_table)),
+    GuardLongJumpTargetCount := UIntPtr(^UIntPtr(@__guard_longjmp_count))
+    ); readonly; public;
+  {$else}
+  [Used, SymbolName('_load_config_used'), StaticallyInitializedField]
+  _load_config_used: rtl.IMAGE_LOAD_CONFIG_DIRECTORY :=
+    new rtl.IMAGE_LOAD_CONFIG_DIRECTORY(
+    Size := sizeOf(rtl.IMAGE_LOAD_CONFIG_DIRECTORY),
+    SecurityCookie := UIntPtr(^UIntPtr(@__security_cookie)),
+    SEHandlerTable := UIntPtr(^UIntPtr(@__safe_se_handler_table)),
+    SEHandlerCount := UIntPtr(^UIntPtr(@__safe_se_handler_count)),
+    //GuardCFCheckFunctionPointer := UIntPtr(^UIntPtr(@__guard_check_icall_fptr)),
+    GuardCFDispatchFunctionPointer := 0, // amd64: __guard_dispatch_icall_fptr
+    GuardCFFunctionTable := UIntPtr(^UIntPtr(@__guard_fids_table)),
+    GuardCFFunctionCount := UIntPtr(^UIntPtr(@__guard_fids_count)),
+    //GuardFlags := UIntPtr(^UIntPtr(@__guard_flags)),
+    GuardAddressTakenIatEntryTable := UIntPtr(^UIntPtr(@__guard_iat_table)),
+    GuardAddressTakenIatEntryCount := UIntPtr(^UIntPtr(@__guard_iat_count)),
+    GuardLongJumpTargetTable := UIntPtr(^UIntPtr(@__guard_longjmp_table)),
+    GuardLongJumpTargetCount := UIntPtr(^UIntPtr(@__guard_longjmp_count))
+    ); readonly; public;
+  {$ENDIF}
+
+  [SymbolName('__security_cookie'), StaticallyInitializedField] var __security_cookie: Integer := $12345678;
+  //[SymbolName('__guard_check_icall_fptr')] var __guard_check_icall_fptr: Integer; external;
+  {$IFDEF _WIN64}
+  //[SymbolName('__guard_dispatch_icall_fptr')] var __guard_dispatch_icall_fptr: Integer; external;
+  {$ELSE}
+  [SymbolName('__safe_se_handler_table'), StaticallyInitializedField] var __safe_se_handler_table: Integer; external;
+  [SymbolName('__safe_se_handler_count'), StaticallyInitializedField] var __safe_se_handler_count: Integer; external;
+  {$ENDIF}
+
+  [SymbolName('__guard_fids_table')] var __guard_fids_table: Integer; external;
+  [SymbolName('__guard_fids_count')] var __guard_fids_count: Integer; external;
+  //[SymbolName('__guard_flags')] var __guard_flags: Integer; external;
+  [SymbolName('__guard_iat_table')] var __guard_iat_table: Integer; external;
+  [SymbolName('__guard_iat_count')] var __guard_iat_count: Integer; external;
+  [SymbolName('__guard_longjmp_table')] var __guard_longjmp_table: Integer; external;
+  [SymbolName('__guard_longjmp_count')] var __guard_longjmp_count: Integer; external;
 
 [SymbolName('__elements_tls_callback_method'), Used, CallingConvention(CallingConvention.Stdcall)]
-method elements_tls_callback(aHandle: ^Void; aReason: rtl.DWORD; aReserved: ^Void);public;
+method elements_tls_callback(aHandle: ^Void; aReason: rtl.DWORD; aReserved: ^Void); public;
 [SymbolName('main')]
 method main: Integer;
 
+[SymbolName('mainCRTStartup')]
+method mainCRTStartup: Integer;
+
+[SymbolName('WinMainCRTStartup')]
+method WinMainCRTStartup: Integer;
+
+[SymbolName('_DllMainCRTStartup'), CallingConvention(CallingConvention.Stdcall), DisableOptimizations, DisableInlining]
+method DllMainCRTStartup(aModule: rtl.HMODULE; aReason: rtl.DWORD; aReserved: ^Void): Boolean;
 
 method ElementsThreadHelper(aParam: ^Void): rtl.DWORD;
-
 
 method CheckForIOError(value: Boolean);
 method CheckForLastError(aMessage: String := '');
 
-
 method malloc(size: NativeInt): ^Void; inline;
-begin 
+begin
   exit ExternalCalls.malloc(size);
 end;
- 
+
 method realloc(ptr: ^Void; size: NativeInt): ^Void;inline;
-begin 
+begin
   exit ExternalCalls.realloc(ptr, size);
 end;
 
 method free(v: ^Void);inline;
-begin 
-   ExternalCalls.Free(v);
+begin
+  ExternalCalls.free(v);
 end;
-
 
 implementation
 
@@ -461,22 +951,22 @@ begin
   vval := vval or (vval shl 32);
   // TODO: Optimize this
   while aNum >= 8 do begin
-    ^Int64(ptr)^ := 0;
+    ^Int64(ptr)^ := vval;
     ptr := ^Void(^Byte(ptr) + 8);
     dec(aNum, 8);
   end;
   if aNum >= 4 then begin
-    ^Int32(ptr)^ := 0;
+    ^Int32(ptr)^ := Int32(vval);
     ptr := ^Void(^Byte(ptr) + 4);
     dec(aNum, 4);
   end;
   if aNum >= 2 then begin
-    ^Int16(ptr)^ := 0;
+    ^Int16(ptr)^ := Int16(vval);
     ptr := ^Void(^Byte(ptr) + 2);
     dec(aNum, 2);
   end;
   if aNum >= 1 then begin
-    ^Byte(ptr)^ := 0;
+    ^Byte(ptr)^ := value;
   end;
 end;
 
@@ -535,7 +1025,7 @@ method ElementsThreadHelper(aParam: ^Void): rtl.DWORD;
 begin
   var aThread:= InternalCalls.Cast<ThreadRec>(aParam);
   try
-  result := aThread.Call(aThread.Arg);
+    result := aThread.Call(aThread.Arg);
   finally
     rtl.ExitThread(result);
   end;
@@ -566,7 +1056,8 @@ end;
 class method ExternalCalls.realloc(ptr: ^Void; size: NativeInt): ^Void;
 begin
   if processheap = nil then processheap := rtl.GetProcessHeap;
-
+  if ptr = nil then
+    exit rtl.HeapAlloc(processheap, 0, size);
   exit rtl.HeapReAlloc(processheap, 0, ptr, size);
 end;
 
@@ -644,7 +1135,7 @@ end;
 
 class method ExternalCalls.int64remainder(dividend, divisor: Int64): Int64;
 begin
-if divisor = dividend then exit 0;
+  if divisor = dividend then exit 0;
   if divisor = 0 then begin
     {$message hint throw!}
     exit 0;
@@ -704,7 +1195,7 @@ end;
 
 class method ExternalCalls.int64divide(dividend, divisor: Int64): Int64;
 begin
-if divisor = dividend then exit 1;
+  if divisor = dividend then exit 1;
   if divisor = 0 then begin
     {$message hint throw!}
     exit 0;
@@ -786,36 +1277,36 @@ end;
 class method ExternalCalls._chkstk;
 begin
 {$IFNDEF _WIN64}
-  InternalCalls.voidasm(
-  "
-    push %ecx  // save EcX as the caller doesn't expect ANY changes to registers, except EAX which holds the nr of bytes
-    leal 4(%esp), %ecx // top of the stack after returning from this function
-    cmpl $$0x1000, %eax
-    jb done // if below 4096, done
-  loop:
-    subl $$0x1000, %eax  // decrease the count by 4096
-    subl $$0x1000, %ecx  // decrease (ie grow) the stack bt 4096
-    testl %ecx, (%ecx) // touch it
-    cmpl $$0x1000, %eax
-    jae loop // if above or equal to 4096, loop
-  done:
-    xchg %eax, %ecx
-    subl %ecx, %eax
-    movl 4(%esp), %ecx // store the original top of stack in ecx
-    movl %ecx, (%eax) // place it back at the top of the new stack
-    movl (%esp), %ecx // restore ecx
-    movl %eax, %esp
-    ret
+InternalCalls.VoidAsm(
+"
+  push %ecx  // save EcX as the caller doesn't expect ANY changes to registers, except EAX which holds the nr of bytes
+  leal 4(%esp), %ecx // top of the stack after returning from this function
+  cmpl $$0x1000, %eax
+  jb done // if below 4096, done
+loop:
+  subl $$0x1000, %eax  // decrease the count by 4096
+  subl $$0x1000, %ecx  // decrease (ie grow) the stack bt 4096
+  testl %ecx, (%ecx) // touch it
+  cmpl $$0x1000, %eax
+  jae loop // if above or equal to 4096, loop
+done:
+  xchg %eax, %ecx
+  subl %ecx, %eax
+  movl 4(%esp), %ecx // store the original top of stack in ecx
+  movl %ecx, (%eax) // place it back at the top of the new stack
+  movl (%esp), %ecx // restore ecx
+  movl %eax, %esp
+  ret
 ", "", false, false);
 {$ELSE}
 // This version is dual licensed under the MIT and the University of Illinois Open Source Licenses. See LICENSE.TXT for details; from the llvm compiler-RT project.
-  InternalCalls.voidasm(
-  "
-        push   %rcx
-        push   %rax
-        cmp    $$0x1000,%rax
-        lea    24(%rsp),%rcx
-        jb     done
+InternalCalls.voidasm(
+"
+      push   %rcx
+      push   %rax
+      cmp    $$0x1000,%rax
+      lea    24(%rsp),%rcx
+      jb     done
 loop:
         sub    $$0x1000,%rcx
         test   %rcx,(%rcx)
@@ -870,8 +1361,8 @@ retq
 method CallCatch64(aCall: NativeInt; aEBP: NativeInt): NativeInt; external;
 {$ELSE}
 [DisableInlining]
-method CallCatch32(aCall: NativeInt; aEBP: NativeInt): NativeInt; 
-begin 
+method CallCatch32(aCall: NativeInt; aEBP: NativeInt): NativeInt;
+begin
   exit InternalCalls.Asm("
 movl $2, %ebp
 calll *$1
@@ -881,18 +1372,18 @@ end;
 
 {$IFNDEF _WIN64}
 [DisableInlining, DisableOptimizations, LinkOnce]
-method MyRtlUnwind(TargetFrame: IntPtr; TargetIp: IntPtr; ExceptionRecord: IntPtr; ReturnValue: IntPtr); 
-begin 
+method MyRtlUnwind(TargetFrame: IntPtr; TargetIp: IntPtr; ExceptionRecord: IntPtr; ReturnValue: IntPtr);
+begin
   InternalCalls.VoidAsm("
-	movl $3, %eax
+  movl $3, %eax
   pushl %eax
-	movl $2, %eax
+  movl $2, %eax
   pushl %eax
-	movl $1, %eax
+  movl $1, %eax
   pushl %eax
-	movl $0, %eax
+  movl $0, %eax
   pushl %eax
-	calll	_RtlUnwind@16
+  calll  _RtlUnwind@16
   ", "m,m,m,m,~{ebp},~{esp},~{ebx},~{esi},~{edi},~{dirflag},~{fpsr},~{flags}", true, true, [TargetFrame, TargetIp, ExceptionRecord, ReturnValue]);
   if TargetFrame = 0 then // KEEP! This forces it to be linked in, without this call it disapears!
     rtl.RtlUnwind(^Void(TargetFrame), ^Void(TargetIp), rtl.PEXCEPTION_RECORD(ExceptionRecord), ^Void(ReturnValue));
@@ -904,7 +1395,7 @@ end;{$ENDIF}
     movq %r8, %rbp
     movq %rdx, %rsp
     jmpq *%rcx
-", "", false, false), DisableInlining, DisableOptimizations] 
+", "", false, false), DisableInlining, DisableOptimizations]
 method JumpToContinuation64(aAddress, aESP, aEBP: NativeInt); external;
 {$ELSE}
 (*[InlineAsm("
@@ -914,8 +1405,8 @@ method JumpToContinuation64(aAddress, aESP, aEBP: NativeInt); external;
     jmpl *%eax
 ", "", false, false), DisableInlining, DisableOptimizations]*)
 [DisableInlining, DisableOptimizations]
-method JumpToContinuation32(aAddress, aESP, aEBP: NativeInt); 
-begin 
+method JumpToContinuation32(aAddress, aESP, aEBP: NativeInt);
+begin
   InternalCalls.VoidAsm("
     movl $2, %ebp
     movl $0, %eax
@@ -979,7 +1470,7 @@ begin
       var lTargetState := arec^.ExceptionInformation[3];
       // special exception, we're unwinding to a specific stat
       while (index < msvcinfo^.NumUnwindMap) and (&index <> lTargetState) do begin
-      if lMap[index].Cleanup <> 0 then CallCatch64(dispatcher^.ImageBase + lMap[index].Cleanup, dispatcher^.EstablisherFrame);
+        if lMap[index].Cleanup <> 0 then CallCatch64(dispatcher^.ImageBase + lMap[index].Cleanup, dispatcher^.EstablisherFrame);
         index:= lMap[index].ToState;
       end;
       exit;
@@ -1025,7 +1516,7 @@ begin
   result := 1;
 end;
 {$ELSE}
- method ExternalCalls.ExceptionHandler(inmsvcinfo: ^MSVCExceptionInfo; arec: ^rtl.EXCEPTION_RECORD; aOrgregFrame: ^ElementsRegistrationFrame; context: rtl.PCONTEXT; dispatcher: ^Void): Integer;
+method ExternalCalls.ExceptionHandler(inmsvcinfo: ^MSVCExceptionInfo; arec: ^rtl.EXCEPTION_RECORD; aOrgregFrame: ^ElementsRegistrationFrame; context: rtl.PCONTEXT; dispatcher: ^Void): Integer;
 begin
   var msvcinfo := inmsvcinfo;
   var regFrame := ^ElementsRegistrationFrame(@^NativeInt(aOrgregFrame)[-1]);
@@ -1068,7 +1559,7 @@ begin
               MyRtlUnwind(IntPtr(aOrgregFrame), nil, IntPtr(arec), nil);
               // now unwind locally
               while (regFrame^.TryLevel <> $FFFFFFFF) and (regFrame^.TryLevel < tb^.CatchHigh) and (regFrame^.TryLevel >= tb^.TryLow) do begin
-                if msvcinfo^.UnwindMap[regFrame^.TryLevel].Cleanup <> nil then begin 
+                if msvcinfo^.UnwindMap[regFrame^.TryLevel].Cleanup <> nil then begin
                   CallCatch32(NativeInt(^Void(msvcinfo^.UnwindMap[regFrame^.TryLevel].Cleanup)), lBaseAddress);
                 end;
                 regFrame^.TryLevel := msvcinfo^.UnwindMap[regFrame^.TryLevel].ToState;
@@ -1100,29 +1591,51 @@ begin
   Utilities.Initialize;
   var cnt: Int32;
   var args := rtl.CommandLineToArgvW(rtl.GetCommandLineW(), @cnt);
-  var args_s := new String[cnt];
-  for i: Integer := 0 to cnt-1 do
-    args_s[i] := String.FromPChar(args[i]);
-  exit UserEntryPoint(args_s);
+  var args_s := new String[cnt-1];
+  for i: Integer := 1 to cnt-1 do
+    args_s[i-1] := String.FromPChar(args[i]);
+  result := UserEntryPoint(args_s);
+  while ExternalCalls.atexitlist <> nil do begin
+    ExternalCalls.atexitlist^.func();
+    ExternalCalls.atexitlist := ExternalCalls.atexitlist^.next;
+  end;
 end;
 
-method ExternalCalls.mainCRTStartup: Integer;
+method mainCRTStartup: Integer;
 begin
-  &exit(main);
+  ExternalCalls.fModuleHandle := rtl.GetModuleHandle(nil);
+  var lMain := main;
+  BoehmGC.UnloadGC;
+  ExternalCalls.exit(lMain);
+end;
+
+method WinMainCRTStartup: Integer;
+begin
+  ExternalCalls.fModuleHandle := rtl.GetModuleHandle(nil);
+  var lMain := main;
+  BoehmGC.UnloadGC;
+  ExternalCalls.exit(lMain);
 end;
 
 type
   VoidMethod = method;
 
-method ExternalCalls.DllMainCRTStartup(aModule: rtl.HMODULE; aReason: rtl.DWORD; aReserved: ^Void): Boolean;
-begin
-  fModuleHandle := aModule;
-  exit DllMain(aModule, aReason, aReserved);
-end;
-
-method DefaultDllMain(aModule: rtl.HMODULE; aReason: rtl.DWORD; aReserved: ^Void): Boolean; 
-begin 
-  exit true;
-end;
+  method DllMainCRTStartup(aModule: rtl.HMODULE; aReason: rtl.DWORD; aReserved: ^Void): Boolean;
+  begin
+    var lMain: ^DllMainType := @_dllmain;
+    ExternalCalls.fModuleHandle := aModule;
+    try
+      if lMain^ = nil then exit true;
+      exit lMain^(aModule, aReason, aReserved);
+    finally
+      if (aReason = rtl.DLL_PROCESS_DETACH) then begin
+        while ExternalCalls.atexitlist <> nil do begin
+          ExternalCalls.atexitlist^.func();
+          ExternalCalls.atexitlist := ExternalCalls.atexitlist^.next;
+        end;
+        BoehmGC.UnloadGC;
+      end;
+    end;
+  end;
 
 end.

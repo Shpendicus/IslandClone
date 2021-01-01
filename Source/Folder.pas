@@ -33,9 +33,19 @@ type
       {$ELSE}{$ERROR}{$ENDIF}
     end;
 
+    class method Delete(aFolder: String);
+    begin
+      new Folder(aFolder).Delete;
+    end;
+
     method Exists: Boolean;override;
     begin
       exit FileUtils.FolderExists(fFullName);
+    end;
+
+    class method Exists(aFolder: String): Boolean;
+    begin
+      exit FileUtils.FolderExists(aFolder);
     end;
 
     method Rename(NewName: String): Folder;
@@ -56,23 +66,24 @@ type
         exit nil;
     end;
 
-    method GetFiles: not nullable List<File>;
+    method GetFiles: not nullable ImmutableList<File>;
     begin
-      result := new List<File>;
+      var lResult := new List<File> as not nullable;
       {$IFDEF WINDOWS}
       var find: rtl.WIN32_FIND_DATAW;
       var hFind  := rtl.FindFirstFileW((FullName + '\*').ToFileName(),@find);
-      if hFind = rtl.INVALID_HANDLE_VALUE then exit;
+      if hFind = rtl.INVALID_HANDLE_VALUE then
+        exit lResult;
       repeat
         if FileUtils.IsFile(find.dwFileAttributes) then
-          result.Add(new File(Path.Combine(FullName,String.FromPChar(@find.cFileName[0]))));
+          lResult.Add(new File(Path.Combine(FullName,String.FromPChar(@find.cFileName[0]))));
       until (not rtl.FindNextFileW(hFind, @find));
       {$ELSEIF POSIX}
       // code from http://pubs.opengroup.org/onlinepubs/9699919799/ was used as an example
       var dfd: Int32 := rtl.open(FullName.ToFileName(), rtl.O_RDONLY);
       var d: ^rtl.DIR := rtl.fdopendir(dfd);
       if d = nil then begin
-        exit;
+        exit lResult;
       end;
       try
       var dp: ^rtl.__struct_dirent := rtl.readdir(d);
@@ -84,7 +95,7 @@ type
           try
             var statbuf: rtl.__struct_stat;
             if rtl.fstat(ffd,@statbuf) <> 0 then continue;
-            if FileUtils.isFile(statbuf.st_mode) then result.Add(new File(Path.Combine(FullName,fn)));
+            if FileUtils.IsFile(statbuf.st_mode) then lResult.Add(new File(Path.Combine(FullName,fn)));
           finally
             rtl.close(ffd);
           end;
@@ -95,29 +106,34 @@ type
       finally
         rtl.closedir(d);
       end;
-      {$ELSE}{$ERROR}{$ENDIF}
+      {$ELSE}
+      {$ERROR}
+      {$ENDIF}
+      result := lResult;
     end;
 
-    method GetSubfolders: not nullable List<Folder>;
+    method GetSubfolders: not nullable ImmutableList<Folder>;
     begin
-      result := new List<Folder>;
+      var lResult := new List<Folder> as not nullable;;
       {$IFDEF WINDOWS}
       var find: rtl.WIN32_FIND_DATAW;
       var hFind  := rtl.FindFirstFileW((FullName + '\*').ToFileName(),@find);
-      if hFind = rtl.INVALID_HANDLE_VALUE then exit;
+      if hFind = rtl.INVALID_HANDLE_VALUE then
+        exit lResult;
       repeat
         if FileUtils.IsFolder(find.dwFileAttributes) then begin
           var fn := String.FromPChar(@find.cFileName[0]);
           // skip `.` and `..`
           if (fn='.') or (fn='..') then continue;
-          result.Add(new Folder(Path.Combine(FullName,fn)));
+          lResult.Add(new Folder(Path.Combine(FullName,fn)));
         end;
       until (not rtl.FindNextFileW(hFind, @find));
       {$ELSEIF POSIX}
       // code from http://pubs.opengroup.org/onlinepubs/9699919799/ was used as an example
       var dfd: Int32 := rtl.open(FullName.ToFileName(), rtl.O_RDONLY);
       var d: ^rtl.DIR := rtl.fdopendir(dfd);
-      if d = nil then exit;
+      if d = nil then
+        exit lResult;
       try
       var dp: ^rtl.__struct_dirent := rtl.readdir(d);
       while (dp <> nil) do begin
@@ -130,7 +146,7 @@ type
           try
             var statbuf: rtl.__struct_stat;
             if rtl.fstat(ffd,@statbuf) <> 0 then continue;
-            if FileUtils.isFolder(statbuf.st_mode) then result.Add(new Folder(Path.Combine(FullName,fn)));
+            if FileUtils.IsFolder(statbuf.st_mode) then lResult.Add(new Folder(Path.Combine(FullName,fn)));
           finally
             rtl.close(ffd);
           end;
@@ -141,7 +157,10 @@ type
       finally
         rtl.closedir(d);
       end;
-      {$ELSE}{$ERROR}{$ENDIF}
+      {$ELSE}
+      {$ERROR}
+      {$ENDIF}
+      result := lResult;
     end;
 
     class method CreateFolder(FolderName: String; FailIfExists: Boolean := false): Folder;

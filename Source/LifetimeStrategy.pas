@@ -29,8 +29,9 @@ type
   
   Manual<T> = public lifetimestrategy (Manual) T;
   Manual = public record(ILifetimeStrategy<Manual>)
-  private 
+  private {$HIDE H6}
     fValue: IntPtr;
+      {$SHOW H6}
   public
     class method &New(aTTY: ^Void; aSize: IntPtr): ^Void;
     begin 
@@ -57,11 +58,19 @@ type
       try {$HIDE W58}
         InternalCalls.Cast<Object>(^Void(aObj)).Finalize;
         {$SHOW W58}
-        free(^Void(aObj));
+        {$IFDEF WINDOWS or WEBASSEMBLY}
+        __Global.free(^Void(aObj));
+        {$ELSE}
+         rtl.free(^Void(aObj));
+        {$ENDIF}
       except 
       end;
     end;
-    
+    class method Free<T>(aVal: Manual<T>); public;
+    begin 
+      FreeObject(IntPtr(InternalCalls.Cast(aVal)));
+    end;
+
   end;
   
   RC<T> = public lifetimestrategy (RC) T;
@@ -109,7 +118,7 @@ type
         InternalCalls.Increment(var ^IntPtr(lInst)[-1]);
       end;
       if lOld <> 0  then begin 
-        if InternalCalls.Decrement(var ^IntPtr(lOld)[-1]) = 0 then  
+        if InternalCalls.Decrement(var ^IntPtr(lOld)[-1]) = 1 then  
           FreeObject(lOld);
       end;
     end;
@@ -119,8 +128,8 @@ type
       var lValue := InternalCalls.Exchange(var fValue, 0);
       if lValue = 0 then exit;
       var p := InternalCalls.Decrement(var ^IntPtr(lValue)[-1]);
-      if p = 0 then 
-        FreeObject(p);    
+      if p = 1 then 
+        FreeObject(lValue);    
     end;
 
     class method Init(var Dest: RC); empty;
@@ -130,7 +139,7 @@ type
       var lValue := InternalCalls.Exchange(var Dest.fValue, 0);
       if lValue = 0 then exit;
       var p := InternalCalls.Decrement(var ^IntPtr(lValue)[-1]);
-      if p = 0 then 
+      if p = 1 then 
         FreeObject(p);
     end;
     

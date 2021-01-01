@@ -54,7 +54,7 @@ type
         var len := rtl.GetEnvironmentVariableW(Name.ToLPCWSTR ,rtl.LPWSTR(@buf[0]), 32767);
         if len > 0 then
           result := String.FromPChar(@buf[0], len);
-        {$ELSEIF WEBASSEMBLY} 
+        {$ELSEIF WEBASSEMBLY}
         exit nil;
         {$ELSEIF POSIX}
         var lName := Name.ToAnsiChars;
@@ -63,6 +63,67 @@ type
         {$ERROR Unsupported platform}
         {$ENDIF}
       end;
+    end;
+
+    method SetEnvironmentVariable(Name: String; Value: String): Boolean;
+    begin
+      {$IFDEF WINDOWS}
+        exit rtl.SetEnvironmentVariable(Name.ToLPCWSTR, Value.ToLPCWSTR);
+      {$ELSEIF WEBASSEMBLY}
+      exit false;
+      {$ELSEIF POSIX}
+      var lName := Name.ToAnsiChars(true);
+      if Value ≠ nil then begin
+        var lValue := Value.ToAnsiChars(true);
+        exit rtl.setenv(@lName[0], @lValue[0], 1) = 0;
+      end
+      else
+        exit rtl.unsetenv(@lName[0]) = 0;
+      {$ENDIF}
+    end;
+
+    method GetEnvironmentVariables: ImmutableDictionary<String, String>;
+    begin
+      var lResult := new Dictionary<String,String>();
+      {$IFDEF WINDOWS}
+      var lEnvp := rtl.GetEnvironmentStringsW;
+      if lEnvp = nil then
+        exit;
+      var lStrings := lEnvp;
+      while lStrings^ ≠ ''#0 do begin
+        var lVar := lStrings;
+        var lOneVar: String := '';
+        while lVar^ ≠ #0 do begin
+          lOneVar := lOneVar + lVar^;
+          inc(lVar);
+          inc(lStrings);
+        end;
+        if lOneVar ≠ '' then begin
+          var lPos := lOneVar.LastIndexOf('=');
+          if lPos >= 0 then begin
+            var lKey := lOneVar.Substring(0, lPos);
+            var lValue := lOneVar.Substring(lPos + 1);
+            lResult.Add(lKey, lValue);
+          end;
+        end;
+        inc(lStrings);
+      end;
+      rtl.FreeEnvironmentStrings(lEnvp);
+      {$ELSEIF POSIX}
+      var lStrings := ExternalCalls.envp;
+      var i: Integer := 0;
+      while lStrings[i] ≠ nil do begin
+        var lVar := String.FromPAnsiChars(lStrings[i]);
+        var lPos := lVar.LastIndexOf('=');
+        if lPos >= 0 then begin
+          var lKey := lVar.Substring(0, lPos);
+          var lValue := lVar.Substring(lPos + 1);
+          lResult.Add(lKey, lValue);
+        end;
+        inc(i);
+      end;
+      {$ENDIF}
+      result := lResult;
     end;
 
     method CurrentDirectory: String;
@@ -82,9 +143,9 @@ type
         end;
       end;
       CheckForLastError;
-      {$ELSEIF WEBASSEMBLY} 
+      {$ELSEIF WEBASSEMBLY}
       exit nil;
-      {$ELSEIF ANDROID}
+      {$ELSEIF ANDROID or DARWIN}
       var len := 1024;
       loop begin
         var buf := new AnsiChar[len];
@@ -115,7 +176,47 @@ type
       {$ELSE}{$ERROR}{$ENDIF}
       exit new Folder(fn);
     end;
+    method TempFolder: Folder;
+    begin
+      var lString: String;
+      {$IF WINDOWS}
+      var lBuf := new Char[rtl.MAX_PATH + 1];
+      var lLen := rtl.GetTempPath(rtl.MAX_PATH, @lBuf[0]);
+      lString := if lLen <> 0 then new String(@lBuf[0], lLen) else '';
+      {$ELSEIF POSIX AND NOT DARWIN}
+      lString := 'TMPDIR';
+      var lTmp := rtl.getenv(lString.ToAnsiChars);
+      var lDir: String := '';
+      if lTmp <> nil then
+        lDir := RemObjects.Elements.System.String.FromPAnsiChars(lTmp);
+      lString := if lDir <> '' then lDir else rtl.P_tmpdir;
+      {$ELSEIF DARWIN}
+      var lTemp := Foundation.NSTemporaryDirectory();
+      lString := if lTemp = nil then '/tmp' else String(lTemp);
+      {$ENDIF}
+      result := new Folder(lString);
+    end;
     {$endif}
+
+    method ProcessorCount:Integer;
+    begin
+      {$IFDEF WINDOWS}
+      var si: rtl.SYSTEM_INFO;
+      rtl.GetSystemInfo(@si);
+      exit si.dwNumberOfProcessors;
+      {$ELSEIF POSIX}
+      exit rtl.sysconf(rtl._SC_NPROCESSORS_ONLN);
+      {$ENDIF}
+    end;
+
+    method &Exit(aCode: Integer);
+    begin
+      {$IFDEF WINDOWS}
+      ExternalCalls.exit(aCode);
+      {$ELSEIF POSIX}
+      rtl.exit(aCode);
+      {$ENDIF}
+    end;
   end;
 
 end.

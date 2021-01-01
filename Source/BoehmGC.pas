@@ -1,26 +1,132 @@
 ﻿namespace RemObjects.Elements.System;
+
 uses gc;
 
-[assembly:DefaultObjectLifetimeStrategy(typeOf(BoehmGC))]
+[assembly:DefaultObjectLifetimeStrategy(typeOf(BoehmGC), typeOf(ForeignBoehmGC))]
 
 type
   GC<T> = public lifetimestrategy (BoehmGC) T;
+  BoehmGC<T> = public lifetimestrategy (BoehmGC) T;
+
   DefaultGC = public BoehmGC;
+
+  // Same as boehm gc, but works in foreign object models
+  ForeignBoehmGC = public record(ILifetimeStrategy<ForeignBoehmGC>)
+  private
+    {$HIDE H6} // DO NOT REMOVE!!
+    fInst: IntPtr;
+    {$SHOW H6} // DO NOT REMOVE!!
+
+    class var fGC: Dictionary<Object, Integer> := new Dictionary<Object, Integer>(new ObjectReferenceComparer<Object>);
+    class var fLock: Monitor := new Monitor;
+  public
+    class method Release(var Dest: ForeignBoehmGC);
+    begin
+      var lValue := InternalCalls.Exchange(var Dest.fInst, 0);
+      Release(lValue);
+    end;
+
+    class method Init(var Dest: ForeignBoehmGC);
+    begin
+      Dest.fInst := 0;
+    end;
+
+    class method Copy(var aDest: ForeignBoehmGC; var aSource: ForeignBoehmGC);
+    begin
+      aDest.fInst := aSource.fInst;
+      AddRef(aDest.fInst);
+    end;
+
+    class method Assign(var aDest: ForeignBoehmGC; var aSource: ForeignBoehmGC);
+    begin
+      if (@aDest) = (@aSource) then exit;
+      var lSrc := aSource.fInst;
+      var lOld := InternalCalls.Exchange(var aDest.fInst, lSrc);
+      if lSrc = lOld then exit;
+      AddRef(lSrc);
+      Release(lOld);
+    end;
+
+    constructor;
+    begin
+      fInst := 0;
+    end;
+
+    class method &New(aTTY: ^Void; aSize: IntPtr): ^Void;
+    begin
+      exit BoehmGC.New(aTTY, aSize);
+    end;
+
+    [GCSkipIfOnStack]
+    constructor Copy(var aValue: ForeignBoehmGC);
+    begin
+      fInst := aValue.fInst;
+      AddRef(fInst);
+    end;
+
+    [GCSkipIfOnStack]
+    class operator Assign(var aDest: ForeignBoehmGC; var aSource: ForeignBoehmGC);
+    begin
+      if (@aDest) = (@aSource) then exit;
+      var lSrc := aSource.fInst;
+      var lOld := InternalCalls.Exchange(var aDest.fInst, lSrc);
+      if lSrc = lOld then exit;
+      AddRef(lSrc);
+      Release(lOld);
+    end;
+
+    [GCSkipIfOnStack]
+    finalizer;
+    begin
+      var lValue := InternalCalls.Exchange(var fInst, 0);
+      Release(lValue);
+    end;
+
+    class method AddRef(aVal: Object);
+    begin
+      if aVal = nil then exit;
+      locking fLock do begin
+        var i:  Integer;
+        if fGC.TryGetValue(aVal, out i) then inc(i) else i := 1;
+        fGC[aVal] := i;
+      end;
+    end;
+
+    class method Release(aVal: Object);
+    begin
+      if aVal = nil then exit;
+      locking fLock do begin
+        var i:  Integer;
+        if fGC.TryGetValue(aVal, out i) then begin
+          dec(i);
+          if i = 0 then fGC.Remove(aVal) else fGC[aVal] := i;
+        end;
+      end;
+    end;
+
+  end;
+
   BoehmGC = public record(ILifetimeStrategy<BoehmGC>)
   assembly
-    {$HIDE h6} // DO NOT REMOVE!!
+
+    {$HIDE H6} // DO NOT REMOVE!!
     var fInst: IntPtr;
-    {$SHOW h6}
+    {$SHOW H6}
     class var fFinalizer: ^Void;
     class var fLoaded: Integer; assembly;
+    class var fLocal: Boolean;
     class var fLock: Integer;
     {$IFDEF POSIX}[LinkOnce]{$ENDIF}
     class var fSharedMemory: SharedMemory; assembly;
 
-{$IFDEF POSIX}[LinkOnce, DllExport]{$ENDIF}
+    {$IFDEF POSIX}[LinkOnce, DllExport]{$ENDIF}
     [SkipDebug]
     class method LocalGC; private;
     begin
+      fLocal := true;
+      {$IF DARWIN}
+      GC_set_pages_executable(0);
+      {$ENDIF}
       GC_init;
       GC_allow_register_threads();
       fSharedMemory.collect := @GC_gcollect;
@@ -30,7 +136,9 @@ type
       fSharedMemory.setfinalizer := @SetFinalizer;
       fSharedMemory.unsetfinalizer := @UnsetFinalizer;
     end;
+
     {$IFDEF WINDOWS}class var fMapping: rtl.HANDLE;{$ENDIF}
+
     [SkipDebug]
     class method LoadGC; assembly;
     begin
@@ -121,8 +229,14 @@ type
       GC_register_finalizer_no_order(aVal, nil, nil, nil, nil);
     end;
 
+    class method SuppressFinalize(o: Object); public;
+    begin
+      if o = nil then exit;
+      fSharedMemory.unsetfinalizer(InternalCalls.Cast(o));
+    end;
+
     class method GC_my_register_my_thread: Integer;
-    begin 
+    begin
       {$IFDEF WINDOWS}
       var sb: GC_stack_base;
       GC_get_stack_base(@sb);
@@ -135,6 +249,7 @@ type
     end;
 
   public
+
     class method Collect(c: Integer);
     begin
       for i: Integer := 0 to c -1 do
@@ -143,16 +258,16 @@ type
 
     [SymbolName('boehmregisterthread')]
     class method RegisterThread;
-    begin 
+    begin
       fSharedMemory.register();
     end;
 
     [SymbolName('boehmunregisterthread')]
-    class method UnregisterThread; 
-    begin 
+    class method UnregisterThread;
+    begin
       fSharedMemory.unregister;
     end;
-    
+
     class method &New(aTTY: ^Void; aSize: NativeInt): ^Void;
     begin
       if fFinalizer = nil then begin
@@ -168,25 +283,55 @@ type
       end;
     end;
 
-    class method Assign(var aDest, aSource: BoehmGC); 
-    begin 
+    class method Assign(var aDest, aSource: BoehmGC);
+    begin
       aDest := aSource;
     end;
-    
-    class method Copy(var aDest, aSource: BoehmGC); 
+
+    class method Copy(var aDest, aSource: BoehmGC);
     begin
       aDest := aSource;
     end;
 
     class method Init(var Dest: BoehmGC); empty;
     class method Release(var Dest: BoehmGC); empty;
+    class method UnloadGC;
+    begin
+      if fLocal then begin
+        GC_gcollect_and_unmap();
+        GC_deinit();
+      end;
+      Utilities.SpinLockEnter(var fLock);
+      try
+        {$IFDEF WINDOWS}
+        if (fMapping <> nil) and (fMapping <> rtl.INVALID_HANDLE_VALUE) then begin
+          rtl.CloseHandle(fMapping);
+          fMapping := rtl.INVALID_HANDLE_VALUE;
+        end;
+        {$ENDIF}
+        fLoaded := 0;
+        fSharedMemory.collect := nil;
+        fSharedMemory.register := nil;
+        fSharedMemory.unregister := nil;
+        fSharedMemory.malloc := nil;
+        fSharedMemory.setfinalizer := nil;
+        fSharedMemory.unsetfinalizer := nil;
+      finally
+        Utilities.SpinLockExit(var fLock);
+      end;
+    end;
   end;
 
   BoehmGCExt = public extension class(Utilities)
-  public 
+  public
     class method Collect(c: Integer);
     begin
       BoehmGC.Collect(c);
+    end;
+
+    class method SuppressFinalize(c: Object);
+    begin
+      BoehmGC.SuppressFinalize(c);
     end;
   end;
 

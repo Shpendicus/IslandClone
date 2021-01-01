@@ -75,6 +75,11 @@ type
     begin
       inherited constructor('Member access on null reference');
     end;
+
+    constructor(s: String);
+    begin
+      inherited constructor(if s = nil then 'Member access on null reference' else 'Null Reference Exception for expression: '+s);
+    end;
   end;
 
   InvalidCastException = public class(Exception)
@@ -117,6 +122,12 @@ type
   end;
 
   InvalidStateException = public class(Exception)
+  end;
+
+  LibraryNotFoundException = public class(Exception)
+  end;
+
+  EntrypointNotFoundException = public class(Exception)
   end;
 
 end.

@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Attributes.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseFile.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)BitConverter.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Convert.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Debug.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)EqualityComparer.pas" />
@@ -23,7 +24,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Locale.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Nullable.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)ObjectPool.pas" />
-    <Compile Include="$(MSBuildThisFileDirectory)PrimitiveTypes.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Parallel.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Queue.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Random.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Stack.pas" />
@@ -31,6 +32,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)TextConvert.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Timer.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)TimeZone.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)UTF8String.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities.pas" />
     <Compile Include="Environment.pas" />
     <Compile Include="StringBuilder.pas" />
@@ -38,8 +40,12 @@
     <Compile Include="File.pas" />
     <Compile Include="Folder.pas" />
     <Compile Include="Path.pas" />
-    <Compile Include="MemoryStream.pas" />
-    <Compile Include="Stream.pas" />
+    <Compile Include="MemoryStream.pas">
+      <VirtualFolder>Streams</VirtualFolder>
+    </Compile>
+    <Compile Include="Stream.pas">
+      <VirtualFolder>Streams</VirtualFolder>
+    </Compile>
     <Compile Include="FileStream.pas" />
     <Compile Include="Tuples.pas" />
     <Compile Include="Dictionary.pas" />
@@ -58,5 +64,37 @@
     <Compile Include="Sequence.pas" />
     <Compile Include="Linq.pas" />
     <Compile Include="Dynamic.pas" />
+    <Compile Include="Span.pas" />
+    <Compile Include="Set.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Encoding.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)GenericNullable.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Serializable.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Bridges.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Bridges.Darwin.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)String.Bridge.Darwin.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Process.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Socket.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)MicroTasks.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)OleString.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)NSException.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Darwin.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Darwin.Macros.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Darwin.Macros.Foundation.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)CocoaGC.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Currency.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)VersionHelpers.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)StopWatch.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)DB.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)NullStream.pas">
+      <VirtualFolder>Streams</VirtualFolder>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Range.pas" />
+    <Compile Include="$(MSBuildThisFileDirectory)Resources.pas" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Streams">
+      <Virtual>True</Virtual>
+    </Folder>
   </ItemGroup>
 </Project>

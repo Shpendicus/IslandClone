@@ -5,10 +5,16 @@ interface
 type
   LCMapStringTransformMode = assembly enum (None, Upper, Lower);
 
-  String = public class(Object,IEnumerable<Char>, IEnumerable)
-  assembly {$HIDE H6}
+  String = public partial class(Object,IEnumerable<Char>, IEnumerable, IComparable, IComparable<String>)
+  assembly
+    {$HIDE H6}
+    // WARNING: Do not change the field structure w/o also changing the compiler! these are compiler created!
+    {$IFDEF DARWIN}
+    fCachedNSString: Foundation.NSString;
+    {$ENDIF}
     fLength: Integer;
-    fFirstChar: Char;{$SHOW H6}
+    fFirstChar: Char;
+    {$SHOW H6}
     method get_Item(i: Integer): Char;
     constructor; empty; // not callable
     {$IFDEF WINDOWS}
@@ -16,6 +22,15 @@ type
     method doLCMapString(aLocale: Locale; aMode:LCMapStringTransformMode := LCMapStringTransformMode.None): String;
     {$ENDIF}
     method TestChar(c: Char; Arr : array of Char): Boolean;
+    class method PcharLen(c: ^Char): Integer;
+    begin
+      if c = nil then exit 0;
+      result := 0;
+      while Byte(c^) <> 0 do begin
+        inc(c);
+        inc(result);
+      end;
+    end;
     class method RaiseError(aMessage: String);
     method CheckIndex(aIndex: Integer);
     method GetNonGenericEnumerator: IEnumerator; implements IEnumerable.GetEnumerator;
@@ -46,10 +61,10 @@ type
     method &Remove(StartIndex: Integer; Count: Integer): String;
     method CompareTo(Value: String): Integer;
     method CompareToIgnoreCase(Value: String): Integer;
-    method &Equals(Value: String): Boolean;
-    method &Equals(obj: Object): Boolean; override;
-    method EqualsIgnoreCase(Value: String): Boolean;
-    method EqualsIgnoreCaseInvariant(Value: String): Boolean;
+    method &Equals(aOther: String): Boolean;
+    method &Equals(aOther: Object): Boolean; override;
+    method EqualsIgnoreCase(aOther: String): Boolean;
+    method EqualsIgnoreCaseInvariant(aOther: String): Boolean;
     class method &Join(Separator: String; Value: array of String): String;
     class method &Join(Separator: String; Value: IEnumerable<String>): String;
     class method &Join<T>(Separator: String; Value: IEnumerable<T>): String;
@@ -64,7 +79,7 @@ type
     method LastIndexOfAny(anyOf: array of Char): Integer;
     method Substring(StartIndex: Integer): not nullable String;
     method Substring(StartIndex: Integer; aLength: Integer): not nullable String;
-    method Split(Separator: String; aRemoveEmptyEntries: Boolean := false): array of String;
+    method Split(Separator: String; aRemoveEmptyEntries: Boolean := false; aMax: Integer := -1): array of String;
     method Replace(OldValue, NewValue: String): not nullable String;
     method PadStart(TotalWidth: Integer): String; inline;
     method PadStart(TotalWidth: Integer; PaddingChar: Char): String;
@@ -84,7 +99,7 @@ type
     method TrimEnd(aChars: array of Char): String;
     method StartsWith(Value: String; aInvariant: Boolean := false): Boolean;
     method EndsWith(Value: String; aInvariant: Boolean := false): Boolean;
-    class method Format(aFormat: String; params aArguments: array of Object): String;
+    class method Format(aFormat: not nullable String; params aArguments: not nullable array of Object): String;
 
     class method Compare(aLeft, aRight: String): Integer;
     class operator Add(aLeft, aRight: String): String;
@@ -97,11 +112,18 @@ type
     class operator Less(Value1, Value2: String): Boolean;
     class operator GreaterOrEqual(Value1, Value2: String): Boolean;
     class operator LessOrEqual(Value1, Value2: String): Boolean;
-    class operator Equal(Value1, Value2: String): Boolean;
-    class operator NotEqual(Value1, Value2: String): Boolean;
+    class operator Equal(aValue1: String; aValue2: String): Boolean;
+    class operator NotEqual(aValue1: String; aValue2: String): Boolean;
 
     method ToString: String; override;
     method GetHashCode: Integer; override;
+
+    method CompareTo(a: Object): Integer;
+    begin
+      var lString := String(a);
+      if lString = nil then exit -1;
+      exit CompareTo(lString);
+    end;
   end;
 
   String_Constructors = public extension class(String)
@@ -133,6 +155,7 @@ end;
 
 class method String.FromPChar(c: ^Char; aCharCount: Integer): String;
 begin
+  if c = nil then exit nil;
   result := AllocString(aCharCount);
   memcpy(@result.fFirstChar, c, aCharCount * 2);
 end;
@@ -144,17 +167,15 @@ begin
   if outputdata = nil then begin
     exit -1;
   end;
+  retry:;
   var inpos := inputdata;
-  var outpos := outputdata;
   var left: rtl.size_t := inputdatalength;
   var outleft: rtl.size_t := suggestedlength;
-  retry:;
+  var outpos := outputdata;
   var count := rtl.iconv(cd, @inpos, @left, @outpos, @outleft);
   if (count = rtl.size_t(- 1)) and (rtl.errno = 7) then begin
-    suggestedlength := suggestedlength + 16;
-    var cu := outpos - outputdata;
+    suggestedlength := suggestedlength + left + 8;
     outputdata := ^AnsiChar(rtl.realloc(outputdata, suggestedlength));
-    outpos := outputdata + cu;
     goto retry;
   end;
   if (count = rtl.size_t(-1)) then begin
@@ -176,7 +197,7 @@ begin
   {$ELSEIF ANDROID or WEBASSEMBLY}
   var b := new Byte[aCharCount];
   Array.Copy(^Byte(c), b, 0, aCharCount);
-  exit TextConvert.UTF8ToString(b);
+  exit Encoding.UTF8.GetString(b);
   {$ELSE}
   var lNewData: ^AnsiChar := nil;
   var lNewLen: rtl.size_t := iconv_helper(TextConvert.fCurrentToUtf16, c, aCharCount, aCharCount * 2 + 5, out lNewData);
@@ -196,7 +217,7 @@ begin
   if len <> 0 then
     rtl.WideCharToMultiByte(rtl.CP_ACP, 0, @self.fFirstChar, Length, rtl.LPSTR(@result[0]), len, nil, nil);
   {$ELSEIF ANDROID or WEBASSEMBLY}
-  var b := TextConvert.StringToUtf8(self, false);
+  var b := Encoding.UTF8.GetBytes(self, false);
   result := new AnsiChar[b.Length + if aNullTerminate then 1 else 0];
   if b.Length <> 0 then
     memcpy(@result[0], @b[0], b.Length);
@@ -204,7 +225,7 @@ begin
   var lNewData: ^AnsiChar := nil;
   var lNewLen: rtl.size_t := iconv_helper(TextConvert.fUTF16ToCurrent, ^AnsiChar(@fFirstChar), Length * 2, Length + 5, out lNewData);
 
-  if lNewLen <> -1  then begin
+  if lNewLen <> rtl.size_t(-1)  then begin
     result := new AnsiChar[lNewLen+ if aNullTerminate then 1 else 0];
     if lNewLen <> 0 then
       rtl.memcpy(@result[0], lNewData, lNewLen);
@@ -263,7 +284,7 @@ end;
 
 class method String.AllocString(aLen: Integer): String;
 begin
-  result := InternalCalls.Cast<String>(DefaultGC.New(InternalCalls.GetTypeInfo<String>(), (sizeOf(Object) + sizeOf(Integer)) + 2 * aLen));
+  result := InternalCalls.Cast<String>(DefaultGC.New(InternalCalls.GetTypeInfo<String>(), (sizeOf(Object) + sizeOf(Integer) + if defined('DARWIN') then sizeOf(IntPtr) else 0) + 2 * aLen));
   result.fLength := aLen;
 end;
 
@@ -280,14 +301,14 @@ end;
 method String.Trim: String;
 begin
   if String.IsNullOrEmpty(self) then exit self;
-  var lStart:Integer := 0;
-  var len := Integer(self.Length);
-  var lEnd := Integer(len-1);
+  var lStart := 0;
+  var len := self.Length;
+  var lEnd := len-1;
 
-  while (lStart <= lEnd) and Char.IsWhiteSpace(self[lStart]) do inc(lStart);
+  while (lStart ≤ lEnd) and Char.IsWhiteSpace(self[lStart]) do inc(lStart);
   if lStart > lEnd then exit '';
 
-  while (lEnd >= lStart) and Char.IsWhiteSpace(self[lEnd]) do dec(lEnd);
+  while (lEnd ≥ lStart) and Char.IsWhiteSpace(self[lEnd]) do dec(lEnd);
   if lEnd < lStart then exit '';
 
   result := Substring(lStart, lEnd-lStart+1);
@@ -297,8 +318,8 @@ method String.Trim(aChars: array of Char): String;
 begin
   if String.IsNullOrEmpty(self) then exit self;
   var lStart := 0;
-  var len := Integer(self.Length);
-  var lEnd := Integer(len-1);
+  var len := self.Length;
+  var lEnd := len-1;
 
   while (lStart ≤ lEnd) and TestChar(self[lStart], aChars) do inc(lStart);
   if lStart > lEnd then exit '';
@@ -336,8 +357,8 @@ end;
 method String.TrimEnd: String;
 begin
   if String.IsNullOrEmpty(self) then exit self;
-  var len := Integer(self.Length);
-  var lEnd := Integer(len-1);
+  var len := self.Length;
+  var lEnd := len-1;
 
   while (lEnd ≥ 0) and Char.IsWhiteSpace(self[lEnd]) do dec(lEnd);
   if lEnd < 0 then exit '';
@@ -348,8 +369,8 @@ end;
 method String.TrimEnd(aChars: array of Char): String;
 begin
   if String.IsNullOrEmpty(self) then exit self;
-  var len := Integer(self.Length);
-  var lEnd := Integer(len-1);
+  var len := self.Length;
+  var lEnd := len-1;
 
   while (lEnd ≥ 0) and TestChar(self[lEnd], aChars) do dec(lEnd);
   if lEnd < 0 then exit '';
@@ -366,55 +387,122 @@ end;
 
 method String.Substring(StartIndex: Integer; aLength: Integer): not nullable String;
 begin
+  if aLength = 0 then exit '';
   CheckIndex(StartIndex);
   if aLength > 1 then
     CheckIndex(StartIndex+aLength-1);
-  if aLength = 0 then exit '';
   if (StartIndex = 0) and (aLength = self.Length) then exit self;
   {$HIDE W46}
   exit String.FromPChar(@(@fFirstChar)[StartIndex], aLength);
   {$SHOW W46}
 end;
 
-method String.&Equals(Value: String): Boolean;
+//
+// Equality
+//
+
+method String.&Equals(aOther: String): Boolean;
 begin
-  exit self = Value;
+  exit &Equals(Object(aOther));
 end;
 
-method String.Equals(obj: Object): Boolean;
+method String.Equals(aOther: Object): Boolean;
 begin
- if assigned(obj) and (obj is String) then
-   exit self = String(obj)
- else
-   exit false;
+  var lOther := String(aOther);
+  if defined("DARWIN") and not assigned(lOther) then
+    lOther := String(Foundation.NSString(IslandWrappedCocoaObject(aOther):Value));
+
+  if assigned(lOther) then begin
+    if self.Length <> lOther.Length then
+      exit false;
+    for i: Integer := 0 to self.Length-1 do
+      if self[i] <> lOther[i] then
+        exit false;
+    exit true;
+  end;
 end;
 
-method String.EqualsIgnoreCase(Value: String): Boolean;
+method String.EqualsIgnoreCase(aOther: String): Boolean;
 begin
-  exit self:ToLower() = Value:ToLower();
+  exit ToLower().Equals(aOther:ToLower());
 end;
 
-method String.EqualsIgnoreCaseInvariant(Value: String): Boolean;
+method String.EqualsIgnoreCaseInvariant(aOther: String): Boolean;
 begin
-  exit self:ToLowerInvariant() = Value:ToLowerInvariant();
+  exit ToLowerInvariant().Equals(aOther:ToLowerInvariant());
 end;
 
-class operator String.Equal(Value1, Value2: String): Boolean;
+class operator String.Equal(aValue1: String; aValue2: String): Boolean;
 begin
-  // (value1 = value2) = true
-  if (Object(Value1) = nil) and (Object(Value2) = nil) then exit true;
-  if ((Object(Value1) = nil) and (Object(Value2) <> nil)) or
-     ((Object(Value1) <> nil) and (Object(Value2) = nil)) then exit false;
-  if Value1.Length <> Value2.Length then exit false;
-  for i: Integer :=0 to Value1.Length-1 do
-    if Value1.Item[i] <> Value2.Item[i] then exit false;
-  exit true;
+  if not assigned(aValue1) then
+    result := not assigned(aValue2)
+  else
+    result := aValue1:&Equals(aValue2);
 end;
 
-class operator String.NotEqual(Value1, Value2: String): Boolean;
+class operator String.NotEqual(aValue1: String; aValue2: String): Boolean;
 begin
-  exit not Value1.Equals(Value2);
+  if not assigned(aValue1) then
+    result := assigned(aValue2)
+  else
+    result := not aValue1.Equals(aValue2);
 end;
+
+class operator String.Greater(Value1, Value2: String): Boolean;
+begin
+  // Value1 > Value2 = true
+  if (Object(Value1) = nil) then exit false;    // nil > ????
+  if (Object(Value2) = nil) then exit true;     // not nil > nil
+  var min_length := iif(Value1.Length > Value2.Length, Value2.Length, Value1.Length);
+
+  for i: Integer := 0 to min_length-1 do
+    if Value1.Item[i] <= Value2.Item[i] then exit false; //  a <= b
+
+  exit Value1.Length > Value2.Length;  // xxxy > xxx
+end;
+
+class operator String.Less(Value1, Value2: String): Boolean;
+begin
+  // Value1 < Value2 = true
+  if (Object(Value2) = nil) then exit false;    // ???? < nil
+  if (Object(Value1) = nil) then exit true;     // nil < not nil
+  var min_length := iif(Value1.Length > Value2.Length, Value2.Length, Value1.Length);
+
+  for i: Integer :=0 to min_length-1 do
+    if Value1.Item[i] >= Value2.Item[i] then exit false;  // b >= a
+
+  exit Value1.Length < Value2.Length; // xxx < xxxy
+end;
+
+class operator String.GreaterOrEqual(Value1, Value2: String): Boolean;
+begin
+  // Value1 >= Value2 = true
+  if (Object(Value2) = nil) then exit true;     // ???? >= nil
+  if (Object(Value1) = nil) then exit false;    // nil >= ????
+  var min_length := iif(Value1.Length > Value2.Length, Value2.Length, Value1.Length);
+
+  for i: Integer :=0 to min_length-1 do
+    if Value1.Item[i] < Value2.Item[i] then exit false; //  a <= b
+
+  exit Value1.Length >= Value2.Length;  // xxxy > xxx
+end;
+
+class operator String.LessOrEqual(Value1, Value2: String): Boolean;
+begin
+  // Value1 <= Value2 = true
+  if (Object(Value1) = nil) then exit true;     // nil <= ????
+  if (Object(Value2) = nil) then exit false;    // ???? <= nil
+  var min_length := iif(Value1.Length > Value2.Length, Value2.Length, Value1.Length);
+
+  for i: Integer :=0 to min_length-1 do
+    if Value1.Item[i] > Value2.Item[i] then exit false;  // b > a
+
+  exit Value1.Length <= Value2.Length; // xxx <= xxxy
+end;
+
+//
+//
+//
 
 method String.Contains(Value: String): Boolean;
 begin
@@ -482,58 +570,6 @@ begin
       inc(lstart, newValue_Length);
   end;
   until lstart = -1;
-end;
-
-class operator String.Greater(Value1, Value2: String): Boolean;
-begin
-  // Value1 > Value2 = true
-  if (Object(Value1) = nil) then exit false;    // nil > ????
-  if (Object(Value2) = nil) then exit true;     // not nil > nil
-  var min_length := iif(Value1.Length > Value2.Length, Value2.Length, Value1.Length);
-
-  for i: Integer := 0 to min_length-1 do
-    if Value1.Item[i] <= Value2.Item[i] then exit false; //  a <= b
-
-  exit Value1.Length > Value2.Length;  // xxxy > xxx
-end;
-
-class operator String.Less(Value1, Value2: String): Boolean;
-begin
-  // Value1 < Value2 = true
-  if (Object(Value2) = nil) then exit false;    // ???? < nil
-  if (Object(Value1) = nil) then exit true;     // nil < not nil
-  var min_length := iif(Value1.Length > Value2.Length, Value2.Length, Value1.Length);
-
-  for i: Integer :=0 to min_length-1 do
-    if Value1.Item[i] >= Value2.Item[i] then exit false;  // b >= a
-
-  exit Value1.Length < Value2.Length; // xxx < xxxy
-end;
-
-class operator String.GreaterOrEqual(Value1, Value2: String): Boolean;
-begin
-  // Value1 >= Value2 = true
-  if (Object(Value2) = nil) then exit true;     // ???? >= nil
-  if (Object(Value1) = nil) then exit false;    // nil >= ????
-  var min_length := iif(Value1.Length > Value2.Length, Value2.Length, Value1.Length);
-
-  for i: Integer :=0 to min_length-1 do
-    if Value1.Item[i] < Value2.Item[i] then exit false; //  a <= b
-
-  exit Value1.Length >= Value2.Length;  // xxxy > xxx
-end;
-
-class operator String.LessOrEqual(Value1, Value2: String): Boolean;
-begin
-  // Value1 <= Value2 = true
-  if (Object(Value1) = nil) then exit true;     // nil <= ????
-  if (Object(Value2) = nil) then exit false;    // ???? <= nil
-  var min_length := iif(Value1.Length > Value2.Length, Value2.Length, Value1.Length);
-
-  for i: Integer :=0 to min_length-1 do
-    if Value1.Item[i] > Value2.Item[i] then exit false;  // b > a
-
-  exit Value1.Length <= Value2.Length; // xxx <= xxxy
 end;
 
 method String.TestChar(c: Char; Arr : array of Char): Boolean;
@@ -614,58 +650,30 @@ begin
   exit String.Compare(self:ToLower(), Value:ToLower());
 end;
 
-method String.Split(Separator: String; aRemoveEmptyEntries: Boolean := false): array of String;
+method String.Split(Separator: String; aRemoveEmptyEntries: Boolean := false; aMax: Integer := -1): array of String;
 begin
-  if (Separator = nil) or (Separator = '') then begin
+  if (Separator = nil) or (Separator = '') or (aMax in [0, 1]) then begin
     result := new String[1];
     result[0] := self;
     exit result;
   end;
-  // detect array dimension
-  var Sep_len := Separator.Length;
-  var self_len := Self.Length;
-  var len := 0;
-  var i := 0;
-  var last := 0;
-  repeat
-    i := self.IndexOf(Separator, i);
-    if i ≠ -1 then begin
-      if ((i ≠ last) and (i + Sep_len < self_len - 1)) or not aRemoveEmptyEntries then
-        len := len+1;
-      i := i + Sep_len;
-      last := i;
-      if i >= self_len then break;
-    end;
-  until i = -1;
-
-  result := new String[len+1];
-  if len = 0 then begin
-    result[0] := self;
-    exit result;
+  var lRes := new List<String>;
+  var lIdx := 0;
+  while lIdx < Length do begin
+    var lSplitIndex := IndexOf(Separator, lIdx);
+    if lSplitIndex = -1 then break;
+    if not aRemoveEmptyEntries or (lSplitIndex - lIdx > 0) then
+      lRes.Add(Substring(lIdx, lSplitIndex - lIdx));
+    lIdx := lSplitIndex + Separator.Length;
+    if lRes.Count + 1 = aMax then break;
   end;
+  if (Length - lIdx > 0) then
+    lRes.Add(Substring(lIdx, Length - lIdx))
+  else
+    if not aRemoveEmptyEntries then
+      lRes.Add('');
 
-  // fill array
-  i := 0;
-  var old_i:=0;
-  len:=0;
-  repeat
-    i := self.IndexOf(Separator, old_i);
-    if i <> -1 then begin
-      if (not aRemoveEmptyEntries) or (i-old_i > 0) then begin
-        result[len]:= self.Substring(old_i, i-old_i);
-        len := len+1;
-      end;
-      i := i + Sep_len;
-      old_i:=i;
-    end;
-  until i = -1;
-
-  if old_i < self_len then begin
-    if (not aRemoveEmptyEntries) or (self_len-old_i > 0) then
-      result[len] := self.Substring(old_i, self_len-old_i)
-  end
-  else if (not aRemoveEmptyEntries) and (old_i = self_len) then
-    result[len] := '';
+  exit lRes.ToArray;
 end;
 
 {$IFDEF WINDOWS}
@@ -789,7 +797,7 @@ end;
 
 class method String.FromPChar(c: ^Char): String;
 begin
-  exit FromPChar(c, {$IFDEF WINDOWS OR WEBASSEMBLY}ExternalCalls.wcslen(c){$ELSEIF POSIX}rtl.wcslen(c){$ELSE}{$ERROR Not Implemented}{$ENDIF});
+  exit FromPChar(c, PcharLen(c));
 end;
 
 class method String.FromChar(c: Char): String;
@@ -811,10 +819,8 @@ begin
   exit FromPAnsiChars(c, {$IFDEF WINDOWS OR WEBASSEMBLY}ExternalCalls.strlen(c){$ELSEIF POSIX}rtl.strlen(c){$ELSE}{$ERROR Not Implemented}{$ENDIF});
 end;
 
-class method String.Format(aFormat: String; params aArguments: array of Object): String;
+class method String.Format(aFormat: not nullable String; params aArguments: not nullable array of Object): String;
 begin
-  if aFormat = nil then raise new ArgumentNullException('aFormat is nil');
-  if aArguments = nil then raise new ArgumentNullException('aArguments is nil');
   var arg_count := aArguments.Length;
   var sb := new StringBuilder(aFormat.Length + aArguments.Length*8);
   var cur_pos := 0;
@@ -913,11 +919,13 @@ begin
         end;
         if aFormat[cur_pos] <> '}' then RaiseError('format error');
 
-        var arg_format := aArguments[n].ToString;
+        var arg_format := coalesce(aArguments[n]:ToString, "");
         var t := width - arg_format.Length;
-        if not sign and (t>0) then sb.Append(' ',t);
+        if not sign and (t > 0) then
+          sb.Append(' ', t);
         sb.Append(arg_format);
-        if sign and (t>0) then sb.Append(' ',t);
+        if sign and (t > 0) then
+          sb.Append(' ', t);
         old_pos := cur_pos+1;
       end;
       '}': begin
@@ -934,7 +942,11 @@ begin
     end;
     inc(cur_pos);
   end;
-  exit sb.ToString;
+
+  if sb.Length = 0 then exit aFormat;
+
+  sb.Append(aFormat, old_pos, cur_pos - old_pos);
+  result := sb.ToString;
 end;
 
 /*constructor String(aArray: array of Char);
@@ -1065,8 +1077,15 @@ begin
   {$ELSEIF WEBASSEMBLY}
   // JavaScript standard does not have lowerCase function with a locale as parameter yet
   exit WebAssembly.GetStringFromHandle(WebAssemblyCalls.ToLower(@fFirstChar, Length, false), true);
+  {$ELSEIF DARWIN}
+  var lTmp := CoreFoundation.CFStringCreateMutable(nil, 0);
+  CoreFoundation.CFStringAppendCharacters(lTmp, ^rtl.UniChar(@fFirstChar), Length);
+  CoreFoundation.CFStringLowercase(lTmp, aLocale.PlatformLocale);
+  var lTotal := CoreFoundation.CFStringGetLength(lTmp); // need to get converted string length, it can change
+  result := String.AllocString(lTotal);
+  CoreFoundation.CFStringGetCharacters(lTmp, CoreFoundation.CFRangeMake(0, lTotal), ^rtl.UniChar(@result.fFirstChar));
   {$ELSEIF POSIX AND NOT ANDROID}
-  var b := TextConvert.StringToUTF32LE(self);
+  var b := Encoding.UTF32LE.GetBytes(self);
   for i: Int32 := 0 to RemObjects.Elements.System.length(b)-1 step 4 do begin
     var ch := b[i] + (Int32(b[i+1]) shl 8) + (Int32(b[i+2]) shl 16) + (Int32(b[i+3]) shl 24);
     var u := rtl.towlower_l(ch, aLocale.PlatformLocale);
@@ -1075,7 +1094,7 @@ begin
     b[i+2] := (u shr 16) and $ff;
     b[i+3] := (u shr 24) and $ff;
   end;
-  result := TextConvert.UTF32LEToString(b);
+  result := Encoding.UTF32LE.GetString(b);
   {$ELSEIF ANDROID}
   result := AllocString(self.Length);
   var lErr: UErrorCode;
@@ -1096,8 +1115,15 @@ begin
   {$ELSEIF WEBASSEMBLY}
   // JavaScript standard does not have upperCase function with a locale as parameter yet
   exit WebAssembly.GetStringFromHandle(WebAssemblyCalls.Toupper(@fFirstChar, Length, false), true);
+  {$ELSEIF DARWIN}
+  var lTmp := CoreFoundation.CFStringCreateMutable(nil, 0);
+  CoreFoundation.CFStringAppendCharacters(lTmp, ^rtl.UniChar(@fFirstChar), Length);
+  CoreFoundation.CFStringUppercase(lTmp, aLocale.PlatformLocale);
+  var lTotal := CoreFoundation.CFStringGetLength(lTmp);
+  result := String.AllocString(lTotal);
+  CoreFoundation.CFStringGetCharacters(lTmp, CoreFoundation.CFRangeMake(0, lTotal), ^rtl.UniChar(@result.fFirstChar));
   {$ELSEIF POSIX AND NOT ANDROID}
-  var b := TextConvert.StringToUTF32LE(self);
+  var b := Encoding.UTF32LE.GetBytes(self);
   for i: Int32 := 0 to RemObjects.Elements.System.length(b)-1 step 4 do begin
     var ch := b[i] + (Int32(b[i+1]) shl 8) + (Int32(b[i+2]) shl 16) + (Int32(b[i+3]) shl 24);
     var u := rtl.towupper_l(ch, aLocale.PlatformLocale);
@@ -1106,7 +1132,7 @@ begin
     b[i+2] := (u shr 16) and $ff;
     b[i+3] := (u shr 24) and $ff;
   end;
-  result := TextConvert.UTF32LEToString(b);
+  result := Encoding.UTF32LE.GetString(b);
   {$ELSEIF ANDROID}
   result := AllocString(self.Length);
   var lErr: UErrorCode;

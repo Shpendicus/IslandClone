@@ -77,6 +77,10 @@ type
     [SymbolName('fmod'), Used]
     {$IFDEF WebAssembly}[DLLExport]{$ENDIF}
     class method fmod(x, y: Double): Double;
+    [SymbolName('fmodf'), Used]
+    {$IFDEF WebAssembly}[DLLExport]{$ENDIF}
+    class method fmodf(x,y: Single): Single;
+
     class method IEEERemainder(x, y: Double): Double;
     [SymbolName('acos')]
     class method Acos(d: Double): Double;
@@ -88,6 +92,8 @@ type
     class method Atan2(x,y: Double): Double;
     [SymbolName('ceil')]
     class method Ceiling(d: Double): Double;
+    [SymbolName('ceilf')]
+    class method Ceiling(d: Single): Single;
     [SymbolName('cos')]
     class method Cos(d: Double): Double;
     [SymbolName('cosh')]
@@ -98,6 +104,9 @@ type
     [SymbolName('floor'), Used]
     {$IFDEF WebAssembly}[DLLExport]{$ENDIF}
     class method Floor(d: Double): Double;
+    [SymbolName('floorf'), Used]
+    {$IFDEF WebAssembly}[DLLExport]{$ENDIF}
+    class method Floor(d: Single): Single;
     [SymbolName('log')]
     class method Log(a: Double): Double;
     class method Log2(a: Double): Double;
@@ -107,7 +116,7 @@ type
     [SymbolName('pow')]
     class method Pow(x, y: Double): Double;
     [SymbolName('round')]
-    class method Round(a: Double): Int64;
+    class method Round(a: Double): Double;
     class method Sign(d: Double): Integer;
     [SymbolName('sin')]
     class method Sin(x: Double): Double;
@@ -122,6 +131,9 @@ type
     [SymbolName('trunc'), Used]
     {$IFDEF WebAssembly}[DLLExport]{$ENDIF}
     class method Truncate(d: Double): Double;
+    [SymbolName('truncf'), Used]
+    {$IFDEF WebAssembly}[DLLExport]{$ENDIF}
+    class method Truncate(d: Single): Single;
 
     const PI: Double = 3.141592653589793238462643383279502884197169399375105820974944592307816406286208998628034825342117067982148086513282306647093844609550582232;
     const E:  Double = 2.718281828459045235360287471352662497757247093699959574966967627724076630353547594571382178525166427427466391932;
@@ -251,6 +263,13 @@ begin
   if d < 0 then exit d-p else exit d-p+1;
 end;
 
+class method Math.Ceiling(d: Single): Single;
+begin
+  var p := d mod 1;
+  if p = 0 then exit d;
+  if d < 0 then exit d-p else exit d-p+1;
+end;
+
 class method Math.Cos(d: Double): Double;
 begin
   exit Sin(PI/2 - d);
@@ -308,6 +327,14 @@ class method Math.Exp(d: Double): Double;
 begin
   // exit 2^(x/ln(2))
   exit Exp2(d/ln2);
+end;
+
+class method Math.Floor(d: Single): Single;
+begin
+  var xi := Integer(d);
+  if d < xi then
+    exit xi -1;
+  exit xi;
 end;
 
 class method Math.Floor(d: Double): Double;
@@ -393,11 +420,11 @@ end;
 
 
 class method Math.Pow(x: Double; y: Integer): Double;
-begin  
-  if y >= 0 then 
+begin
+  if y >= 0 then
     exit IntPow(x, y)
   else
-    exit 1.0 / IntPow(x, -y); 
+    exit 1.0 / IntPow(x, -y);
 end;
 
 class method Math.Pow(x, y: Double): Double;
@@ -408,22 +435,22 @@ begin
     exit Exp(y * Log(x));
 end;
 
-class method Math.Round(a: Double): Int64;
+class method Math.Round(a: Double): Double;
 begin
   var p := a mod 1;
-  if p = 0 then exit Int64(a);
+  if p = 0 then exit Double(a);
   var p1 := Abs(p);
-  if p1 < 0.5 then exit Int64(a - p);
-  if p1 > 0.5 then exit Int64(a - p) + if a<0 then -1 else 1;
+  if p1 < 0.5 then exit Double(a - p);
+  if p1 > 0.5 then exit Double(a - p) + if a<0 then -1 else 1;
   //special case, p1 = 0.5
   //12.5 => 12 and 11.5 => 12
   //-12.5 => -12 and -11.5 => -12
   var d1:Double := a + (if a<0 then -0.5 else 0.5);
   if d1 mod 2 <> 0 then begin
-    exit Int64(d1) - if a<0 then -1 else 1
+    exit Double(d1) - if a<0 then -1 else 1
   end
   else
-    exit Int64(d1);
+    exit Double(d1);
 end;
 
 class method Math.Sin(x: Double): Double;
@@ -449,7 +476,7 @@ end;
 
 class method Math.Sqrt(d: Double): Double;
 begin
-  exit Exp2((0.5 * Log(d))/ln2); // Pow(d, 0.5) = Exp(0.5 * Log(d)) = Exp2((0.5 * Log(d))/ln2);  
+  exit Exp2((0.5 * Log(d))/ln2); // Pow(d, 0.5) = Exp(0.5 * Log(d)) = Exp2((0.5 * Log(d))/ln2);
 end;
 
 class method Math.Tan(d: Double): Double;
@@ -469,6 +496,11 @@ begin
   exit if d < 0 then -Floor(-d) else Floor(d);
 end;
 
+class method Math.Truncate(d: Single): Single;
+begin
+  exit if d < 0 then -Floor(-d) else Floor(d);
+end;
+
 class method Math.fmod(x: Double; y: Double): Double;
 begin
   // from https://msdn.microsoft.com/en-us/library/system.math.ieeeremainder%28v=vs.110%29.aspx
@@ -476,6 +508,12 @@ begin
   //           (Math.Floor(Math.Abs(dividend) / Math.Abs(divisor))))) *
   //           Math.Sign(dividend)
   exit (Abs(x) - (Abs(y) *  (Floor(Abs(x) / Abs(y))))) * Sign(x);
+end;
+
+
+class method Math.fmodf(x,y: Single): Single;
+begin
+  exit Math.fmod(x, y);
 end;
 
 class method Math.IntPow(x: Double; y: Integer): Double;
@@ -489,7 +527,7 @@ begin
     res := res*res;
     y := y shr 1;
   end;
-  res := IntPow(res, y); 
+  res := IntPow(res, y);
   if fl then res := res * x;
   exit res;
 end;

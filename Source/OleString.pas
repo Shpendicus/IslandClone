@@ -4,22 +4,79 @@ type
   private
     bstr: ^Char;
   protected
-    method AllocString(Value: String): ^Char;
+    class method AllocString(Value: String): ^Char;
     begin
-      if assigned(Value) then
+      if assigned(Value) then begin
+        {$IFDEF WINDOWS}
         exit rtl.SysAllocStringLen(Value.FirstChar, Value.Length)
-      else
+        {$ELSE}
+        var lData: ^Byte := ^Byte(malloc((Value.Length + 1) * 2 + 4));
+        ^Int32(lData)^ := length(Value);
+        lData := lData + 4;
+        memcpy(lData, @Value.fFirstChar, length(Value) * 2);
+          
+        ^Char(lData)[length(Value)] := #0;
+        exit ^Char(lData);
+        {$ENDIF}
+      end else
         exit nil;
     end;
 
-    method FreeString(Value : ^Char);
+    class method AllocString(aLength: Integer): ^Char;
     begin
-      if Value <> nil then rtl.SysFreeString(Value);
+        {$IFDEF WINDOWS}
+        exit rtl.SysAllocStringLen(nil, aLength)
+        {$ELSE}
+        var lData: ^Byte := ^Byte(malloc((aLength + 1) * 2 + 4));
+        ^Int32(lData)^ := aLength;
+        lData := lData + 4;
+        ^Char(lData)[aLength] := #0;
+        exit ^Char(lData);
+        {$ENDIF}
+    end;
+
+    class method FreeString(Value : ^Char);
+    begin
+      if Value <> nil then begin
+        {$IFDEF WINDOWS}
+        rtl.SysFreeString(Value);
+        {$ELSE}
+        free(^Void(IntPtr(Value) - 4));
+        {$ENDIF}
+      end;
+    end;
+
+    class method DuplicateString(var aSource: OleString; var aDest: OleString);
+    begin 
+      aDest.bstr := AllocString(aSource.Length);
+      memcpy(aDest.bstr,  aSource.bstr, aSource.Length * 2);
+      aDest.bstr[aSource.Length] := #0;
     end;
   public
     constructor(Value: String);
     begin
       bstr := AllocString(Value);
+    end;
+
+    
+    constructor Copy(var aValue: OleString);
+    begin
+      if aValue.bstr = nil then
+        bstr := nil
+      else
+        DuplicateString(var aValue, var self);
+    end;
+
+
+    class operator Assign(var aDest: OleString; var aSource: OleString);
+    begin
+      if (@aDest) = (@aSource) then exit;
+      if aDest.bstr <> nil then
+        FreeString(aDest.bstr);
+      if aSource.bstr = nil then begin
+        aDest.bstr := nil;
+      end else
+        DuplicateString(var aSource, var aDest);
     end;
 
     finalizer;
@@ -31,8 +88,13 @@ type
     begin
       if bstr = nil then
         exit nil
-      else
+      else begin
+        {$IFDEF WINDOWS}
         exit String.FromPChar(bstr,rtl.SysStringLen(bstr));
+        {$ELSE}
+        exit String.FromPChar(bstr, ^Integer(bstr)[-1]);
+        {$ENDIF}
+      end;
     end;
 
     method GetHashCode: Integer; override;
@@ -52,6 +114,18 @@ type
       else
         exit default(OleString);
     end;
+
+    method get_Length: Integer;
+    begin
+      if self.bstr = nil then exit 0;
+      {$IFDEF WINDOWS}
+        exit rtl.SysStringLen(self.bstr);
+      {$ELSE}
+        exit ^Integer(bstr)[-1];
+      {$ENDIF}
+    end;
+    property Item[i: Integer]: Char read bstr[i] write bstr[i];
+    property Length: Integer read get_Length;
   end;
 
   String_OleStringSupport = public extension class(String)

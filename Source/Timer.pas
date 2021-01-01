@@ -13,6 +13,10 @@ type
     fTimer: rtl.HANDLE := rtl.INVALID_HANDLE_VALUE;
     {$ELSEIF LINUX OR ANDROID}
     fTimer: rtl.timer_t;
+    {$ELSEIF ISLAND AND DARWIN}
+    fTimer: rtl.dispatch_source_t;
+    {$ELSEIF WEBASSEMBLY}
+    fTimer: IntPtr;
     {$ENDIF}
     fElapsed: TimerElapsedBlock;
     fEnabled: Boolean;
@@ -78,7 +82,7 @@ end;
 method Timer.Init;
 begin
   {$IFDEF WINDOWS}
-  fTimerQueue := rtl.CreateTimerQueue;  
+  fTimerQueue := rtl.CreateTimerQueue;
   {$ENDIF}
 end;
 
@@ -112,7 +116,7 @@ begin
   var lSigEv: rtl.sigevent_t;
   lSigEv.sigev_notify := rtl.SIGEV_THREAD;
   lSigEv.sigev_value.sival_ptr := InternalCalls.Cast(self);
-  
+
   lSigEv._sigev_un._sigev_thread._function := @TimerCallback;
   lSigEv._sigev_un._sigev_thread._attribute := nil;
   rtl.timer_create(rtl.CLOCK_REALTIME, @lSigEv, @fTimer);
@@ -120,12 +124,24 @@ begin
   var lInterval: rtl.__struct_itimerspec;
   lInterval.it_value.tv_sec := fInterval div 1000;
   lInterval.it_value.tv_nsec := (fInterval mod 1000) * 1000000;
-  
+
   if fRepeat then begin
     lInterval.it_interval.tv_sec := fInterval div 1000;
     lInterval.it_interval.tv_nsec := (fInterval mod 1000) * 1000000;
-  end;                                                                                                                             
+  end;
   rtl.timer_settime(fTimer, 0, @lInterval, nil);
+  {$ELSEIF ISLAND AND DARWIN}
+  var lQueue := rtl.dispatch_get_global_queue(rtl.DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+  fTimer := rtl.dispatch_source_create(rtl.DISPATCH_SOURCE_TYPE_TIMER, 0, 0, lQueue);
+  var lRepeatInterval := if fRepeat then (fInterval * rtl.NSEC_PER_MSEC) else 0;
+  rtl.dispatch_source_set_timer(fTimer, rtl.dispatch_time(rtl.DISPATCH_TIME_NOW, fInterval * rtl.NSEC_PER_MSEC), lRepeatInterval, 0);
+  rtl.dispatch_source_set_event_handler(fTimer, ()->Elapsed(Data));
+  rtl.dispatch_resume(fTimer);
+  {$ELSEIF WEBASSEMBLY}
+  if not fRepeat then
+    fTimer := WebAssemblyCalls.SetTimeout(()->Elapsed(Data), fInterval)
+  else
+    fTimer := WebAssemblyCalls.SetInterval(()->Elapsed(Data), fInterval);
   {$ENDIF}
   fEnabled := true;
 end;
@@ -139,6 +155,13 @@ begin
   fTimer := rtl.INVALID_HANDLE_VALUE;
   {$ELSEIF LINUX OR ANDROID}
   rtl.timer_delete(fTimer);
+  {$ELSEIF ISLAND AND DARWIN}
+  rtl.dispatch_source_cancel(fTimer);
+  {$ELSEIF WEBASSEMBLY}
+  if not fRepeat then
+    WebAssembly.Global.clearTimeout(fTimer)
+  else
+    WebAssemblyCalls.ClearInterval(fTimer);
   {$ENDIF}
   fEnabled := false;
 end;
@@ -147,7 +170,7 @@ method Timer.Dispose;
 begin
   {$IFDEF WINDOWS}
   rtl.DeleteTimerQueueEx(fTimerQueue, rtl.INVALID_HANDLE_VALUE);
-  {$ELSEIF LINUX OR ANDROID}
+  {$ELSEIF (LINUX OR ANDROID) OR (ISLAND AND DARWIN)}
   if fEnabled then Stop;
   {$ENDIF}
 end;

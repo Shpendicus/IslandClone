@@ -5,16 +5,19 @@ type
   DebugExceptionCallback = public procedure (data: ^Void; ex: IntPtr);
   DebugInvokeCallback = public procedure (data: ^Void);
 
+
+[assembly: NamespaceAlias('System', ['RemObjects.Elements.System'])]
+
   Utilities = public static class
   private
   public
     [SymbolName('__island_debug_invoke'), Used, DllExport]
     method DebugInvoke(data: ^Void; invk: DebugInvokeCallback; ex: DebugExceptionCallback);
-    begin 
+    begin
       try
         invk(data)
-      except 
-        on e: Exception do 
+      except
+        on e: Exception do
           ex(data, IntPtr(InternalCalls.Cast(e)));
       end;
     end;
@@ -101,20 +104,25 @@ type
     begin
       exit new NullReferenceException;
     end;
-    
-    const FinalizerIndex = {$IFDEF I386}8{$ELSE}6{$ENDIF};
 
+    [SymbolName('__newnullrefexceptionex'), SkipDebug]
+    class method CreateNullReferenceExceptionEx(s: String): Exception;
+    begin
+      exit new NullReferenceException(s);
+    end;
+
+    const FinalizerIndex = 4 + {$IFDEF I386}4{$ELSE}2{$ENDIF};
 
     [SymbolName('__newdelegate')]
     //[SkipDebug]
-    class method NewDelegate(aTY: ^Void; aSelf: Object; aPtr: ^Void): &Delegate; 
+    class method NewDelegate(aTY: ^Void; aSelf: Object; aPtr: ^Void): &Delegate;
     begin
       result := InternalCalls.Cast<&Delegate>(DefaultGC.New(aTY, sizeOf(^Void) * 3));
       result.fSelf := aSelf;
       result.fPtr := aPtr;
     end;
 
- 
+
     [SymbolName('__newarray')]
     //[SkipDebug]
     class method NewArray(aTY: ^Void; aElementSize, aElements: NativeInt): ^Void;
@@ -122,7 +130,7 @@ type
       result := DefaultGC.New(aTY, sizeOf(^Void) + sizeOf(NativeInt) + aElementSize * aElements);
       (@InternalCalls.Cast<&Array>(result).fLength)^ := aElements;
     end;
- 
+
 
     [SymbolName('__init')]
     class method Initialize;
@@ -141,13 +149,26 @@ type
       exit @s[0];
     end;
 
-    [SymbolName('ElementsObjectToString'), Used]
+    [SymbolName('ElementsObjectToString'), Used , DllExport]
     class method GetObjectToString(aObj: Object): ^WideChar;
     begin
       if aObj = nil then exit nil;
       var s := aObj:ToString():ToCharArray(true);
       exit @s[0];
     end;
+
+
+    {$IFDEF DARWIN}
+    [SymbolName('CocoaObjectToString'), Used]
+    class method GetCocoaObjectToString(aObj: Foundation.NSObject): ^WideChar;
+    begin
+      if aObj = nil then exit nil;
+      var s: array of Char;
+      if aObj is Foundation.NSString then s := String(Foundation.NSString(aObj)):ToCharArray(true)
+      else s := String(aObj:debugDescription()):ToCharArray(true);
+      exit @s[0];
+    end;
+    {$ENDIF}
 
     class method SpinLockEnter(var x: Integer);
     begin
@@ -210,10 +231,10 @@ type
     end;
 
     class var __fRegisterThread: LinkedListNode<Action>;
-    class var __fUnregisterThread: LinkedListNode<Action>; 
+    class var __fUnregisterThread: LinkedListNode<Action>;
 
     method RegisterThreadHandlers(aRegister, aUnregister: Action);
-    begin 
+    begin
       loop begin
         var lNew := new LinkedListNode<Action>(aRegister, __fRegisterThread);
         if InternalCalls.CompareExchange(var __fRegisterThread, lNew, lNew.Previous) = lNew.Previous then break;
@@ -228,17 +249,17 @@ type
     method RegisterThread;
     begin
       var lT := __fRegisterThread;
-      while lT <> nil do begin 
+      while lT <> nil do begin
         lT.Value();
         lT := lT.Previous;
       end;
     end;
 
     [SymbolName('unregisterthread')]
-    method UnregisterThread; 
-    begin 
+    method UnregisterThread;
+    begin
       var lT := __fUnregisterThread;
-      while lT <> nil do begin 
+      while lT <> nil do begin
         lT.Value();
         lT := lT.Previous;
       end;
@@ -263,12 +284,22 @@ type
 {$ENDIF}
     // Returns the raw typeinfo for T
     class method GetTypeInfo<T>(): ^Void; external;
+    class method GetIslandTypeInfo<T>(): ^Void; external;
+    {$IFDEF DARWIN}
+    class method GetSwiftTypeInfo<T>(): ^Void; external;
+    {$ENDIF}
     // Casts an object to ^Void and back. Doesn't do any error checking!
     class method Cast(o: Object): ^Void; external;
+    class method Cast(o: Manual<Object>): ^Void; external;
     class method Cast<T>(o: ^Void): T; external;
 
     // Optimizer tool: Returns an undefined value of type T
     class method Undefined<T>: T; external;
+
+    class method GuidOf<T>: Guid; external;
+
+    // Low level; allocates stack space; **do not use in iterator/async methods**
+    class method Alloca(aSize: Integer): ^Byte; external;
 
     // Inline asm
     class method VoidAsm(aAsm: String; aConstraints: String; aSideEffects, aAlign: Boolean; params aArgs: array of Object); external;
@@ -354,6 +385,57 @@ type
     class method &Xor(var address: NativeUInt; value: NativeUInt): NativeUInt; external;
   end;
 
+method interlockedInc(var x: Integer; increment: Integer := 1): Integer;  inline; public;
+begin
+  exit InternalCalls.Add(var x, increment);
+end;
+
+
+method interlockedInc(var x: Int64; increment: Int64 := 1): Int64;  inline; public;
+begin
+  exit InternalCalls.Add(var x, increment);
+end;
+
+method interlockedInc(var x: IntPtr; increment: IntPtr := 1): IntPtr;  inline; public;
+begin
+  exit InternalCalls.Add(var x, increment);
+end;
+
+
+
+method interlockedDec(var x: Integer; increment: Integer := 1): Integer;  inline; public;
+begin
+  exit InternalCalls.Add(var x, - increment);
+end;
+
+
+method interlockedDec(var x: Int64; increment: Int64 := 1): Int64;  inline; public;
+begin
+  exit InternalCalls.Add(var x, - increment);
+end;
+
+method interlockedDec(var x: IntPtr; increment: IntPtr := 1): IntPtr;  inline; public;
+begin
+  exit InternalCalls.Add(var x, 0 - increment);
+end;
+
+
+method interlockedCompareExchange(var x: Integer; compareTo, newValue: Integer): Integer; inline; public;
+begin
+  exit InternalCalls.CompareExchange(var x, newValue, compareTo);
+end;
+
+method interlockedCompareExchange(var x: Integer; compareTo, newValue: Int64): Int64; inline; public;
+begin
+  exit InternalCalls.CompareExchange(var x, newValue, compareTo);
+end;
+
+method interlockedCompareExchange(var x: Integer; compareTo, newValue: IntPtr): IntPtr; inline; public;
+begin
+  exit InternalCalls.CompareExchange(var x, newValue, compareTo);
+end;
+
+
 {$G+}
 method GC_finalizer(obj, d: ^Void); assembly;
 begin
@@ -365,7 +447,7 @@ begin
 end;
 
 method memcpy(destination: ^Void; source: ^Void; num: NativeInt): ^Void; public;inline;
-begin 
+begin
   {$IFDEF WINDOWS OR WEBASSEMBLY}
   exit ExternalCalls.memcpy(destination, source, num);
   {$ELSE}
@@ -374,8 +456,17 @@ begin
 end;
 
 
+method memcmp(a: ^Void; b: ^Void; num: NativeInt): Integer; public;inline;
+begin
+  {$IFDEF WINDOWS OR WEBASSEMBLY}
+  exit ExternalCalls.memcmp(^Byte(a), ^Byte(b), num);
+  {$ELSE}
+  exit rtl.memcmp(a, b, num);
+  {$ENDIF}
+end;
+
 method memmove(destination: ^Void; source: ^Void; num: NativeInt): ^Void; public;inline;
-begin 
+begin
   {$IFDEF WINDOWS OR WEBASSEMBLY}
   exit ExternalCalls.memmove(destination, source, num);
   {$ELSE}
@@ -384,12 +475,40 @@ begin
 end;
 
 method memset (ptr: ^Void; value: Integer; num: NativeInt): ^Void; public; inline;
-begin 
+begin
   {$IFDEF WINDOWS OR WEBASSEMBLY}
   exit ExternalCalls.memset(ptr, value, num);
   {$ELSE}
   exit rtl.memset(ptr, value, num);
   {$ENDIF}
 end;
+
+operator Pow(a, b: Double): Double; public;
+begin
+  exit Math.Pow(a,b);
+end;
+
+operator Pow(a, b: Int64): Int64; public;
+begin
+  result := 1;
+  if b < 0 then exit 0;
+  while b <> 0 do begin
+    if (b and 1) <> 0 then result := result * a;
+    a := a * a;
+    b := b shr 1;
+  end;
+end;
+
+operator Pow(a, b: Integer): Integer; public;
+begin
+  result := 1;
+  if b < 0 then exit 0;
+  while b <> 0 do begin
+    if (b and 1) <> 0 then result := result * a;
+    a := a * a;
+    b := b shr 1;
+  end;
+end;
+
 
 end.

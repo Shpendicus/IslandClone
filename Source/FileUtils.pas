@@ -18,7 +18,16 @@ type
     begin
       if Attr = rtl.INVALID_FILE_ATTRIBUTES then exit false;
       exit (Attr and rtl.FILE_ATTRIBUTE_DIRECTORY) <> rtl.FILE_ATTRIBUTE_DIRECTORY;
-    end;  
+    end;
+{$ELSEIF DARWIN}
+    class method IsFolder(Attr: rtl.mode_t): Boolean; inline;
+    begin
+      exit (Attr and rtl.S_IFMT) = rtl.S_IFDIR;
+    end;
+    class method IsFile(Attr: rtl.mode_t): Boolean; inline;
+    begin
+      exit (Attr and rtl.S_IFMT) = rtl.S_IFREG;
+    end;
   {$ELSEIF POSIX}
     class method IsFolder(Attr: rtl.__mode_t): Boolean; inline;
     begin
@@ -27,11 +36,11 @@ type
     class method IsFile(Attr: rtl.__mode_t): Boolean; inline;
     begin
       exit (Attr and rtl.S_IFMT) = rtl.S_IFREG;
-    end;  
+    end;
   {$ELSE}
   {$ERROR Unsupported platform}
   {$ENDIF}
-    
+
 
     class method FolderExists(aFullName: not nullable String): Boolean;
     begin
@@ -61,7 +70,7 @@ type
     end;
     {$ENDIF}
 
-    {$IFDEF POSIX AND NOT ANDROID}
+    {$IFDEF POSIX AND NOT ANDROID and not DARWIN}
     [SymbolName('stat')]
     method stat(file: ^AnsiChar; buf: ^rtl.__struct_stat): Int32;
     begin
@@ -89,7 +98,12 @@ end;
 extension method String.ToFileName: rtl.LPCWSTR; assembly;
 begin
   if String.IsNullOrEmpty(self) then exit nil;
-  exit ((if not self.StartsWith('\\?\') then '\\?\' else '')+self).ToLPCWSTR();
+  if (Length > 2) and (self[1] = ':')  then
+    exit ((if not self.StartsWith('\\?\') then '\\?\' else '')+self).ToLPCWSTR();
+  if self.StartsWith('\\') then
+    exit self
+  else
+    exit Path.GetFullPath(self).ToFileName;
 end;
 {$ENDIF}
 

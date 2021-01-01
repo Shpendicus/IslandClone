@@ -294,6 +294,8 @@ type
       if o is Single then exit Int32(Single(o));
       if o is Double then exit Int32(Double(o));
       if o is String then exit SByte.Parse(String(o));
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
+      if o is &Enum then exit &Enum(o).ToInt64;
       raise new ArgumentException('Unknown type for o');
     end;
 
@@ -311,6 +313,8 @@ type
       if o is Single then exit Int16(Single(o));
       if o is Double then exit Int16(Double(o));
       if o is String then exit Int16.Parse(String(o));
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
+      if o is &Enum then exit &Enum(o).ToInt64;
       raise new ArgumentException('Unknown type for o');
     end;
 
@@ -329,7 +333,9 @@ type
       if o is Single then exit Int32(Single(o));
       if o is Double then exit Int32(Double(o));
       if o is String then exit Int32.Parse(String(o));
-      raise new ArgumentException('Unknown type for o');
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
+      if o is &Enum then exit &Enum(o).ToInt64;
+      raise new ArgumentException('Unknown type for o '+o);
     end;
 
     method ToInt64(o: Object): Int64;
@@ -346,6 +352,7 @@ type
       if o is Single then exit Int64(Single(o));
       if o is Double then exit Int64(Double(o));
       if o is String then exit Int64.Parse(String(o));
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
       raise new ArgumentException('Unknown type for o');
     end;
 
@@ -363,6 +370,8 @@ type
       if o is Single then exit Byte(Single(o));
       if o is Double then exit Byte(Double(o));
       if o is String then exit Byte.Parse(String(o));
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
+      if o is &Enum then exit &Enum(o).ToInt64;
       raise new ArgumentException('Unknown type for o');
     end;
 
@@ -380,6 +389,8 @@ type
       if o is Single then exit UInt16(Single(o));
       if o is Double then exit UInt16(Double(o));
       if o is String then exit UInt16.Parse(String(o));
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
+      if o is &Enum then exit &Enum(o).ToInt64;
       raise new ArgumentException('Unknown type for o');
     end;
 
@@ -397,7 +408,9 @@ type
       if o is UInt64 then exit UInt64(o);
       if o is Single then exit UInt32(Single(o));
       if o is Double then exit UInt32(Double(o));
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
       if o is String then exit UInt32.Parse(String(o));
+      if o is &Enum then exit &Enum(o).ToInt64;
       raise new ArgumentException('Unknown type for o');
     end;
 
@@ -414,7 +427,9 @@ type
       if o is UInt64 then exit UInt64(o);
       if o is Single then exit UInt64(Single(o));
       if o is Double then exit UInt64(Double(o));
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
       if o is String then exit UInt64.Parse(String(o));
+      if o is &Enum then exit &Enum(o).ToInt64;
       raise new ArgumentException('Unknown type for o');
     end;
 
@@ -431,7 +446,28 @@ type
       if o is UInt64 then exit UInt64(o);
       if o is Single then exit Single(o);
       if o is Double then exit Double(o);
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
       if o is String then exit Double.Parse(String(o));
+      raise new ArgumentException('Unknown type for o');
+    end;
+
+
+    method ToBoolean(o: Object): Boolean;
+    begin
+      if o = nil then raise new ArgumentNullException('o is null');
+      if o is SByte then exit SByte(o) <> 0;
+      if o is Int16 then exit Int16(o) <> 0;
+      if o is Int32 then exit Int32(o) <> 0;
+      if o is Int64 then exit Int64(o) <> 0;
+      if o is Byte then exit Byte(o) <> 0;
+      if o is UInt16 then exit UInt16(o) <> 0;
+      if o is UInt32 then exit UInt32(o) <> 0;
+      if o is UInt64 then exit UInt64(o) <> 0;
+      if o is Single then exit Single(o) <> 0;
+      if o is Double then exit Double(o) <> 0;
+      if o is Boolean then exit Boolean(o);
+      if o is String then exit o in ['true', 'TRUE', 'True', '1', 'Y', 'yes'];
+      if o is &Enum then exit &Enum(o).ToInt64 <>0;
       raise new ArgumentException('Unknown type for o');
     end;
 
@@ -449,6 +485,7 @@ type
       if o is UInt64 then exit UInt64(o);
       if o is Single then exit Single(o);
       if o is Double then exit Double(o);
+      if o is Boolean then exit if Boolean(o) then 1 else 0;
       if o is String then exit Single.Parse(String(o));
       raise new ArgumentException('Unknown type for o');
     end;

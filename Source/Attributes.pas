@@ -36,7 +36,7 @@ type
     property &Inherited: Boolean;
   end;
 
-  CallingConvention = public enum (Default, FastCall, Stdcall, Cdecl);
+  CallingConvention = public enum (Default, FastCall, Stdcall, Cdecl, Swift);
 
   [AttributeUsage(AttributeTargets.Method or AttributeTargets.Delegate)]
   CallingConventionAttribute = public class(Attribute)
@@ -78,7 +78,7 @@ type
       fLibrary := aLibrary;
       fVersion := aVersion;
     end;
-
+    property ReferenceFromMain: Boolean;
     property Name: String read fName;
     property Library: String read fLibrary;
     property Version: String read fVersion;
@@ -95,6 +95,7 @@ type
   public
     constructor(aAddress: NativeInt); empty;
   end;
+
 
   [AttributeUsage(AttributeTargets.Enum)]
   FlagsAttribute = public class(Attribute)
@@ -214,7 +215,7 @@ type
   ExportAttribute = public DllExportAttribute;
   ImportAttribute = public DllImportAttribute;
 
-  [AttributeUsage(AttributeTargets.Method)]
+  [AttributeUsage(AttributeTargets.Method or AttributeTargets.Assembly, AllowMultiple := true)]
   DllImportAttribute = public class(Attribute)
   private
     fDllName: String;
@@ -230,10 +231,34 @@ type
 
   [AttributeUsage(AttributeTargets.Method or AttributeTargets.Field or AttributeTargets.Property or AttributeTargets.Event or AttributeTargets.Struct or AttributeTargets.Class or AttributeTargets.Enum or AttributeTargets.Delegate)]
   DllExportAttribute = public class(Attribute)
+  private
+    fName: String;
+  public
+    constructor; empty;
+    constructor(aName: String);
+    begin
+      fName := aName;
+    end;
+
+    property Name: String read fName;
   end;
 
   [AttributeUsage(AttributeTargets.Parameter)]
   InRegAttribute = public class(Attribute)
+  public
+    constructor(); empty;
+  end;
+
+
+  [AttributeUsage(AttributeTargets.Parameter)]
+  SwiftSelfAttribute = public class(Attribute)
+  public
+    constructor(); empty;
+  end;
+
+
+  [AttributeUsage(AttributeTargets.Parameter)]
+  SRetAttribute = public class(Attribute)
   public
     constructor(); empty;
   end;
@@ -261,9 +286,9 @@ type
       SideEffects := aSideEffects;
       Align := aAlign;
     end;
-    property Asm: String;readonly;
-    property Constraints: String;readonly;
-    property SideEffects: Boolean;readonly;
+    property Asm: String; readonly;
+    property Constraints: String; readonly;
+    property SideEffects: Boolean; readonly;
     property Align: Boolean; readonly;
   end;
 
@@ -295,13 +320,23 @@ type
     begin
       Define := aDefine;
     end;
-    property Define: String;readonly;
+    property Define: String; readonly;
   end;
 
   [AttributeUsage(AttributeTargets.Assembly)]
   RemObjects.Elements.System.DefaultObjectLifetimeStrategyAttribute = public class(Attribute)
   public
+    /// <summary>
+    /// Sets the default lifetime strategy.
+    /// </summary>
+    /// <param name="aType">lifetime type</param>
     constructor(aType: &Type); empty;
+    /// <summary>
+    /// Sets the default lifetime strategy.
+    /// </summary>
+    /// <param name="aType">lifetime type</param>
+    /// <param name="aForeign">The lifetime type used when a type is stored in a foreign class model</param>
+    constructor(aType, aForeign: &Type); empty;
   end;
 
 
@@ -317,6 +352,59 @@ type
 
   [AttributeUsage(AttributeTargets.Delegate)]
   BlockPointerAttribute = public class(Attribute)
+  end;
+
+  [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true)]
+  LifetimeStrategyOverrideAttribute = public class(Attribute)
+  public
+    constructor(aSource, aLifetimeType: &Type); empty;
+  end;
+
+
+  [AttributeUsage(AttributeTargets.Field)]
+  StaticallyInitializedFieldAttribute = public class(Attribute)
+  public
+    constructor; empty;
+  end;
+
+  [AttributeUsage(AttributeTargets.Field)]
+  BitPackingAttribute = public class(Attribute)
+  public
+    constructor(aBitPack: Integer); empty;
+  end;
+
+
+  [AttributeUsage(AttributeTargets.Method or AttributeTargets.Event or AttributeTargets.Property or AttributeTargets.Constructor)]
+  PublishedAttribute = public class(Attribute)
+  public
+    constructor; empty;
+  end;
+
+  // Like DLL import but uses LoadLibrary/GetProcAddress.
+  [AttributeUsage(AttributeTargets.Method)]
+  DelayLoadDllImportAttribute = public class(Attribute)
+  public
+    constructor(aDllName: String; aEntryPoint: String := nil);
+    begin
+    end;
+  end;
+
+  [AttributeUsage(AttributeTargets.Interface)]
+  DynamicInterfaceAttribute = public class(Attribute)
+  public
+    constructor(aType: &Type; aCheckType: String);
+    begin
+      &Type := aType;
+      CheckType := aCheckType;
+    end;
+
+    constructor(aType: &Type);
+    begin
+      &Type := aType;
+    end;
+
+    property &Type: &Type; readonly;
+    property CheckType: String; readonly;
   end;
 
 end.

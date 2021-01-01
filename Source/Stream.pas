@@ -5,11 +5,12 @@ interface
 type
   SeekOrigin = public enum (&Begin, Current, &End);
 
-  Stream = public abstract class
+  Stream = public abstract class(IDisposable)
   private
     method GetLength: Int64;
     method SetPosition(value: Int64);
     method GetPosition: Int64;
+    method Dispose;
   protected
     method IsValid: Boolean; abstract;
   public
@@ -19,10 +20,21 @@ type
     method Seek(Offset: Int64; Origin: SeekOrigin): Int64; abstract;
     method Close; virtual; empty;
     method Flush; virtual; empty;
-    method &Read(const buf: ^Void; Count: Int32): Int32; abstract;
-    method &Write(const buf: ^Void; Count: Int32): Int32; abstract;
+    method &Read(aSpan: Span<Byte>): Int32; abstract;
+    method &Write(aSpan: ImmutableSpan<Byte>): Int32; abstract;
     method &Read(Buffer: array of Byte; Offset: Int32; Count: Int32): Int32;
     method &Write(Buffer: array of Byte; Offset: Int32; Count: Int32): Int32;
+
+    method &Read(const buf: ^Void; Count: Int32): Int32;
+    begin
+      exit &Read(new Span<Byte>(^Byte(buf), Count));
+    end;
+
+    method &Write(const buf: ^Void; Count: Int32): Int32;
+    begin
+      exit &Write(new ImmutableSpan<Byte>(^Byte(buf), Count));
+    end;
+
     method CopyTo(Destination: Stream);
     property Length: Int64 read GetLength; virtual;
     method SetLength(value: Int64); virtual;
@@ -55,6 +67,11 @@ begin
   raise new NotSupportedException;
 end;
 
+method Stream.Dispose;
+begin
+  Close;
+end;
+
 method Stream.CopyTo(Destination: Stream);
 begin	
 	const	bufsize = 4096; //4kb
@@ -64,8 +81,8 @@ begin
   if not Destination.CanWrite then raise new NotSupportedException;
   var buf: array [1..bufsize] of Byte := InternalCalls.Undefined<array [1..bufsize] of Byte>();
   while true do begin
-    var rest := &Read(@buf[0],bufsize);
-    if rest > 0 then rest := Destination.Write(@buf[0],rest);
+    var rest := &Read(new Span<Byte>(@buf[0], bufsize));
+    if rest > 0 then rest := Destination.Write(new Span<Byte>(@buf[0], rest));
     if rest <> bufsize then break;
   end;
 end;
@@ -73,21 +90,13 @@ end;
 method Stream.Read(Buffer: array of Byte; Offset: Int32; Count: Int32): Int32;
 begin
   if not CanRead then raise new NotSupportedException;
-  if Buffer.Length < Offset then raise Utilities.CreateIndexOutOfRangeException(Offset, Buffer.Length-1);
-  if Buffer.Length < Offset + Count then raise new ArgumentOutOfRangeException('Offset plus Count is greater than the length of Buffer.');
-  if Count = 0 then exit 0;
-  var buf: ^Void := @(Buffer[Offset]);
-  exit &Read(buf,Count);
+  exit &Read(new Span<Byte>(Buffer, Offset, Count));
 end;
 
 method Stream.Write(Buffer: array of Byte; Offset: Int32; Count: Int32): Int32;
 begin
   if not CanWrite then raise new NotSupportedException;
-  if Buffer.Length < Offset then raise Utilities.CreateIndexOutOfRangeException(Offset, Buffer.Length-1);
-  if Buffer.Length < Offset + Count  then raise new ArgumentOutOfRangeException('Offset plus Count is greater than the length of Buffer.');
-  if Count = 0 then exit 0;
-  var buf: ^Void := @(Buffer[Offset]);
-  exit &Write(buf,Count);
+  exit Write(new ImmutableSpan<Byte>(Buffer, Offset, Count));
 end;
 
 end.

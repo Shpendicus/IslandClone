@@ -1,125 +1,89 @@
 ﻿namespace RemObjects.Elements.System;
 
 type
-  [Guid("00000000-0000-0000-C000-000000000046")]
-  IUnknown = public interface
+  {$IFDEF WINDOWS}
+  IUnknown = public rtl.IUnknown;
+  {$ELSE}
+  [COM, Guid("{00000000-0000-0000-C000-000000000046}")]
+  rtl.IUnknown = public interface
     [CallingConvention(CallingConvention.Stdcall)]
-    method QueryInterface(riid: ^rtl.GUID; ppvObject: ^^Void): rtl.HRESULT;
+    method QueryInterface(riid: ^rtl.GUID; ppvObject: ^^Void): Cardinal;
     [CallingConvention(CallingConvention.Stdcall)]
-    method AddRef(): rtl.ULONG;
+    method AddRef(): Cardinal;
     [CallingConvention(CallingConvention.Stdcall)]
-    method Release(): rtl.ULONG;
+    method Release(): Cardinal;
   end;
-  [CallingConvention(CallingConvention.Stdcall)]
-  IUnknown_VMT_QueryInterface = public method(aSelf: ComObject; riid: ^rtl.GUID; ppvObject: ^^Void): rtl.HRESULT;
-  [CallingConvention(CallingConvention.Stdcall)]
-  IUnknown_VMT_AddRef = public method(aSelf: ComObject): rtl.ULONG;
-  [CallingConvention(CallingConvention.Stdcall)]
-  IUnknown_VMT_Release = public method(aSelf: ComObject): rtl.ULONG;
-
-  IUnknown_VMTType = public record
+  IUnknown = public rtl.IUnknown;
+  rtl.__struct_IUnknownVtbl = public record
   public
-    QueryInterface: IUnknown_VMT_QueryInterface;
-    AddRef: IUnknown_VMT_AddRef;
-    Release: IUnknown_VMT_Release;
+    QueryInterface: QueryInterfaceFunction;
+    AddRef: AddRefFunction;
+    Release: ReleaseFunction;
   end;
-  IUnknownPtr = public record(IUnknown)
-  private
-    fInstance: ComObject;
-  public
-    class operator Explicit(aVal: IUnknownPtr): ComObject;
-    begin
-      exit aVal.fInstance;
-    end;
-    class operator Explicit(aVal: IUnknown): IUnknownPtr;
-    begin
-      exit new IUnknownPtr(COMHelpers.ObjectToComObject(aVal, @IUnknown_VMT));
-    end;
+  [CallingConvention(CallingConvention.Stdcall)]
+  QueryInterfaceFunction nested in rtl.__struct_IUnknownVtbl = public function (slf: rtl.IUnknown; riid: ^rtl.GUID; ppvObject: ^^Void): rtl.HRESULT;
+  [CallingConvention(CallingConvention.Stdcall)]
+  AddRefFunction nested in rtl.__struct_IUnknownVtbl = public function(slf: rtl.IUnknown): Cardinal;
+  [CallingConvention(CallingConvention.Stdcall)]
+  ReleaseFunction nested in rtl.__struct_IUnknownVtbl = public function(slf: rtl.IUnknown): Cardinal;
+  rtl.GUID = public Guid;
+  rtl.HRESULT = public Cardinal;
+  {$ENDIF}
 
-    class operator Explicit(aVal: IUnknownPtr): IUnknown;
-    begin
-      exit coalesce(COMHelpers.ComObjectToObject(aVal.fInstance), IUnknown(Object(aVal)));
-    end;
-
-    class operator Equal(a,b: IUnknownPtr): Boolean;
-    begin
-      exit a.fInstance = b.fInstance;
-    end;
-
-    class operator NotEqual(a,b: IUnknownPtr): Boolean;
-    begin
-      exit a.fInstance <> b.fInstance;
-    end;
-
-    method Release: rtl.ULONG;
-    begin
-      exit fInstance^^.Release(fInstance);
-    end;
-    method AddRef: rtl.ULONG;
-    begin
-      exit fInstance^^.AddRef(fInstance);
-    end;
-    method QueryInterface(riid: ^rtl.GUID; ppvObject: ^^Void): rtl.HRESULT;
-    begin
-      exit fInstance^^.QueryInterface(fInstance, riid, ppvObject);
-    end;
-
-    constructor(aIntf: ComObject);
-    begin
-      fInstance := aIntf;
-    end;
-    constructor(var aCopyFrom: IUnknownPtr);
-    begin
-      fInstance := aCopyFrom.fInstance;
-      if fInstance <> nil then fInstance^^.AddRef(fInstance);
-    end;
-    finalizer;
-    begin
-      var lInst := fInstance;
-      fInstance := nil;
-      if lInst <> nil then lInst^^.Release(lInst);
-    end;
+  ULONG = public {$IFDEF WINDOWS}rtl.ULONG{$ELSE}Cardinal{$ENDIF};
+  ICOMInterface = public interface
+    method QueryInterface(var riid: Guid; out ppvObject: ^Void): Boolean;
+    method AddRef(): ULONG;
+    method Release(): ULONG;
   end;
-
-var IUnknown_UID: Guid := new RemObjects.Elements.System.Guid(Data1 := 0, Data2 := 0, Data3 := 0, Data4_0 := 192, Data4_1 := 0, Data4_2 := 0,  Data4_3 := 0,  Data4_4 := 0,  Data4_5 := 0,  Data4_6 := 0,  Data4_7 := 70); public; readonly;
-var IUnknown_VMT: IUnknown_VMTType := new IUnknown_VMTType(QueryInterface := @IUnknown_VMTImpl_QueryInterface, AddRef := @IUnknown_VMTImpl_AddRef, Release := @IUnknown_VMTImpl_Release); public; readonly;
 
 var IElementsObject_UID: Guid := new RemObjects.Elements.System.Guid(Data1 := $5b9e00e5, Data2 := $c1da, Data3 := $4f0d, Data4_0 := $8d, Data4_1 := $92, Data4_2 := $e0,  Data4_3 := $68,  Data4_4 := $42,  Data4_5 := $bd,  Data4_6 := $5d,  Data4_7 := $f5); public; readonly;
 
 type
   ElementsCOMInterface = public record
   public
-    VMT: ^IUnknown_VMTType;
+    VMT: ^Void;
     Object: Object;
     fMyRC: Integer;
   end;
 
-  ComObject = public ^^IUnknown_VMTType;
-
   COMHelpers = public static class
   public
-
-    method ObjectToComObject(aVal: IUnknown; aForVMT: ^Void): ComObject;
+    method IntObjectToComObject(aVal: ICOMInterface; aForVMT: ^Void): ^Void;
     begin
       aVal.AddRef; // increases the ref count for the gc handle; also creates the handle if needed
-      var lPtr := ExternalCalls.malloc(sizeOf(ElementsCOMInterface));
+      var lPtr := malloc(sizeOf(ElementsCOMInterface));
       ^ElementsCOMInterface(lPtr)^.fMyRC := 1;
       ^ElementsCOMInterface(lPtr)^.Object := aVal;
-      ^ElementsCOMInterface(lPtr)^.VMT := ^IUnknown_VMTType(aForVMT);
-      exit ComObject(lPtr);
+      ^ElementsCOMInterface(lPtr)^.VMT := aForVMT;
+      ^^Void(@result)^ := lPtr;
     end;
 
-    method ComObjectToObject(aVal: ComObject): IUnknown;
+    method ObjectToComObject(aVal: ICOMInterface; aForVMT: ^Void): IUnknown;
+    begin
+      var lTmp := IntObjectToComObject(aVal, aForVMT);
+      ^^Void(@result)^ := lTmp;
+    end;
+
+    method ComObjectToObject(aVal: IUnknown): ICOMInterface;
     begin
       if aVal = nil then exit nil;
       var lPtr: ^Void;
-      if 0 = aVal^^.QueryInterface(aVal, ^rtl.GUID(@IElementsObject_UID), @lPtr) then exit nil;
-      result := IUnknown(^ElementsCOMInterface(lPtr)^.Object);
-      ^ElementsCOMInterface(lPtr)^. VMT^.Release(ComObject(lPtr));
+      if 0 <> ^^^rtl.__struct_IUnknownVtbl(@aVal)^^.QueryInterface(aVal, ^rtl.GUID(@IElementsObject_UID), @lPtr) then exit nil;
+      result := ICOMInterface(^ElementsCOMInterface(lPtr)^.Object);
+      ^^rtl.__struct_IUnknownVtbl(lPtr)^^.Release(^rtl.IUnknown(@lPtr)^);
+    end;
+
+    method ObjectToCom(aVal: Object; aGuid: Guid): IUnknown;
+    begin
+      var lPVal := ICOMInterface(aVal);
+      if lPVal = nil then exit;
+      if not lPVal.QueryInterface(var aGuid, out ^^Void(@result)^) then
+        ^^Void(@result)^ := nil;
     end;
   end;
 
-  method __elements_Default_AddRef(aObj: Object; var aRefCount: Integer; var aGCHandle: GCHandle): rtl.ULONG;public;
+  method __elements_Default_AddRef(aObj: Object; var aRefCount: Integer; var aGCHandle: GCHandle): ULONG; public;
   begin
     result := InternalCalls.Increment(var aRefCount) + 1;
     if result = 1 then begin
@@ -127,7 +91,7 @@ type
       if InternalCalls.CompareExchange(var ^NativeInt(@aGCHandle)^, ^NativeInt(@lHandle)^, 0) <> 0 then lHandle.Dispose;
     end;
   end;
-  method __elements_Default_Release(aObj: Object; var aRefCount: Integer; var aGCHandle: GCHandle): rtl.ULONG;public;
+  method __elements_Default_Release(aObj: Object; var aRefCount: Integer; var aGCHandle: GCHandle): ULONG; public;
   begin
     result := InternalCalls.Decrement(var aRefCount) - 1;
     if result = 0 then begin
@@ -136,27 +100,91 @@ type
         ^GCHandle(@lHandle)^.Dispose;
     end;
   end;
+
   // Bridge methods; These call
   [CallingConvention(CallingConvention.Stdcall)]
-  method IUnknown_VMTImpl_QueryInterface(aSelf: ComObject; riid: ^rtl.GUID; ppvObject: ^^Void): rtl.HRESULT;public;static;
+  method IUnknown_VMTImpl_QueryInterface(aSelf: ^ElementsCOMInterface; riid: ^rtl.GUID; ppvObject: ^^Void): rtl.HRESULT; public;static;
   begin
-    exit IUnknown(^ElementsCOMInterface(aSelf)^.Object).QueryInterface(riid, ppvObject);
+    var g := ^Guid(riid)^;
+    if ICOMInterface(^ElementsCOMInterface(aSelf)^.Object).QueryInterface(var g, out ppvObject^) then
+      exit 0;
+    exit $80004002;
   end;
 
   [CallingConvention(CallingConvention.Stdcall)]
-  method IUnknown_VMTImpl_AddRef(aSelf: ComObject): rtl.ULONG; public;static;
+  method IUnknown_VMTImpl_AddRef(aSelf: ^ElementsCOMInterface): ULONG; public;static;
   begin
-    IUnknown(^ElementsCOMInterface(aSelf)^.Object).AddRef(); // Increase the internal count so that we keep around the gc handle
+    ICOMInterface(^ElementsCOMInterface(aSelf)^.Object).AddRef(); // Increase the internal count so that we keep around the gc handle
     exit InternalCalls.Increment(var ^ElementsCOMInterface(aSelf)^.fMyRC)+1; // returns the old value
   end;
 
   [CallingConvention(CallingConvention.Stdcall)]
-  method IUnknown_VMTImpl_Release(aSelf: ComObject): rtl.ULONG; public;static;
+  method IUnknown_VMTImpl_Release(aSelf: ^ElementsCOMInterface): ULONG; public;static;
   begin
-    IUnknown(^ElementsCOMInterface(aSelf)^.Object).Release();
+    ICOMInterface(^ElementsCOMInterface(aSelf)^.Object).Release();
     result := InternalCalls.Decrement(var ^ElementsCOMInterface(aSelf)^.fMyRC)-1;
     if result = 0 then
-      ExternalCalls.free(aSelf);
+      free(aSelf);
   end;
+
+type
+  COMRC<T> = public lifetimestrategy (COMRC) T;
+  COMRC = public record(ILifetimeStrategy<COMRC>)
+  assembly
+    fInst: IntPtr;
+  public
+    class method &New(aTTY: ^Void; aSize: NativeInt): ^Void;
+    begin
+      raise new Exception('Not supported');
+    end;
+
+    class method Init(var Dest: COMRC);
+    begin
+      Dest.fInst := nil;
+    end;
+
+    constructor Copy(var aValue: COMRC);
+    begin
+      fInst := aValue.fInst;
+      if ^^rtl.__struct_IUnknownVtbl(fInst) <> nil then
+        ^^rtl.__struct_IUnknownVtbl(fInst)^^.AddRef(^rtl.IUnknown(@fInst)^);
+    end;
+
+    class method Copy(var aDest, aSource: COMRC);
+    begin
+      var lInst := aSource.fInst;
+      if ^^rtl.__struct_IUnknownVtbl(lInst) <> nil then
+        ^^rtl.__struct_IUnknownVtbl(lInst)^^.AddRef(^rtl.IUnknown(@lInst)^);
+      aDest.fInst := lInst;
+    end;
+
+    class operator Assign(var aDest: COMRC; var aSource: COMRC);
+    begin
+      Assign(var aDest, var aSource);
+    end;
+
+    class method Assign(var aDest, aSource: COMRC);
+    begin
+      var lNew := aSource.fInst;
+      var lOld := InternalCalls.Exchange(var aDest.fInst, lNew);
+      if ^^rtl.__struct_IUnknownVtbl(lNew) <> nil then
+        ^^rtl.__struct_IUnknownVtbl(lNew)^^.AddRef(^rtl.IUnknown(@lNew)^);
+      if ^^rtl.__struct_IUnknownVtbl(lOld) <> nil then
+        ^^rtl.__struct_IUnknownVtbl(lOld)^^.Release(^rtl.IUnknown(@lOld)^);
+    end;
+
+    class method Release(var aDest: COMRC);
+    begin
+      var lOld := InternalCalls.Exchange(var aDest.fInst, nil);
+      if ^^rtl.__struct_IUnknownVtbl(lOld) <> nil then
+        ^^rtl.__struct_IUnknownVtbl(lOld)^^.Release(^rtl.IUnknown(@lOld)^);
+    end;
+
+    finalizer;
+    begin
+      Release(var self);
+    end;
+  end;
+
 
 end.

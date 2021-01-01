@@ -6,18 +6,23 @@ type
   IDisposable = public interface
     method Dispose;
   end;
-  Monitor = public class(IDisposable)
-  private
+  Monitor = public class(IDisposable, IMonitor)
+  assembly
     {$IFDEF WINDOWS}
     fCS: rtl.CRITICAL_SECTION;
     {$ELSEIF POSIX}
-    fcs: rtl.pthread_mutex_t;
+    fCS: rtl.pthread_mutex_t;
     {$ENDIF}
   public
     constructor;
     method Wait;
     method Release;
     method Dispose;
+  end;
+
+  IMonitor = public interface
+    method Wait;
+    method Release;
   end;
 
   SingleLinkedList<T> = class
@@ -70,7 +75,7 @@ begin
   var attr: rtl.pthread_mutexattr_t;
   rtl.pthread_mutexattr_init(@attr);
   rtl.pthread_mutexattr_settype(@attr, rtl.PTHREAD_MUTEX_RECURSIVE);
-  rtl.pthread_mutex_init(@fcs, @attr);
+  rtl.pthread_mutex_init(@fCS, @attr);
   {$ENDIF}
 end;
 
@@ -79,7 +84,7 @@ begin
   {$IFDEF WINDOWS}
   rtl.EnterCriticalSection(@fCS);
   {$ELSEIF POSIX}
-  rtl.pthread_mutex_lock(@fcs);
+  rtl.pthread_mutex_lock(@fCS);
   {$ENDIF}
 end;
 
@@ -88,7 +93,7 @@ begin
   {$IFDEF WINDOWS}
   rtl.LeaveCriticalSection(@fCS);
   {$ELSEIF POSIX}
-  rtl.pthread_mutex_unlock(@fcs);
+  rtl.pthread_mutex_unlock(@fCS);
   {$ENDIF}
 end;
 
@@ -97,7 +102,7 @@ begin
   {$IFDEF WINDOWS}
   rtl.DeleteCriticalSection(@fCS);
   {$ELSEIF POSIX}
-  rtl.pthread_mutex_destroy(@fcs);
+  rtl.pthread_mutex_destroy(@fCS);
   {$ENDIF}
 end;
 

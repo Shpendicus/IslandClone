@@ -113,7 +113,14 @@ type
           TypeCodes.Double: PushDouble(Double(aVal));
           TypeCodes.IntPtr: PushU32(NativeInt(aVal));
           TypeCodes.UIntPtr: PushU32(NativeUInt(aVal));
-        else begin
+        else
+          if aParamType.IsEnum then begin
+            if aParamType.Constants.FirstOrDefault().Type.Code = TypeCodes.Int32 then
+              PushU32(UInt32(Int32(aVal)))
+            else
+              PushU64(UInt64(Int64(aVal)));
+          end
+          else begin
           // TODO: add record support
             assert(not aParamType.IsValueType);
             PushU32(UInt32(InternalCalls.Cast(aVal)));
@@ -139,7 +146,7 @@ type
           if (lInst.fVarData = nil) and (aParameterFlags[I] in [ArgumentMode.Var, ArgumentMode.Out]) then lInst.fVarData := new Object[length(aParams)];
           lInst.PushParameter(aParams[I], I, aParameterTypes[I], aParameterFlags[I]);
         end;
-        lInst.fCallData.StackData := @lInst.fStack[length(lInst.fStack)-4];
+        lInst.fCallData.StackData := if length(lInst.fStack) = 0 then nil else @lInst.fStack[length(lInst.fStack)-4];
         lInst.fCallData.StackDataLength := length(lInst.fStack) / 4;
         lInst.fCallData.Address := aAddress;
         if aCallingConv in [CallingConvention.Cdecl, CallingConvention.Default] then

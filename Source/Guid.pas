@@ -149,6 +149,8 @@ type
     begin
       if assigned(obj) and (obj is Guid) then
         exit self = Guid(obj)
+      else if assigned(obj) and (obj is rtl.GUID) then
+        exit self = rtl.Guid(obj)
       else
         exit False;
     end;
@@ -198,6 +200,15 @@ type
     class operator NotEqual(Value1: Guid; Value2: rtl.GUID): Boolean;
     begin
       exit not (Value2 = Value1);
+    end;
+    class operator Implicit(val: rtl.GUID): Guid;
+    begin
+      memcpy(@result, @val, 16);
+    end;
+
+    class operator Implicit(val: Guid): rtl.GUID;
+    begin
+      memcpy(@result, @val, 16);
     end;
     {$ENDIF}
   end;

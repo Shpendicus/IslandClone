@@ -2,6 +2,17 @@
 
 interface
 
+{$IF DARWIN}
+uses
+  CoreFoundation;
+
+[assembly:DllImport(COREFOUNDATION_FRAMEWORK, EntryPoint := '_kCFLocaleCurrencySymbol')]
+[assembly:DllImport(COREFOUNDATION_FRAMEWORK, EntryPoint := '_kCFLocaleDecimalSeparator')]
+[assembly:DllImport(COREFOUNDATION_FRAMEWORK, EntryPoint := '_kCFDateFormatterPMSymbol')]
+[assembly:DllImport(COREFOUNDATION_FRAMEWORK, EntryPoint := '_kCFDateFormatterAMSymbol')]
+[assembly:DllImport(COREFOUNDATION_FRAMEWORK, EntryPoint := '_kCFLocaleGroupingSeparator')]
+{$ENDIF}
+
 {$IFDEF ANDROID}
   {$DEFINE ICU_LOCALE}
 {$ENDIF}
@@ -13,8 +24,8 @@ type
     fThousandsSeparator: Char;
     fDecimalSeparator: Char;
     fIsReadOnly: Boolean;
-    method SetCurrency(value: String);    
-    method SetThousandsSeparator(value: Char);      
+    method SetCurrency(value: String);
+    method SetThousandsSeparator(value: Char);
     method SetDecimalSeparator(value: Char);
     method CheckReadOnly;
   public
@@ -61,9 +72,11 @@ type
     method GetDateTimePattern(aTimeStyle: UDateFormatStyle; aDateStyle: UDateFormatStyle; aLocaleID: PlatformLocale): String;
     {$ENDIF}
     {$IF LINUX OR ICU_LOCALE}
+    method AdjustPattern(aPattern: String): String;
+    {$ENDIF}
+    {$IF LINUX OR ICU_LOCALE OR DARWIN}
     method GetDateSeparator(aShortDatePattern: String): String;
     method GetTimeSeparator(aShortTimePattern: String): String;
-    method AdjustPattern(aPattern: String): String;
     {$ENDIF}
   public
     constructor(aLocale: PlatformLocale; aIsReadonly: Boolean := false);
@@ -82,7 +95,7 @@ type
     property IsReadOnly: Boolean read fIsReadOnly;
   end;
 
-  PlatformLocale = {$IF WINDOWS}rtl.LCID{$ELSEIF LINUX AND NOT ANDROID}rtl.locale_t{$ELSEIF ICU_LOCALE OR WEBASSEMBLY}String{$ENDIF};
+  PlatformLocale = {$IF WINDOWS}rtl.LCID{$ELSEIF LINUX AND NOT ANDROID}rtl.locale_t{$ELSEIF DARWIN}CoreFoundation.CFLocaleRef{$ELSEIF ICU_LOCALE OR WEBASSEMBLY}String{$ENDIF};
 
   Locale = public class
   private
@@ -94,9 +107,9 @@ type
     method GetIdentifier: not nullable String;
     class var fCurrent: Locale;
     class var fInvariant: Locale;
-  protected
-    constructor(aLocaleID: PlatformLocale; aIsReadOnly: Boolean := false);
   public
+    constructor(aLocaleID: PlatformLocale; aIsReadOnly: Boolean := false);
+    constructor(aLocale: String);
     class property Invariant: Locale read GetInvariant;
     class property Current: Locale read GetCurrent;
     property Identifier: not nullable String read GetIdentifier;
@@ -204,7 +217,7 @@ begin
   if lTemp.Length > 0 then
      lDecimalSep := lTemp[0];
   lTotal := rtl.GetLocaleInfo(fLocaleID, rtl.LOCALE_STHOUSAND, @lBuffer[0], lBuffer.Length);
-  lTemp := String.FromPChar(@lBuffer[0], lTotal).SubString(0, 1);
+  lTemp := String.FromPChar(@lBuffer[0], lTotal).Substring(0, 1);
   if lTemp.Length > 0 then
   lThousandsSep := lTemp[0];
   {$ELSEIF LINUX AND NOT ANDROID}
@@ -224,8 +237,21 @@ begin
   if lTemp <> nil then begin
     var lTempString := String.FromPAnsiChars(lTemp) as not nullable;
     if lTempString.Length > 1 then
-      lCurrency := lTempString.SubString(1);
+      lCurrency := lTempString.Substring(1);
   end;
+  {$ELSEIF DARWIN}
+  var lData := CFLocaleGetValue(aLocaleID, kCFLocaleDecimalSeparator);
+  var lString: String := bridge<Foundation.NSString>(CFStringRef(lData));
+  if lString.Length > 0 then
+    lDecimalSep := lString[0];
+
+  lData := CFLocaleGetValue(aLocaleID, kCFLocaleGroupingSeparator);
+  lString := bridge<Foundation.NSString>(CFStringRef(lData));
+  if lString.Length > 0 then
+    lThousandsSep := lString[0];
+
+  lData := CFLocaleGetValue(aLocaleID, kCFLocaleCurrencySymbol);
+  lCurrency := bridge<Foundation.NSString>(CFStringRef(lData));
   {$ELSEIF ICU_LOCALE}
   var lParseError: UParseError;
   var lStatus: UErrorCode;
@@ -255,6 +281,23 @@ begin
   fDateTimeFormat := new DateTimeFormatInfo(aLocaleID, aIsReadOnly);
 end;
 
+constructor Locale(aLocale: String);
+begin
+  {$IF WINDOWS}
+  constructor(rtl.LocaleNameToLCID(aLocale.ToLPCWSTR, 0), false);
+  {$ELSEIF LINUX AND NOT ANDROID}
+  aLocale := aLocale.Replace('-', '_');
+  var lName := aLocale.ToAnsiChars(true);
+  var lLocale := rtl.newlocale(rtl.LC_ALL_MASK, @lName[0], nil);
+  constructor(lLocale, false);
+  {$ELSEIF DARWIN}
+  var lLocale := CFLocaleCreate(nil, CFLocaleCreateCanonicalLanguageIdentifierFromString(nil, aLocale));
+  constructor(lLocale, false);
+  {$ELSEIF ICU_LOCALE OR WEBASSEMBLY}
+  constructor(aLocale, false);
+  {$ENDIF}
+end;
+
 method Locale.GetIdentifier: not nullable String;
 begin
   {$IF WINDOWS}
@@ -268,6 +311,9 @@ begin
   if lName = nil then
     raise new Exception("Error getting locale name");
   result := String.FromPAnsiChars(lName) as not nullable;
+  {$ELSEIF DARWIN}
+  var lString := bridge<Foundation.NSString>(CFLocaleGetIdentifier(fLocaleID));
+  result := lString as not nullable;
   {$ELSEIF ICU_LOCALE}
   var lErr: UErrorCode;
   var lName := new Char[80];
@@ -286,6 +332,8 @@ begin
     {$ELSEIF LINUX AND NOT ANDROID}
     var lInvariant := 'en_US.utf8'.ToAnsiChars(true);
     fInvariant := new Locale(rtl.newLocale(rtl.LC_ALL_MASK, @lInvariant[0], nil), true);
+    {$ELSEIF DARWIN}
+    fInvariant := new Locale(CFLocaleGetSystem());
     {$ELSEIF ICU_LOCALE OR WEBASSEMBLY}
     fInvariant := new Locale('en-US', true);
     {$ENDIF}
@@ -306,6 +354,8 @@ begin
     var lName := lDefaultName.ToAnsiChars(true);
     var lLocale := rtl.newlocale(rtl.LC_ALL_MASK, @lName[0], nil);
     fCurrent := new Locale(lLocale, true);
+    {$ELSEIF DARWIN}
+    fCurrent := new Locale(CFLocaleCopyCurrent());
     {$ELSEIF ICU_LOCALE}
     var lName: ^Char := ICUHelper.ULocGetDefault();
     var lDefaultName := String.FromPChar(lName);
@@ -336,12 +386,12 @@ end;
 constructor DateTimeFormatInfo(aLocale: PlatformLocale; aIsReadonly: Boolean := false);
 begin
   fIsReadOnly := aIsReadonly;
-  {$IF WINDOWS}  
+  {$IF WINDOWS}
   for i: Integer := 0 to 6 do begin
     fShortDayNames[i] := GetStringFromLocale(aLocale, rtl.LOCALE_SABBREVDAYNAME1 + i);
     fLongDayNames[i] := GetStringFromLocale(aLocale, rtl.LOCALE_SDAYNAME1 + i);
   end;
-  
+
   for i: Integer := 0 to 11 do begin
     fShortMonthNames[i] := GetStringFromLocale(aLocale, rtl.LOCALE_SABBREVMONTHNAME1 + i);
     fLongMonthNames[i] := GetStringFromLocale(aLocale, rtl.LOCALE_SMONTHNAME1 + i);
@@ -367,13 +417,35 @@ begin
   end;
 
   fAMString := GetStringFromLocale(aLocale, rtl.AM_STR);
-  fPMString := GetStringFromLocale(aLocale, rtl.PM_STR);  
-  fShortDatePattern := AdjustPattern(GetStringFromLocale(aLocale, rtl.D_FMT)); 
+  fPMString := GetStringFromLocale(aLocale, rtl.PM_STR);
+  fShortDatePattern := AdjustPattern(GetStringFromLocale(aLocale, rtl.D_FMT));
   fLongDatePattern := AdjustPattern(GetStringFromLocale(aLocale, rtl.D_T_FMT));
   fShortTimePattern := AdjustPattern(GetStringFromLocale(aLocale, rtl.T_FMT));
   fLongTimePattern := AdjustPattern(GetStringFromLocale(aLocale, rtl.T_FMT_AMPM));
   fDateSeparator := GetDateSeparator(fShortDatePattern);
   fTimeSeparator := GetTimeSeparator(fShortTimePattern);
+  {$ELSEIF DARWIN}
+  var lFormatter := CFDateFormatterCreate(nil, aLocale, CFDateFormatterStyle.NoStyle, CFDateFormatterStyle.LongStyle);
+  var lData := CFDateFormatterCopyProperty(lFormatter, kCFDateFormatterAMSymbol);
+  fAMString := bridge<Foundation.NSString>(CFStringRef(lData));
+
+  lData := CFDateFormatterCopyProperty(lFormatter, kCFDateFormatterPMSymbol);
+  fPMString := bridge<Foundation.NSString>(CFStringRef(lData));
+  fLongTimePattern := bridge<Foundation.NSString>(CFDateFormatterGetFormat(lFormatter));
+
+  lFormatter := CFDateFormatterCreate(nil, aLocale, CFDateFormatterStyle.NoStyle, CFDateFormatterStyle.ShortStyle);
+  fShortTimePattern := bridge<Foundation.NSString>(CFDateFormatterGetFormat(lFormatter));
+
+  lFormatter := CFDateFormatterCreate(nil, aLocale, CFDateFormatterStyle.MediumStyle, CFDateFormatterStyle.NoStyle);
+  fLongDatePattern := bridge<Foundation.NSString>(CFDateFormatterGetFormat(lFormatter));
+
+  lFormatter := CFDateFormatterCreate(nil, aLocale, CFDateFormatterStyle.ShortStyle, CFDateFormatterStyle.NoStyle);
+  fShortDatePattern := bridge<Foundation.NSString>(CFDateFormatterGetFormat(lFormatter));
+
+  //fDateSeparator := GetDateSeparator(fShortDatePattern);
+  //fTimeSeparator := GetTimeSeparator(fShortTimePattern);
+  fDateSeparator := '/';
+  fTimeSeparator := ':';
   {$ELSEIF ICU_LOCALE}
   var lErr: UErrorCode;
   var lData := ICUHelper.UDatOpen(UDateFormatStyle.UDAT_FULL, UDateFormatStyle.UDAT_FULL, aLocale, nil, 0, nil, 0, @lErr);
@@ -440,7 +512,7 @@ begin
 end;
 {$ENDIF}
 
-{$IF LINUX OR ICU_LOCALE}
+{$IF LINUX OR ICU_LOCALE OR DARWIN}
 method DateTimeFormatInfo.GetDateSeparator(aShortDatePattern: String): String;
 begin
   var lDayPos := aShortDatePattern.IndexOf('dd');
@@ -460,7 +532,7 @@ begin
   var lPos := aShortDatePattern.IndexOfAny(['/', '.', '\', '-']);
   if lPos >= 0 then
     lSeparator := aShortDatePattern[lPos];
-  
+
   result := lSeparator;
 end;
 
@@ -484,10 +556,12 @@ begin
   var lPos := aShortTimePattern.IndexOfAny([':', '.']);
   if lPos >= 0 then
     lSeparator := aShortTimePattern[lPos];
-  
+
   result := lSeparator;
 end;
+{$ENDIF}
 
+{$IF LINUX OR ICU_LOCALE}
 method DateTimeFormatInfo.AdjustPattern(aPattern: String): String;
 begin
   {$IF LINUX}
