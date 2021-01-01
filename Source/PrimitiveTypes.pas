@@ -5,7 +5,7 @@
 															 UInt8, UInt32, UInt64, Single, Double) of byte;
 
 		TOperationToken = public enum (&Add, Subtract, Multiply, Divide,
-																	 GreaterOrEqual, Greater, Equal, LessOrEqual, Less); //can be expanded ofc with logical operators
+																	 GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less); //can be expanded ofc with logical operators
 
 		[Union]
 		TNumeric = public record
@@ -1006,10 +1006,12 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > Int8(operand2);
+								TOperationToken.Greater:          result := Int8(operand1) > Int8(operand2);
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Int8(operand2);
+								TOperationToken.Less:             result := Int8(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:      result := Int8(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1019,6 +1021,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := Int8(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1028,6 +1032,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := Int8(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1037,6 +1043,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := Int8(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1046,6 +1054,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := Int8(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1055,6 +1065,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := Int8(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> UIn16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1064,6 +1076,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := Int8(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1073,6 +1087,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := Int8(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1082,6 +1098,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Single(operand2);
 								TOperationToken.Less:        result := Int8(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1106,6 +1124,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := Int16(operand1) ≤ Int8(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) < Int8(operand2);
+								TOperationToken.Equal:            result := Int16(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := Int16(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1115,6 +1135,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) > Int16(operand2);
 								TOperationToken.Less:        result := Int16(operand1) ≤ Int16(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) < Int16(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1124,6 +1146,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := Int16(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := Int16(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := Int16(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1133,6 +1157,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := Int16(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := Int16(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := Int16(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1142,6 +1168,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := Int16(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := Int16(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := Int16(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1151,6 +1179,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := Int16(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1160,6 +1190,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := Int16(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := Int16(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := Int16(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1169,6 +1201,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := Int16(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := Int16(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := Int16(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1178,6 +1212,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Single(operand2);
 								TOperationToken.Less:        result := Int16(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1187,6 +1223,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Double(operand2);
 								TOperationToken.Less:        result := Int16(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := Int16(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := Int16(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1203,6 +1241,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < Int8(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1212,6 +1252,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := Int8(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := Int8(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1221,6 +1263,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1230,6 +1274,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1239,6 +1285,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1248,6 +1296,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1257,6 +1307,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1266,6 +1318,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1275,6 +1329,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Single(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1284,6 +1340,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Double(operand2);
 								TOperationToken.Less:        result := Int32(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := Int32(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := Int32(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1300,6 +1358,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < Int8(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1309,6 +1369,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1318,6 +1380,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1327,6 +1391,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1336,6 +1402,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1345,6 +1413,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> Uint16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1354,6 +1424,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1363,6 +1435,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1372,6 +1446,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Single(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1381,6 +1457,8 @@
 								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Double(operand2);
 								TOperationToken.Less:        result := Int64(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := Int64(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := Int64(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1397,6 +1475,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < Int8(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1406,6 +1486,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1415,6 +1497,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1424,6 +1508,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1433,6 +1519,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1442,6 +1530,10 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt8(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1451,6 +1543,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1460,6 +1554,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1469,6 +1565,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Single(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1478,6 +1576,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Double(operand2);
 								TOperationToken.Less:        result := UInt8(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := UInt8(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := UInt8(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1495,6 +1595,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < Int8(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1504,6 +1606,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1513,6 +1617,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1522,6 +1628,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1531,6 +1639,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1540,6 +1650,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1549,6 +1661,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1558,6 +1672,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1567,6 +1683,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Single(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1576,6 +1694,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Double(operand2);
 								TOperationToken.Less:        result := UInt16(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := UInt16(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := UInt16(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1592,6 +1712,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := UInt32(operand1) < Int8(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1601,6 +1723,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := UInt32(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1610,6 +1734,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := UInt32(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1619,6 +1745,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := UInt32(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1628,6 +1756,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := UInt32(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1637,6 +1767,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := UInt32(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> UInt16(operand2)
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1646,6 +1778,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := UInt32(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> UInt32(operand2)
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1655,6 +1789,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := UInt32(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> UInt64(operand2)
 							end;
 						end;
 						TNumericType.Single:
@@ -1664,6 +1800,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Single(operand2);
 								TOperationToken.Less: result := UInt32(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> Single(operand2)
 							end;
 						end;
 						TNumericType.Double:
@@ -1673,6 +1811,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Double(operand2);
 								TOperationToken.Less: result := UInt32(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := UInt32(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := UInt32(operand1) <> Double(operand2)
 							end;
 						end;
 					end;
@@ -1689,6 +1829,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < Int8(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1698,6 +1840,9 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> Int16(operand2);
+
 							end;
 						end;
 						TNumericType.Int32:
@@ -1707,6 +1852,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1716,6 +1863,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1725,6 +1874,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1734,6 +1885,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1743,6 +1896,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1752,6 +1907,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1761,6 +1918,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Single(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1770,6 +1929,8 @@
 								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Double(operand2);
 								TOperationToken.Less:        result := UInt64(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := UInt64(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := UInt64(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1787,6 +1948,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := Single(operand1) < Int8(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1796,6 +1959,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := Single(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1805,6 +1970,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := Single(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1814,6 +1981,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := Single(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1823,6 +1992,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := Single(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1832,6 +2003,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := Single(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1841,6 +2014,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := Single(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1850,6 +2025,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ UInt64(operand2);
 								TOperationToken.Less:        result := Single(operand1) < UInt64(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1859,6 +2036,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Single(operand2);
 								TOperationToken.Less:        result := Single(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1868,6 +2047,8 @@
 								TOperationToken.GreaterOrEqual:   result := Single(operand1) > Double(operand2);
 								TOperationToken.Less:        result := Single(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := Single(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := Single(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1884,6 +2065,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Int8(operand2);
 								TOperationToken.Less:        result := Double(operand1) < Int8(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1893,6 +2076,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Int16(operand2);
 								TOperationToken.Less:        result := Double(operand1) < Int16(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1902,6 +2087,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Int32(operand2);
 								TOperationToken.Less:        result := Double(operand1) < Int32(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1911,6 +2098,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Int64(operand2);
 								TOperationToken.Less:        result := Double(operand1) < Int64(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1920,6 +2109,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ UInt8(operand2);
 								TOperationToken.Less:        result := Double(operand1) < UInt8(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1929,6 +2120,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ UInt16(operand2);
 								TOperationToken.Less:        result := Double(operand1) < UInt16(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1938,6 +2131,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ UInt32(operand2);
 								TOperationToken.Less:        result := Double(operand1) < UInt32(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1956,6 +2151,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≤ Single(operand2);
 								TOperationToken.Less:        result := Double(operand1) < Single(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1965,6 +2162,8 @@
 								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Double(operand2);
 								TOperationToken.Less:        result := Double(operand1) < Double(operand2);
 								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            result := Double(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         result := Double(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -2024,8 +2223,10 @@
 			begin
 				exit not(operand1 = operand2);
 			end;
+
+
 			//-----------------CONVERSION-------------------------------------------------------------------//
-			{IMPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := myNumeric}
+			{1.IMPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := myNumeric}
 			operator Implicit(const operand: TNumeric): Boolean;
 			begin
 				exit operand.a0;
@@ -2181,7 +2382,7 @@
 			end;
 
 
-			{EXPLICIT CONVERSION FROM:  BaseType to TNumeric  --> "var b: TNumeric := BaseType(operand)"}
+			{2. EXPLICIT CONVERSION FROM:  BaseType to TNumeric  --> "var b: TNumeric := BaseType(operand)"}
 			operator Explicit(const operand: Int8): TNumeric;
 			begin
 				 //var myNumber : Number := 100;
@@ -2273,7 +2474,7 @@
 			end;
 
 
-			{EXPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := BaseType(myNumeric)}
+			{1. EXPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := BaseType(myNumeric)}
 			operator Explicit(const operand: TNumeric): Boolean;
 			begin
 				exit operand.a0;
