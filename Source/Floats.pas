@@ -21,7 +21,6 @@ type
     class method get_PositiveInfinity: Single;
     class method get_NegativeInfinity: Single;
     class method get_NAN: Single;
-
   public
     method ToString: String; override;
     method ToString(aLocale: Locale): String;
