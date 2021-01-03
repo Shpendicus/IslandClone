@@ -27,12 +27,12 @@ type
 			exit &Equals(&Tuple<T1>(arg1));
 		end;
 
-		class operator Equal(a, b: &Tuple<T1>): Boolean;
+		operator Equal(a, b: &Tuple<T1>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -62,13 +62,13 @@ type
 			if Item2 <> nil then result := Tuple.R3(result) xor Item2.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -111,14 +111,14 @@ type
 			if Item3 <> nil then result := Tuple.R3(result) xor Item3.GetHashCode;
 		end;
 
-	class operator Equal(a, b: &Tuple<T1, T2, T3>): Boolean;
+	operator Equal(a, b: &Tuple<T1, T2, T3>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
 			 (EqualityComparer.Equals(a.Item3, b.Item3));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -164,7 +164,7 @@ type
 			if Item4 <> nil then result := Tuple.R3(result) xor Item4.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -172,7 +172,7 @@ type
 			 (EqualityComparer.Equals(a.Item4, b.Item4));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -224,7 +224,7 @@ type
 			if Item5 <> nil then result := Tuple.R3(result) xor Item5.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -233,7 +233,7 @@ type
 			 (EqualityComparer.Equals(a.Item5, b.Item5));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -289,7 +289,7 @@ type
 			if Item6 <> nil then result := Tuple.R3(result) xor Item6.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -299,7 +299,7 @@ type
 			 (EqualityComparer.Equals(a.Item6, b.Item6));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -358,7 +358,7 @@ type
 			if Item7 <> nil then result := Tuple.R3(result) xor Item7.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -369,7 +369,7 @@ type
 			 (EqualityComparer.Equals(a.Item7, b.Item7));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -432,7 +432,7 @@ type
 			if Item8 <> nil then result := Tuple.R3(result) xor Item8.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -444,7 +444,7 @@ type
 			 (EqualityComparer.Equals(a.Item8, b.Item8));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -512,7 +512,7 @@ type
 			if Item9 <> nil then result := Tuple.R3(result) xor Item9.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -525,7 +525,7 @@ type
 			 (EqualityComparer.Equals(a.Item9, b.Item9)) ;
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -582,7 +582,7 @@ type
 		property Item9: T9; readonly;
 		property Item10: T10; readonly;
 
-	class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>): Boolean;
+	operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -596,7 +596,7 @@ type
 			 (EqualityComparer.Equals(a.Item10, b.Item10));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -671,7 +671,7 @@ type
 			if Item11 <> nil then result := Tuple.R3(result) xor Item11.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -686,7 +686,7 @@ type
 			 (EqualityComparer.Equals(a.Item11, b.Item11));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -767,7 +767,7 @@ type
 		end;
 
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -783,7 +783,7 @@ type
 			 (EqualityComparer.Equals(a.Item12, b.Item12));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -866,7 +866,7 @@ type
 			if Item13 <> nil then result := Tuple.R3(result) xor Item13.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>): Boolean;
+		operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -883,7 +883,7 @@ type
 			 (EqualityComparer.Equals(a.Item13, b.Item13));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>): Boolean;
 		begin
 			exit not (a = b);
 		end;
@@ -971,7 +971,7 @@ type
 			if Item14 <> nil then result := Tuple.R3(result) xor Item14.GetHashCode;
 		end;
 
-	 class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>): Boolean;
+	 operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -989,7 +989,7 @@ type
 			 (EqualityComparer.Equals(a.Item14, b.Item14));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>): Boolean;
+		operator NotEqual(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>): Boolean;
 		begin
 			exit not (a = b);
 		end;

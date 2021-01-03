@@ -3,7 +3,7 @@
 interface
 
 type
-  Single = public record(INumber, IComparable, IComparable<Single>, IEquatable<Single>)
+  Single = public record(IComparable, IComparable<Single>, IEquatable<Single>)
   private
     class method DoTryParse(s: String; aLocale: Locale; out Value: Single; aRaiseOverflowException: Boolean):Boolean;
     const SignificantBitmask: UInt32      = $80000000;
@@ -63,7 +63,7 @@ type
     end;
   end;
 
-  Double = public record(INumber, IComparable, IComparable<Double>, IEquatable<Double>)
+  Double = public record(IComparable, IComparable<Double>, IEquatable<Double>)
   private
 
     class method DoTryParse(s: String; aLocale: Locale; out Value: Double; aRaiseOverflowException: Boolean): Boolean; inline;

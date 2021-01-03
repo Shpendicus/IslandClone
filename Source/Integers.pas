@@ -421,7 +421,7 @@ type
     end;
   end;
 
-  UInt64 = public record(INumber, IIntegerNumber, IEquatable<UInt64>, IComparable, IComparable<UInt64>)
+  UInt64 = public record(IEquatable<UInt64>, IComparable, IComparable<UInt64>)
   private
     class method DoTryParse(s: String; out Value: UInt64; aRaiseOverflowException: Boolean):Boolean;inline;
     begin

@@ -41,7 +41,7 @@
 								TOperationToken.Subtract: exit Int8(operand1) - Int8(operand2);
 								TOperationToken.Multiply: exit Int8(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / Int8(operand2);
-								TOperationToken.Modulus:   exit Int8(operand1) mod Int8(operand2);
+								TOperationToken.Modulus:  exit Int8(operand1) mod Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -2294,14 +2294,14 @@
 
 			method &Equals(other: TNumeric): Boolean;
 			begin
-				self = other;
+				exit self = other;
 			end;
 
 			method CompareTo(a: TNumeric): Integer;
 			begin
-				if self = a then exit 0;
-				else if self < a then exit -1;
-				else if self > then exit 1;
+				if self = a then exit 0
+				else if self < a then exit -1
+				else exit 1;
 			end;
 
 			//ARITHEMETIC OPERATOR
@@ -2667,5 +2667,4 @@
 				exit operand.fValue.a10;
 			end;
 		end;
-	end;
 end.
