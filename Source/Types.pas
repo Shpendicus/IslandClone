@@ -28,6 +28,7 @@ type
   public
     property EnumSize: Integer
       read self.GetType.SizeOfType;
+
     method GetHashCode: Integer; override;
     begin
       var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
