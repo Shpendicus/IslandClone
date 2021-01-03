@@ -2175,7 +2175,22 @@
 			end;
 
 		public
-
+			method ToString: String; override;
+			begin
+				case fType of
+					TNumericType.Boolean: exit fValue.a0.ToString();
+					TNumericType.Int8:    exit fValue.a1.ToString();
+					TNumericType.Int16:   exit fValue.a2.ToString();
+					TNumericType.Int32:   exit fValue.a3.ToString();
+					TNumericType.Int64:   exit fValue.a4.ToString();
+					TNumericType.UInt8:   exit fValue.a5.ToString();
+					TNumericType.UInt16:  exit fValue.a6.ToString();
+					TNumericType.UInt32:  exit fValue.a7.ToString();
+					TNumericType.UInt64:  exit fValue.a8.ToString();
+					TNumericType.Single:  exit fValue.a9.ToString();
+					TNumericType.Double:  exit fValue.a10.ToString();
+				end;
+			end;
 
 			//ARITHEMETIC OPERATOR
 			operator &Add(const operand1, operand2: TNumeric): TNumeric;
