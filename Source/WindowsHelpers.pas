@@ -791,7 +791,7 @@ var
   [Used, SymbolName('_load_config_used'), StaticallyInitializedField]
   _load_config_used: rtl.IMAGE_LOAD_CONFIG_DIRECTORY :=
     new rtl.IMAGE_LOAD_CONFIG_DIRECTORY(
-    size := sizeOf(rtl.IMAGE_LOAD_CONFIG_DIRECTORY),
+    Size := sizeOf(rtl.IMAGE_LOAD_CONFIG_DIRECTORY),
     SecurityCookie := UIntPtr(^UIntPtr(@__security_cookie)),
     //GuardCFCheckFunctionPointer := UIntPtr(^UIntPtr(@__guard_check_icall_fptr)),
     //GuardCFDispatchFunctionPointer := UIntPtr(^UIntPtr(@__guard_dispatch_icall_fptr)),
@@ -1298,7 +1298,7 @@ done:
 ", "", false, false);
 {$ELSE}
 // This version is dual licensed under the MIT and the University of Illinois Open Source Licenses. See LICENSE.TXT for details; from the llvm compiler-RT project.
-InternalCalls.voidasm(
+InternalCalls.VoidAsm(
 "
       push   %rcx
       push   %rax

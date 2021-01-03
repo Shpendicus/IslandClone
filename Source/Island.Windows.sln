@@ -1,0 +1,20 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# RemObjects Water
+Project("{00000000-0000-0000-0000-000000000000}") = "Island (Windows)", "Island.Windows.elements", "{00BBBADD-8D31-439B-9495-1F35080E299E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AnyCPU = Debug|AnyCPU
+		Release|AnyCPU = Release|AnyCPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release|AnyCPU.Build.0 = Release|AnyCPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

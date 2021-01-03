@@ -1,15 +1,15 @@
 ﻿namespace RemObjects.Elements.System;
 
 	type
-		TNumericType = public enum (Boolean, Int8, Int16, Int32, Int64,
-															 UInt8, UInt32, UInt64, Single, Double) of byte;
+		TNumericType    = public enum (Boolean, Int8, Int16, Int32, Int64,
+															 UInt8, UInt16, UInt32, UInt64, Single, Double) of Byte;
 
 		TOperationToken = public enum (&Add, Subtract, Multiply, Divide,
-									    GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less); //can be expanded ofc with logical operators
+											GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less); //can be expanded ofc with logical operators
+
 
 		[Union]
-		TNumeric = public record
-		private
+		TValue nested in TNumeric = unit record
 			a0: Boolean;
 			a1: Int8;
 			a2: Int16;
@@ -21,8 +21,14 @@
 			a8: UInt64;
 			a9: Single;
 			a10:Double;
+		end;
+
+		TNumeric = public record
+		unit
+			fValue: TValue;
 			fType: TNumericType;
 
+		private
 			method ArithmeticOperation(const operand1, operand2: TNumeric; token: TOperationToken): TNumeric; static;
 			begin
 				if operand1.fType = TNumericType.Int8 then
@@ -31,91 +37,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / Single(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int8(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := Int8(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := Int8(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := Int8(operand1) / Double(operand2);
+								TOperationToken.Add:      exit Int8(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit Int8(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit Int8(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit Int8(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -127,91 +133,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / Single(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int16(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := Int16(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := Int16(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := Int16(operand1) / Double(operand2);
+								TOperationToken.Add:      exit Int16(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit Int16(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit Int16(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit Int16(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -224,91 +230,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / Single(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int32(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := Int32(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := Int32(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := Int32(operand1) / Double(operand2);
+								TOperationToken.Add:      exit Int32(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit Int32(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit Int32(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit Int32(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -321,91 +327,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / Single(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := Int64(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := Int64(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := Int64(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := Int64(operand1) / Double(operand2);
+								TOperationToken.Add:      exit Int64(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit Int64(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit Int64(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit Int64(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -418,91 +424,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / Single(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt8(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := UInt8(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := UInt8(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := UInt8(operand1) / Double(operand2);
+								TOperationToken.Add:      exit UInt8(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit UInt8(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit UInt8(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit UInt8(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -516,91 +522,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / Single(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt16(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := UInt16(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := UInt16(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := UInt16(operand1) / Double(operand2);
+								TOperationToken.Add:      exit UInt16(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit UInt16(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit UInt16(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit UInt16(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -613,91 +619,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / Single(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt32(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := UInt32(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := UInt32(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := UInt32(operand1) / Double(operand2);
+								TOperationToken.Add:      exit UInt32(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit UInt32(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit UInt32(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit UInt32(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -710,91 +716,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / Single(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := UInt64(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := UInt64(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := UInt64(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := UInt64(operand1) / Double(operand2);
+								TOperationToken.Add:      exit UInt64(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit UInt64(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit UInt64(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit UInt64(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -808,91 +814,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit Single(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit Single(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit Single(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit Single(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit Single(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit Single(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit Single(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit Single(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / Single(operand2);
+								TOperationToken.Add:      exit Single(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := Single(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := Single(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := Single(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := Single(operand1) / Double(operand2);
+								TOperationToken.Add:      exit Single(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit Single(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit Single(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit Single(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -905,91 +911,91 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + Int8(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - Int8(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * Int8(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / Int8(operand2);
+								TOperationToken.Add:      exit Double(operand1) + Int8(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - Int8(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * Int8(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + Int16(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - Int16(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * Int16(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / Int16(operand2);
+								TOperationToken.Add:      exit Double(operand1) + Int16(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - Int16(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * Int16(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + Int32(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - Int32(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * Int32(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / Int32(operand2);
+								TOperationToken.Add:      exit Double(operand1) + Int32(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - Int32(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * Int32(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + Int64(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - Int64(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * Int64(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / Int64(operand2);
+								TOperationToken.Add:      exit Double(operand1) + Int64(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - Int64(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * Int64(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + UInt8(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - UInt8(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * UInt8(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / UInt8(operand2);
+								TOperationToken.Add:      exit Double(operand1) + UInt8(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - UInt8(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * UInt8(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + UInt16(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - UInt16(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * UInt16(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / UInt16(operand2);
+								TOperationToken.Add:      exit Double(operand1) + UInt16(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - UInt16(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * UInt16(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + UInt32(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - UInt32(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * UInt32(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / UInt32(operand2);
+								TOperationToken.Add:      exit Double(operand1) + UInt32(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - UInt32(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * UInt32(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + UInt64(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - UInt64(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * UInt64(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / UInt64(operand2);
+								TOperationToken.Add:      exit Double(operand1) + UInt64(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - UInt64(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * UInt64(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + Single(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - Single(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * Single(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / Single(operand2);
+								TOperationToken.Add:      exit Double(operand1) + Single(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - Single(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * Single(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Add:      result := Double(operand1) + Double(operand2);
-								TOperationToken.Subtract: result := Double(operand1) - Double(operand2);
-								TOperationToken.Multiply: result := Double(operand1) * Double(operand2);
-								TOperationToken.Divide:   result := Double(operand1) / Double(operand2);
+								TOperationToken.Add:      exit Double(operand1) + Double(operand2);
+								TOperationToken.Subtract: exit Double(operand1) - Double(operand2);
+								TOperationToken.Multiply: exit Double(operand1) * Double(operand2);
+								TOperationToken.Divide:   exit Double(operand1) / Double(operand2);
 							end;
 						end;
 					end;
@@ -1006,109 +1012,109 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:          result := Int8(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:             result := Int8(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:      result := Int8(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> Int8(operand2);
+								TOperationToken.Greater:          exit Int8(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:             exit Int8(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:      exit Int8(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> UIn16(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> UInt64(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Single(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ Single(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int8(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int8(operand1) ≥ Double(operand2);
-								TOperationToken.Less:        result := Int8(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := Int8(operand1) ≤ Double(operand2);
+								TOperationToken.Greater:        exit Int8(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int8(operand1) ≥ Double(operand2);
+								TOperationToken.Less:        exit Int8(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit Int8(operand1) ≤ Double(operand2);
 							end;
 						end;
 					end;
@@ -1120,111 +1126,111 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := Int16(operand1) ≤ Int8(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) < Int8(operand2);
-								TOperationToken.Equal:            result := Int16(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := Int16(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit Int16(operand1) ≤ Int8(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) < Int8(operand2);
+								TOperationToken.Equal:            exit Int16(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit Int16(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) > Int16(operand2);
-								TOperationToken.Less:        result := Int16(operand1) ≤ Int16(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) < Int16(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) > Int16(operand2);
+								TOperationToken.Less:        exit Int16(operand1) ≤ Int16(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) < Int16(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := Int16(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := Int16(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := Int16(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit Int16(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit Int16(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit Int16(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := Int16(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := Int16(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := Int16(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit Int16(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit Int16(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit Int16(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := Int16(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := Int16(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := Int16(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit Int16(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit Int16(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit Int16(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := Int16(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> UInt16(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit Int16(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := Int16(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := Int16(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := Int16(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit Int16(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit Int16(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit Int16(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := Int16(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := Int16(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := Int16(operand1) <> UInt64(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit Int16(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit Int16(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit Int16(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Single(operand2);
-								TOperationToken.Less:        result := Int16(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ Single(operand2);
+								TOperationToken.Less:        exit Int16(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int16(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int16(operand1) ≥ Double(operand2);
-								TOperationToken.Less:        result := Int16(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := Int16(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := Int16(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := Int16(operand1) <> Double(operand2);
+								TOperationToken.Greater:        exit Int16(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int16(operand1) ≥ Double(operand2);
+								TOperationToken.Less:        exit Int16(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit Int16(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit Int16(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit Int16(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1237,111 +1243,111 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := Int8(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := Int8(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit Int8(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit Int8(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> UInt16(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> UInt64(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Single(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ Single(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int32(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int32(operand1) ≥ Double(operand2);
-								TOperationToken.Less:        result := Int32(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := Int32(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := Int32(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := Int32(operand1) <> Double(operand2);
+								TOperationToken.Greater:        exit Int32(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int32(operand1) ≥ Double(operand2);
+								TOperationToken.Less:        exit Int32(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit Int32(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit Int32(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit Int32(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1354,111 +1360,111 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> Uint16(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> UInt64(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Single(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ Single(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Int64(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := Int64(operand1) ≥ Double(operand2);
-								TOperationToken.Less:        result := Int64(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := Int64(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := Int64(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := Int64(operand1) <> Double(operand2);
+								TOperationToken.Greater:        exit Int64(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit Int64(operand1) ≥ Double(operand2);
+								TOperationToken.Less:        exit Int64(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit Int64(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit Int64(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit Int64(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1471,113 +1477,111 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt8(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt16(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> UInt64(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Single(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ Single(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt8(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt8(operand1) ≥ Double(operand2);
-								TOperationToken.Less:        result := UInt8(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := UInt8(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := UInt8(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := UInt8(operand1) <> Double(operand2);
+								TOperationToken.Greater:        exit UInt8(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt8(operand1) ≥ Double(operand2);
+								TOperationToken.Less:        exit UInt8(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit UInt8(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit UInt8(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit UInt8(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1591,111 +1595,111 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> UInt16(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> UInt64(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Single(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ Single(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt16(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt16(operand1) ≥ Double(operand2);
-								TOperationToken.Less:        result := UInt16(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := UInt16(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := UInt16(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := UInt16(operand1) <> Double(operand2);
+								TOperationToken.Greater:        exit UInt16(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt16(operand1) ≥ Double(operand2);
+								TOperationToken.Less:        exit UInt16(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit UInt16(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit UInt16(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit UInt16(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1708,111 +1712,111 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := UInt32(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit UInt32(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit UInt32(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := UInt32(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit UInt32(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit UInt32(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := UInt32(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit UInt32(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit UInt32(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := UInt32(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit UInt32(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit UInt32(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := UInt32(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit UInt32(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit UInt32(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := UInt32(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> UInt16(operand2)
+								TOperationToken.Greater:        exit UInt32(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit UInt32(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> UInt16(operand2)
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := UInt32(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> UInt32(operand2)
+								TOperationToken.Greater:        exit UInt32(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit UInt32(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> UInt32(operand2)
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := UInt32(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> UInt64(operand2)
+								TOperationToken.Greater:        exit UInt32(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit UInt32(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> UInt64(operand2)
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Single(operand2);
-								TOperationToken.Less: result := UInt32(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> Single(operand2)
+								TOperationToken.Greater:        exit UInt32(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ Single(operand2);
+								TOperationToken.Less: exit UInt32(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> Single(operand2)
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt32(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt32(operand1) ≥ Double(operand2);
-								TOperationToken.Less: result := UInt32(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := UInt32(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := UInt32(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := UInt32(operand1) <> Double(operand2)
+								TOperationToken.Greater:        exit UInt32(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt32(operand1) ≥ Double(operand2);
+								TOperationToken.Less: exit UInt32(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit UInt32(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit UInt32(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit UInt32(operand1) <> Double(operand2)
 							end;
 						end;
 					end;
@@ -1825,112 +1829,112 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> Int16(operand2);
 
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> UInt64(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Single(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ Single(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := UInt64(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := UInt64(operand1) ≥ Double(operand2);
-								TOperationToken.Less:        result := UInt64(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := UInt64(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := UInt64(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := UInt64(operand1) <> Double(operand2);
+								TOperationToken.Greater:        exit UInt64(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit UInt64(operand1) ≥ Double(operand2);
+								TOperationToken.Less:        exit UInt64(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit UInt64(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit UInt64(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit UInt64(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -1944,111 +1948,111 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := Single(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit Single(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := Single(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit Single(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := Single(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit Single(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := Single(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit Single(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := Single(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit Single(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := Single(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> UInt16(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit Single(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := Single(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit Single(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := Single(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ UInt64(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = UInt64(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> UInt64(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit Single(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ UInt64(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = UInt64(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) ≥ Single(operand2);
-								TOperationToken.Less:        result := Single(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) ≥ Single(operand2);
+								TOperationToken.Less:        exit Single(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Single(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := Single(operand1) > Double(operand2);
-								TOperationToken.Less:        result := Single(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := Single(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := Single(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := Single(operand1) <> Double(operand2);
+								TOperationToken.Greater:        exit Single(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit Single(operand1) > Double(operand2);
+								TOperationToken.Less:        exit Single(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit Single(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit Single(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit Single(operand1) <> Double(operand2);
 							end;
 						end;
 					end;
@@ -2061,109 +2065,109 @@
 						TNumericType.Int8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > Int8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Int8(operand2);
-								TOperationToken.Less:        result := Double(operand1) < Int8(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Int8(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = Int8(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > Int8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ Int8(operand2);
+								TOperationToken.Less:        exit Double(operand1) < Int8(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ Int8(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = Int8(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > Int16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Int16(operand2);
-								TOperationToken.Less:        result := Double(operand1) < Int16(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Int16(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = Int16(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> Int16(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > Int16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ Int16(operand2);
+								TOperationToken.Less:        exit Double(operand1) < Int16(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ Int16(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = Int16(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > Int32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Int32(operand2);
-								TOperationToken.Less:        result := Double(operand1) < Int32(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Int32(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = Int32(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> Int32(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > Int32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ Int32(operand2);
+								TOperationToken.Less:        exit Double(operand1) < Int32(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ Int32(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = Int32(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > Int64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Int64(operand2);
-								TOperationToken.Less:        result := Double(operand1) < Int64(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Int64(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = Int64(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> Int64(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > Int64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ Int64(operand2);
+								TOperationToken.Less:        exit Double(operand1) < Int64(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ Int64(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = Int64(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > UInt8(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ UInt8(operand2);
-								TOperationToken.Less:        result := Double(operand1) < UInt8(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ UInt8(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = UInt8(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> UInt8(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > UInt8(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ UInt8(operand2);
+								TOperationToken.Less:        exit Double(operand1) < UInt8(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ UInt8(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = UInt8(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > UInt16(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ UInt16(operand2);
-								TOperationToken.Less:        result := Double(operand1) < UInt16(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ UInt16(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = UInt16(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> UInt16(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > UInt16(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ UInt16(operand2);
+								TOperationToken.Less:        exit Double(operand1) < UInt16(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ UInt16(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = UInt16(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > UInt32(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ UInt32(operand2);
-								TOperationToken.Less:        result := Double(operand1) < UInt32(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ UInt32(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = UInt32(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> UInt32(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > UInt32(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ UInt32(operand2);
+								TOperationToken.Less:        exit Double(operand1) < UInt32(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ UInt32(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = UInt32(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > UInt64(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ UInt64(operand2);
-								TOperationToken.Less:        result := Double(operand1) < UInt64(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ UInt64(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > UInt64(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ UInt64(operand2);
+								TOperationToken.Less:        exit Double(operand1) < UInt64(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > Single(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≤ Single(operand2);
-								TOperationToken.Less:        result := Double(operand1) < Single(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Single(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = Single(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> Single(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > Single(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≤ Single(operand2);
+								TOperationToken.Less:        exit Double(operand1) < Single(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ Single(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = Single(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
 						begin
 							case token of
-								TOperationToken.Greater:        result := Double(operand1) > Double(operand2);
-								TOperationToken.GreaterOrEqual:   result := Double(operand1) ≥ Double(operand2);
-								TOperationToken.Less:        result := Double(operand1) < Double(operand2);
-								TOperationToken.LessOrEqual:   result := Double(operand1) ≤ Double(operand2);
-								TOperationToken.Equal:            result := Double(operand1) = Double(operand2);
-								TOperationToken.NotEqual:         result := Double(operand1) <> Int8(operand2);
+								TOperationToken.Greater:        exit Double(operand1) > Double(operand2);
+								TOperationToken.GreaterOrEqual:   exit Double(operand1) ≥ Double(operand2);
+								TOperationToken.Less:        exit Double(operand1) < Double(operand2);
+								TOperationToken.LessOrEqual:   exit Double(operand1) ≤ Double(operand2);
+								TOperationToken.Equal:            exit Double(operand1) = Double(operand2);
+								TOperationToken.NotEqual:         exit Double(operand1) <> Int8(operand2);
 							end;
 						end;
 					end;
@@ -2171,6 +2175,8 @@
 			end;
 
 		public
+
+
 			//ARITHEMETIC OPERATOR
 			operator &Add(const operand1, operand2: TNumeric): TNumeric;
 			begin
@@ -2229,63 +2235,63 @@
 			{1.IMPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := myNumeric}
 			operator Implicit(const operand: TNumeric): Boolean;
 			begin
-				exit operand.a0;
+				exit operand.fValue.a0;
 			end;
 
 			operator Implicit(const operand: TNumeric): Int8;
 			begin
-				exit operand.a1;
+				exit operand.fValue.a1;
 			end;
 
-			operator Implicit(const operand: TNumeric): Int16;
+			operator Implicit(const operand:TNumeric): Int16;
 			begin
-				exit operand.a2;
+				exit operand.fValue.a2;
 			end;
 
 			operator Implicit(const operand: TNumeric): Int32;
 			begin
-				exit operand.a3;
+				exit operand.fValue.a3;
 			end;
 
 			operator Implicit(const operand: TNumeric): Int64;
 			begin
-				exit operand.a4;
+				exit operand.fValue.a4;
 			end;
 
 			operator Implicit(const operand: TNumeric): UInt8;
 			begin
-				exit operand.a5;
+				exit operand.fValue.a5;
 			end;
 
 			operator Implicit(const operand: TNumeric): UInt16;
 			begin
-				exit operand.a6;
+				exit operand.fValue.a6;
 			end;
 
 			operator Implicit(const operand: TNumeric): UInt32;
 			begin
-				exit operand.a7;
+				exit operand.fValue.a7;
 			end;
 
 			operator Implicit(const operand: TNumeric): UInt64;
 			begin
-				exit operand.a8;
+				exit operand.fValue.a8;
 			end;
 
 			operator Implicit(const operand: TNumeric): Single;
 			begin
-				exit operand.a9;
+				exit operand.fValue.a9;
 			end;
 
 			operator Implicit(const operand: TNumeric): Double;
 			begin
-				exit operand.a10;
+				exit operand.fValue.a10;
 			end;
 
 			operator Implicit(const operand: Boolean): TNumeric;
 			begin
 				var nr : TNumeric;
-				nr.a0 := operand;
+				nr.fValue.a0 := operand;
 				nr.fType := TNumericType.Boolean;
 				exit nr;
 			end;
@@ -2295,7 +2301,7 @@
 			operator Implicit(const operand: Int8): TNumeric;
 			begin
 				var nr : TNumeric;
-				nr.a1 := operand;
+				nr.fValue.a1 := operand;
 				nr.fType := TNumericType.Int8;
 				exit nr;
 			end;
@@ -2304,7 +2310,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a2 := operand;
+				nr.fValue.a2 := operand;
 				nr.fType := TNumericType.Int16;
 				exit nr;
 			end;
@@ -2313,7 +2319,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a3 := operand;
+				nr.fValue.a3 := operand;
 				nr.fType := TNumericType.Int32;
 				exit nr;
 			end;
@@ -2322,7 +2328,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a4 := operand;
+				nr.fValue.a4 := operand;
 				nr.fType := TNumericType.Int64;
 				exit nr;
 			end;
@@ -2331,7 +2337,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a5 := operand;
+				nr.fValue.a5 := operand;
 				nr.fType := TNumericType.UInt8;
 				exit nr;
 			end;
@@ -2340,7 +2346,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a6 := operand;
+				nr.fValue.a6 := operand;
 				nr.fType := TNumericType.UInt16;
 				exit nr;
 			end;
@@ -2349,7 +2355,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a7 := operand;
+				nr.fValue.a7 := operand;
 				nr.fType := TNumericType.UInt32;
 				exit nr;
 			end;
@@ -2358,7 +2364,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a8 := operand;
+				nr.fValue.a8 := operand;
 				nr.fType := TNumericType.UInt64;
 				exit nr;
 			end;
@@ -2367,7 +2373,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a9 := operand;
+				nr.fValue.a9 := operand;
 				nr.fType := TNumericType.Single;
 				exit nr;
 			end;
@@ -2376,18 +2382,18 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a10 := operand;
+				nr.fValue.a10 := operand;
 				nr.fType := TNumericType.Double;
 				exit nr;
 			end;
 
 
-			{2. EXPLICIT CONVERSION FROM:  BaseType to TNumeric  --> "var b: TNumeric := BaseType(operand)"}
+			{2. EXPLICIT CONVERSION FROM:  BaseType to TNumeric  --> "var b: TNumeric := BaseType(operand.fValue)"}
 			operator Explicit(const operand: Int8): TNumeric;
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a1 := operand;
+				nr.fValue.a1 := operand;
 				nr.fType := TNumericType.Int8;
 				exit nr;
 			end;
@@ -2396,7 +2402,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a2 := operand;
+				nr.fValue.a2 := operand;
 				nr.fType := TNumericType.Int16;
 				exit nr;
 			end;
@@ -2405,7 +2411,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a3 := operand;
+				nr.fValue.a3 := operand;
 				nr.fType := TNumericType.Int32;
 				exit nr;
 			end;
@@ -2414,7 +2420,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a4 := operand;
+				nr.fValue.a4 := operand;
 				nr.fType := TNumericType.Int64;
 				exit nr;
 			end;
@@ -2423,7 +2429,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a5 := operand;
+				nr.fValue.a5 := operand;
 				nr.fType := TNumericType.UInt8;
 				exit nr;
 			end;
@@ -2432,7 +2438,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a6 := operand;
+				nr.fValue.a6 := operand;
 				nr.fType := TNumericType.UInt16;
 				exit nr;
 			end;
@@ -2441,7 +2447,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a7 := operand;
+				nr.fValue.a7 := operand;
 				nr.fType := TNumericType.UInt32;
 				exit nr;
 			end;
@@ -2450,7 +2456,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a8 := operand;
+				nr.fValue.a8 := operand;
 				nr.fType := TNumericType.UInt64;
 				exit nr;
 			end;
@@ -2459,7 +2465,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a9 := operand;
+				nr.fValue.a9 := operand;
 				nr.fType := TNumericType.Single;
 				exit nr;
 			end;
@@ -2468,7 +2474,7 @@
 			begin
 				 //var myNumber : Number := 100;
 				var nr : TNumeric;
-				nr.a10 := operand;
+				nr.fValue.a10 := operand;
 				nr.fType := TNumericType.Double;
 				exit nr;
 			end;
@@ -2477,56 +2483,57 @@
 			{1. EXPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := BaseType(myNumeric)}
 			operator Explicit(const operand: TNumeric): Boolean;
 			begin
-				exit operand.a0;
+				exit operand.fValue.a0;
 			end;
 
 			operator Explicit(const operand: TNumeric): Int8;
 			begin
-				exit operand.a1;
+				exit operand.fValue.a1;
 			end;
 
 			operator Explicit(const operand: TNumeric): Int16;
 			begin
-				exit operand.a2;
+				exit operand.fValue.a2;
 			end;
 
 			operator Explicit(const operand: TNumeric): Int32;
 			begin
-				exit operand.a3;
+				exit operand.fValue.a3;
 			end;
 
 			operator Explicit(const operand: TNumeric): Int64;
 			begin
-				exit operand.a4;
+				exit operand.fValue.a4;
 			end;
 
 			operator Explicit(const operand: TNumeric): UInt8;
 			begin
-				exit operand.a5;
+				exit operand.fValue.a5;
 			end;
 
 			operator Explicit(const operand: TNumeric): UInt16;
 			begin
-				exit operand.a6;
+				exit operand.fValue.a6;
 			end;
 
 			operator Explicit(const operand: TNumeric): UInt32;
 			begin
-				exit operand.a7;
+				exit operand.fValue.a7;
 			end;
 
 			operator Explicit(const operand: TNumeric): UInt64;
 			begin
-				exit operand.a8;
+				exit operand.fValue.a8;
 			end;
 
 			operator Explicit(const operand: TNumeric): Single;
 			begin
-				exit operand.a9;
+				exit operand.fValue.a9;
 			end;
 
 			operator Explicit(const operand: TNumeric): Double;
 			begin
-				exit operand.a10;
+				exit operand.fValue.a10;
 			end;
 		end;
+end.

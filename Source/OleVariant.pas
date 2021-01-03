@@ -1,4 +1,5 @@
 ﻿namespace RemObjects.Elements.System;
+
 [Assembly: RemObjects.Elements.System.LifetimeStrategyOverrideAttribute(typeOf(rtl.VARIANT), typeOf(Variant_Helper))]
 type
   Variant = public rtl.VARIANT;

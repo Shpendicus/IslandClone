@@ -16,6 +16,7 @@
     <DefineConstants>WINDOWS</DefineConstants>
     <Optimize>False</Optimize>
     <DefaultGlobalsToPublic>True</DefaultGlobalsToPublic>
+    <Architecture>x86_64</Architecture>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <OutputPath>Bin\Debug</OutputPath>
@@ -29,6 +30,7 @@
     <XmlDocWarningLevel>WarningOnPublicMembers</XmlDocWarningLevel>
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <GenerateDebugInfo>True</GenerateDebugInfo>
+    <Architecture>x86_64</Architecture>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputPath>Bin\Release</OutputPath>
@@ -42,10 +44,11 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <Optimize>True</Optimize>
+    <Architecture>x86_64</Architecture>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BoehmGC.pas" />
-    <Compile Include="HString.pas"></Compile>
+    <Compile Include="HString.pas" />
     <Compile Include="Registry.pas" />
     <Compile Include="WindowsHelpers.pas" />
     <Compile Include="Windows_FFI_x64.pas" />
