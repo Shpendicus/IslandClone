@@ -6,7 +6,7 @@ type
   Int8 = public SByte;
   UInt8 = public Byte;
 
-  SByte = public record(INumber, IIntegerNumber, IEquatable<SByte>, IComparable, IComparable<SByte>)
+  SByte = public record(IEquatable<SByte>, IComparable, IComparable<SByte>)
   private
     class method DoTryParse(s: String; out Value: SByte; aRaiseOverflowException: Boolean):Boolean;
     begin
@@ -70,7 +70,7 @@ type
     end;
   end;
 
-  Byte = public record(INumber, IIntegerNumber, IEquatable<Byte>, IComparable, IComparable<Byte>)
+  Byte = public record(IEquatable<Byte>, IComparable, IComparable<Byte>)
   private
     class method DoTryParse(s: String; out Value: Byte; aRaiseOverflowException: Boolean):Boolean;
     begin
@@ -81,6 +81,7 @@ type
       Value := sValue;
       exit True;
     end;
+
   public
     method ToString: String; override;
     method GetHashCode: Integer; override;
@@ -105,8 +106,6 @@ type
     const MinValue: Byte = $0;
     const MaxValue: Byte = $ff;
 
-
-
     method &Equals(other: Byte): Boolean;
     begin
       exit self = other;
@@ -127,7 +126,7 @@ type
     end;
   end;
 
-  Int16 = public record(INumber, IIntegerNumber, IEquatable<Int16>, IComparable, IComparable<Int16>)
+  Int16 = public record(IEquatable<Int16>, IComparable, IComparable<Int16>)
   private
     class method DoTryParse(s: String; out Value: Int16; aRaiseOverflowException: Boolean):Boolean;
     begin
@@ -190,7 +189,7 @@ type
     end;
   end;
 
-  UInt16 = public record(INumber, IIntegerNumber, IEquatable<UInt16>, IComparable, IComparable<UInt16>)
+  UInt16 = public record(IEquatable<UInt16>, IComparable, IComparable<UInt16>)
   private
     class method DoTryParse(s: String; out Value: UInt16; aRaiseOverflowException: Boolean):Boolean;
     begin
@@ -247,7 +246,7 @@ type
     end;
   end;
 
-  Int32 = public record(INumber, IIntegerNumber, IEquatable<Int32>, IComparable, IComparable<Int32>)
+  Int32 = public record(IEquatable<Int32>, IComparable, IComparable<Int32>)
   private
     class method DoTryParse(s: String; out Value: Int32; aRaiseOverflowException: Boolean):Boolean;
     begin
@@ -310,7 +309,7 @@ type
     end;
   end;
 
-  UInt32 = public record(INumber, IIntegerNumber, IEquatable<UInt32>, IComparable, IComparable<UInt32>)
+  UInt32 = public record(IEquatable<UInt32>, IComparable, IComparable<UInt32>)
   private
     class method DoTryParse(s: String; out Value: UInt32; aRaiseOverflowException: Boolean):Boolean;
     begin
@@ -368,7 +367,7 @@ type
     end;
   end;
 
-  Int64 = public record(INumber, IIntegerNumber, IEquatable<Int64>, IComparable, IComparable<Int64>)
+  Int64 = public record(IEquatable<Int64>, IComparable, IComparable<Int64>)
   private
     class method DoTryParse(s: String; out Value: Int64; aRaiseOverflowException: Boolean):Boolean; inline;
     begin
@@ -475,7 +474,7 @@ type
     end;
   end;
 
-  NativeInt = public record(INumber, IIntegerNumber, IEquatable<NativeInt>, IComparable, IComparable<NativeInt>)
+  NativeInt = public record(IEquatable<NativeInt>, IComparable, IComparable<NativeInt>)
   private
     class method DoTryParse(s: String; out Value: NativeInt; aRaiseOverflowException: Boolean):Boolean;
     begin
@@ -547,7 +546,7 @@ type
     end;
   end;
 
-  NativeUInt = public record(INumber, IIntegerNumber, IEquatable<NativeUInt>, IComparable, IComparable<NativeUInt>)
+  NativeUInt = public record(IEquatable<NativeUInt>, IComparable, IComparable<NativeUInt>)
   private
     class method DoTryParse(s: String; out Value: NativeUInt; aRaiseOverflowException: Boolean):Boolean;
     begin
@@ -590,8 +589,6 @@ type
 
     const MinValue: NativeUInt = $0;
     const MaxValue: NativeUInt = {$IFDEF cpu64}$ffffffffffffffff{$ELSE}$ffffffff{$ENDIF};
-
-
 
     method &Equals(other: NativeUInt): Boolean;
     begin

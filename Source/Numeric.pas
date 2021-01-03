@@ -23,7 +23,7 @@
 			a10:Double;
 		end;
 
-		TNumeric = public record
+		TNumeric = public record(IComparable<TNumeric>, IEquatable<TNumeric>)
 		unit
 			fValue: TValue;
 			fType: TNumericType;
@@ -2292,6 +2292,18 @@
 				end;
 			end;
 
+			method &Equals(other: TNumeric): Boolean;
+			begin
+				self = other;
+			end;
+
+			method CompareTo(a: TNumeric): Integer;
+			begin
+				if self = a then exit 0;
+				else if self < a then exit -1;
+				else if self > then exit 1;
+			end;
+
 			//ARITHEMETIC OPERATOR
 			operator &Add(const operand1, operand2: TNumeric): TNumeric;
 			begin
@@ -2655,5 +2667,5 @@
 				exit operand.fValue.a10;
 			end;
 		end;
+	end;
 end.
-TOperationToken.Divide:   exit Double(operand1) / UInt16(operand2);
