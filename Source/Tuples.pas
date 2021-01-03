@@ -36,6 +36,11 @@ type
 		begin
 			exit not (a = b);
 		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ")";
+		end;
 	end;
 
 	//2.
@@ -76,6 +81,11 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " + Item2.ToString +  ")";
 		end;
 	end;
 
@@ -121,6 +131,11 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " + Item2.ToString + ", " + Item3.ToString + ")";
 		end;
 	end;
 
@@ -170,6 +185,14 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(Tuple<T1, T2, T3, T4>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ")";
 		end;
 	end;
 
@@ -223,6 +246,15 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ")";
 		end;
 	end;
 
@@ -280,6 +312,16 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ")";
 		end;
 	end;
 
@@ -340,6 +382,17 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ", " +
+								 Item7.ToString + ")";
 		end;
 	end;
 
@@ -404,6 +457,18 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ", " +
+								 Item7.ToString + ", " +
+								 Item8.ToString + ")";
 		end;
 	end;
 
@@ -474,6 +539,19 @@ type
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>(arg1));
 		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ", " +
+								 Item7.ToString + ", " +
+								 Item8.ToString + ", " +
+								 Item9.ToString + ")";
+		end;
 	end;
 
 
@@ -531,6 +609,20 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ", " +
+								 Item7.ToString + ", " +
+								 Item8.ToString + ", " +
+								 Item9.ToString + ", " +
+								 Item10.ToString + ")";
 		end;
 	end;
 
@@ -607,6 +699,21 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ", " +
+								 Item7.ToString + ", " +
+								 Item8.ToString + ", " +
+								 Item9.ToString + ", " +
+								 Item10.ToString + ", " +
+								 Item11.ToString + ")";
 		end;
 	end;
 
@@ -689,6 +796,22 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ", " +
+								 Item7.ToString + ", " +
+								 Item8.ToString + ", " +
+								 Item9.ToString + ", " +
+								 Item10.ToString + ", " +
+								 Item11.ToString + ", " +
+								 Item12.ToString + ")";
 		end;
 	end;
 
@@ -773,6 +896,23 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ", " +
+								 Item7.ToString + ", " +
+								 Item8.ToString + ", " +
+								 Item9.ToString + ", " +
+								 Item10.ToString + ", " +
+								 Item11.ToString + ", " +
+								 Item12.ToString + ", " +
+								 Item13.ToString + ")";
 		end;
 	end;
 
@@ -862,6 +1002,24 @@ type
 		method &Equals(arg1: Object): Boolean; override;
 		begin
 			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(arg1));
+		end;
+
+		method ToString: String; override;
+		begin
+			exit "(" + Item1.ToString + ", " +
+								 Item2.ToString + ", " +
+								 Item3.ToString + ", " +
+								 Item4.ToString + ", " +
+								 Item5.ToString + ", " +
+								 Item6.ToString + ", " +
+								 Item7.ToString + ", " +
+								 Item8.ToString + ", " +
+								 Item9.ToString + ", " +
+								 Item10.ToString + ", " +
+								 Item11.ToString + ", " +
+								 Item12.ToString + ", " +
+								 Item12.ToString + ", " +
+								 Item13.ToString + ")";
 		end;
 	end;
 
