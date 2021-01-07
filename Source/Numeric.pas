@@ -42,7 +42,7 @@
 								TOperationToken.Multiply: exit Int8(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / Int8(operand2);
 								TOperationToken.Modulus:  exit Int8(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd: exit Int8(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd: exit Int8(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -53,7 +53,7 @@
 								TOperationToken.Multiply: exit Int8(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit Int8(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd: exit Int8(operand1) & Int16(operand2);
+								TOperationToken.BitwiseAnd: exit Int8(operand1) and Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -64,7 +64,7 @@
 								TOperationToken.Multiply: exit Int8(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit Int8(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd: exit Int8(operand1) & Int32(operand2);
+								TOperationToken.BitwiseAnd: exit Int8(operand1) and Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -85,7 +85,7 @@
 								TOperationToken.Multiply: exit Int8(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit Int8(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd: exit Int8(operand1) & UInt8(operand2);
+								TOperationToken.BitwiseAnd: exit Int8(operand1) and UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -96,7 +96,7 @@
 								TOperationToken.Multiply: exit Int8(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit Int8(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd: exit Int8(operand1) & UInt16(operand2);
+								TOperationToken.BitwiseAnd: exit Int8(operand1) and UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -107,7 +107,7 @@
 								TOperationToken.Multiply: exit Int8(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit Int8(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd: exit Int8(operand1) & UInt32(operand2);
+								TOperationToken.BitwiseAnd: exit Int8(operand1) and UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -128,7 +128,6 @@
 								TOperationToken.Multiply: exit Int8(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit Int8(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd: exit Int8(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -139,7 +138,6 @@
 								TOperationToken.Multiply: exit Int8(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit Int8(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit Int8(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd: exit Int8(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -156,7 +154,7 @@
 								TOperationToken.Multiply: exit Int16(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd: exit Int16(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -167,7 +165,7 @@
 								TOperationToken.Multiply: exit Int16(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & Int16(operand2);
+								TOperationToken.BitwiseAnd: exit Int16(operand1) and Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -178,7 +176,7 @@
 								TOperationToken.Multiply: exit Int16(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & Int32(operand2);
+								TOperationToken.BitwiseAnd: exit Int16(operand1) and Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -189,7 +187,7 @@
 								TOperationToken.Multiply: exit Int16(operand1) * Int64(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / Int64(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod Int64(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & Int64(operand2);
+								TOperationToken.BitwiseAnd: exit Int16(operand1) and Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -200,7 +198,7 @@
 								TOperationToken.Multiply: exit Int16(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & Unt8(operand2);
+								TOperationToken.BitwiseAnd: exit Int16(operand1) and UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -211,7 +209,7 @@
 								TOperationToken.Multiply: exit Int16(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & UInt16(operand2);
+								TOperationToken.BitwiseAnd: exit Int16(operand1) and UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -222,7 +220,7 @@
 								TOperationToken.Multiply: exit Int16(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & UInt32(operand2);
+								TOperationToken.BitwiseAnd: exit Int16(operand1) and UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -233,7 +231,7 @@
 								TOperationToken.Multiply: exit Int16(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & UInt64(operand2);
+								TOperationToken.BitwiseAnd: exit Int16(operand1) and UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -244,7 +242,6 @@
 								TOperationToken.Multiply: exit Int16(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -255,7 +252,6 @@
 								TOperationToken.Multiply: exit Int16(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit Int16(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit Int16(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd: exit Int16(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -273,7 +269,7 @@
 								TOperationToken.Multiply: exit Int32(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd: exit Int32(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -284,7 +280,7 @@
 								TOperationToken.Multiply: exit Int32(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & Int16(operand2);
+								TOperationToken.BitwiseAnd: exit Int32(operand1) and Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -295,7 +291,7 @@
 								TOperationToken.Multiply: exit Int32(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & Int32(operand2);
+								TOperationToken.BitwiseAnd: exit Int32(operand1) and Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -306,7 +302,7 @@
 								TOperationToken.Multiply: exit Int32(operand1) * Int64(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / Int64(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod Int64(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & Int64(operand2);
+								TOperationToken.BitwiseAnd: exit Int32(operand1) and Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -317,7 +313,7 @@
 								TOperationToken.Multiply: exit Int32(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & UInt8(operand2);
+								TOperationToken.BitwiseAnd: exit Int32(operand1) and UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -328,7 +324,7 @@
 								TOperationToken.Multiply: exit Int32(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & UInt16(operand2);
+								TOperationToken.BitwiseAnd: exit Int32(operand1) and UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -339,7 +335,7 @@
 								TOperationToken.Multiply: exit Int32(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & UInt32(operand2);
+								TOperationToken.BitwiseAnd: exit Int32(operand1) and UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -350,7 +346,7 @@
 								TOperationToken.Multiply: exit Int32(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & UInt64(operand2);
+								TOperationToken.BitwiseAnd: exit Int32(operand1) and UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -371,7 +367,6 @@
 								TOperationToken.Multiply: exit Int32(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit Int32(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit Int32(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd: exit Int32(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -389,7 +384,7 @@
 								TOperationToken.Multiply: exit Int64(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd: exit Int64(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -400,7 +395,7 @@
 								TOperationToken.Multiply: exit Int64(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & Int16(operand2);
+								TOperationToken.BitwiseAnd: exit Int64(operand1) and Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -411,7 +406,7 @@
 								TOperationToken.Multiply: exit Int64(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & Int32(operand2);
+								TOperationToken.BitwiseAnd: exit Int64(operand1) and Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -422,7 +417,7 @@
 								TOperationToken.Multiply: exit Int64(operand1) * Int64(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / Int64(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod Int64(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & Int64(operand2);
+								TOperationToken.BitwiseAnd: exit Int64(operand1) and Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -433,7 +428,7 @@
 								TOperationToken.Multiply: exit Int64(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & UInt8(operand2);
+								TOperationToken.BitwiseAnd: exit Int64(operand1) and UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -444,7 +439,7 @@
 								TOperationToken.Multiply: exit Int64(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & UInt16(operand2);
+								TOperationToken.BitwiseAnd: exit Int64(operand1) and UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -455,7 +450,7 @@
 								TOperationToken.Multiply: exit Int64(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & UInt32(operand2);
+								TOperationToken.BitwiseAnd: exit Int64(operand1) and UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -466,7 +461,7 @@
 								TOperationToken.Multiply: exit Int64(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & UInt64(operand2);
+								TOperationToken.BitwiseAnd: exit Int64(operand1) and UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -477,7 +472,6 @@
 								TOperationToken.Multiply: exit Int64(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -488,7 +482,6 @@
 								TOperationToken.Multiply: exit Int64(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit Int64(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit Int64(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd: exit Int64(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -506,7 +499,7 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd: exit UInt8(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -517,7 +510,7 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & Int16(operand2);
+								TOperationToken.BitwiseAnd: exit UInt8(operand1) and Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -528,7 +521,7 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & Int32(operand2);
+								TOperationToken.BitwiseAnd: exit UInt8(operand1) and Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -539,7 +532,7 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * Int64(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / Int64(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod Int64(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & Int64(operand2);
+								TOperationToken.BitwiseAnd: exit UInt8(operand1) and Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -550,7 +543,7 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd: exit UInt8(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -561,7 +554,7 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & UInt16(operand2);
+								TOperationToken.BitwiseAnd: exit UInt8(operand1) and UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -572,7 +565,7 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & UInt32(operand2);
+								TOperationToken.BitwiseAnd: exit UInt8(operand1) and UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -583,7 +576,7 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & UInt64(operand2);
+								TOperationToken.BitwiseAnd: exit UInt8(operand1) and UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -594,7 +587,6 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -605,7 +597,6 @@
 								TOperationToken.Multiply: exit UInt8(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit UInt8(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit UInt8(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd: exit UInt8(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -624,7 +615,7 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd: exit UInt16(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd: exit UInt16(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -635,7 +626,7 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd: exit UInt16(operand1) & Int16(operand2);
+								TOperationToken.BitwiseAnd: exit UInt16(operand1) and Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -646,7 +637,7 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd: exit UInt16(operand1) & Int32(operand2);
+								TOperationToken.BitwiseAnd: exit UInt16(operand1) and Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -657,7 +648,7 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * Int64(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / Int64(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod Int64(operand2);
-								TOperationToken.BitwiseAnd: exit UInt16(operand1) & Int64(operand2);
+								TOperationToken.BitwiseAnd: exit UInt16(operand1) and Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -668,7 +659,7 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd: exit UInt16(operand1) & UInt8(operand2);
+								TOperationToken.BitwiseAnd: exit UInt16(operand1) and UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -678,7 +669,7 @@
 								TOperationToken.Subtract: exit UInt16(operand1) - UInt16(operand2);
 								TOperationToken.Multiply: exit UInt16(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / UInt16(operand2);
-								TOperationToken.Modulus:   exit UInt16(operand1) & UInt8(operand2);
+								TOperationToken.Modulus:   exit UInt16(operand1) and UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -689,7 +680,7 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt16(operand1) & UInt32(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt16(operand1) and UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -700,7 +691,7 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt16(operand1) & UInt64(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt16(operand1) and UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -711,7 +702,6 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt16(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -722,7 +712,6 @@
 								TOperationToken.Multiply: exit UInt16(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit UInt16(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit UInt16(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt16(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -740,7 +729,7 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt32(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -751,7 +740,7 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & Int16(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt32(operand1) and Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -762,7 +751,7 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & Int32(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt32(operand1) and Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -773,7 +762,7 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * Int64(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / Int64(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod Int64(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & Int64(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt32(operand1) and Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -784,7 +773,7 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & UInt8(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt32(operand1) and UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -795,7 +784,7 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & UInt16(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt32(operand1) and UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -806,7 +795,7 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & UInt32(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt32(operand1) and UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -817,7 +806,7 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & UInt64(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt32(operand1) and UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -828,7 +817,6 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -839,7 +827,6 @@
 								TOperationToken.Multiply: exit UInt32(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit UInt32(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit UInt32(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt32(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -857,7 +844,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & Int8(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt64(operand1) and Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -868,7 +855,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & Int16(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt64(operand1) and Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -879,7 +866,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & Int32(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt64(operand1) and Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -890,7 +877,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * Int64(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / Int64(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod Int64(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & Int64(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt64(operand1) and Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -901,7 +888,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & UInt8(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt64(operand1) and UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -912,7 +899,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & UInt16(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt64(operand1) and UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -923,7 +910,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & UInt32(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt64(operand1) and UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -934,7 +921,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & UInt64(operand2);
+								TOperationToken.BitwiseAnd:   exit UInt64(operand1) and UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -945,7 +932,6 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -956,7 +942,7 @@
 								TOperationToken.Multiply: exit UInt64(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit UInt64(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit UInt64(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd:   exit UInt64(operand1) & Double(operand2);
+
 							end;
 						end;
 					end;
@@ -975,7 +961,7 @@
 								TOperationToken.Multiply: exit Single(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & Int8(operand2);
+
 							end;
 						end;
 						TNumericType.Int16:
@@ -986,7 +972,7 @@
 								TOperationToken.Multiply: exit Single(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & Int16(operand2);
+
 							end;
 						end;
 						TNumericType.Int32:
@@ -997,7 +983,7 @@
 								TOperationToken.Multiply: exit Single(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & Int32(operand2);
+
 							end;
 						end;
 						TNumericType.Int64:
@@ -1018,7 +1004,6 @@
 								TOperationToken.Multiply: exit Single(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1029,7 +1014,6 @@
 								TOperationToken.Multiply: exit Single(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1040,7 +1024,6 @@
 								TOperationToken.Multiply: exit Single(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1051,7 +1034,6 @@
 								TOperationToken.Multiply: exit Single(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1062,7 +1044,6 @@
 								TOperationToken.Multiply: exit Single(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1073,7 +1054,6 @@
 								TOperationToken.Multiply: exit Single(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit Single(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit Single(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd:   exit Single(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -1091,7 +1071,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * Int8(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / Int8(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod Int8(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & Int8(operand2);
 							end;
 						end;
 						TNumericType.Int16:
@@ -1102,7 +1081,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * Int16(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / Int16(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod Int16(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & Int16(operand2);
 							end;
 						end;
 						TNumericType.Int32:
@@ -1113,7 +1091,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * Int32(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / Int32(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod Int32(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & Int32(operand2);
 							end;
 						end;
 						TNumericType.Int64:
@@ -1124,7 +1101,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * Int64(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / Int64(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod Int64(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & Int64(operand2);
 							end;
 						end;
 						TNumericType.UInt8:
@@ -1135,7 +1111,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * UInt8(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / UInt8(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod UInt8(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & UInt8(operand2);
 							end;
 						end;
 						TNumericType.UInt16:
@@ -1146,7 +1121,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * UInt16(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / UInt16(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod UInt16(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & UInt16(operand2);
 							end;
 						end;
 						TNumericType.UInt32:
@@ -1157,7 +1131,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * UInt32(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / UInt32(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod UInt32(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & UInt32(operand2);
 							end;
 						end;
 						TNumericType.UInt64:
@@ -1168,7 +1141,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * UInt64(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / UInt64(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod UInt64(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & UInt64(operand2);
 							end;
 						end;
 						TNumericType.Single:
@@ -1179,7 +1151,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * Single(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / Single(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod Single(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & Single(operand2);
 							end;
 						end;
 						TNumericType.Double:
@@ -1190,7 +1161,6 @@
 								TOperationToken.Multiply: exit Double(operand1) * Double(operand2);
 								TOperationToken.Divide:   exit Double(operand1) / Double(operand2);
 								TOperationToken.Modulus:   exit Double(operand1) mod Double(operand2);
-								TOperationToken.BitwiseAnd:   exit Double(operand1) & Double(operand2);
 							end;
 						end;
 					end;
@@ -2423,6 +2393,11 @@
 			operator Modulus(const operand1, operand2: TNumeric): TNumeric;
 			begin
 				exit ArithmeticOperation(operand1, operand2, TOperationToken.Modulus);
+			end;
+
+			operator BitwiseAnd(const operand1, operand2: TNumeric): TNumeric;
+			begin
+				exit ArithmeticOperation(operand1, operand2, TOperationToken.BitwiseAnd);
 			end;
 
 			//Logical OPERATOR
