@@ -2,7 +2,7 @@
 
 	type
 		TNumericType    = public enum (Boolean, Int8, Int16, Int32, Int64,
-															 UInt8, UInt16, UInt32, UInt64, Single, Double) of Byte;
+																	 UInt8, UInt16, UInt32, UInt64, Single, Double) of Byte;
 
 		TOperationToken = public enum (&Add, Subtract, Multiply, Divide, Modulus,
 																		GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less); //can be expanded ofc with logical operators
