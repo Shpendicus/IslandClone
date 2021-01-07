@@ -23,8 +23,12 @@ type
 
   DummyEnum = class(&Enum) public fValue: Integer; end;
   Dummy64Enum = class(&Enum) public fValue: Int64; end;
+/*
+  TRec = sealed record
 
-  &Enum = public abstract class
+  end;
+*/
+  &Enum = public abstract class(IEquatable<&Enum>, IComparable<&Enum>)
   public
     property EnumSize: Integer
       read self.GetType.SizeOfType;
@@ -53,31 +57,33 @@ type
 
     method &Equals(aOther: Object): Boolean; override;
     begin
-      if aOther = nil then exit false;
-      if aOther.GetType <> GetType then exit false;
+      if (aOther = nil) or (aOther.GetType <> GetType) then exit false;
+      exit &Equals(&Enum(aOther));
+    end;
 
+    method &Equals(other: &Enum): Boolean;
+    begin
       case EnumSize of
         1: begin
             var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(aOther));
+            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
             exit ^Byte(@lSelf.fValue)^ = ^Byte(@lOther.fValue)^;
-          end;
+           end;
         2: begin
             var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(aOther));
+            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
             exit ^Int16(@lSelf.fValue)^ = ^Int16(@lOther.fValue)^;
-          end;
+           end;
         4: begin
             var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(aOther));
+            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
             exit ^Int32(@lSelf.fValue)^ = ^Int32(@lOther.fValue)^;
-          end;
+           end;
         8: begin
-          var lSelf := InternalCalls.Cast<Dummy64Enum>(InternalCalls.Cast(self));
-          var lOther := InternalCalls.Cast<Dummy64Enum>(InternalCalls.Cast(aOther));
-
-            exit ^Int64(@lSelf.fValue)^ = ^Int64(@lOther.fValue)^;
-          end;
+              var lSelf := InternalCalls.Cast<Dummy64Enum>(InternalCalls.Cast(self));
+          var lOther := InternalCalls.Cast<Dummy64Enum>(InternalCalls.Cast(other));
+              exit ^Int64(@lSelf.fValue)^ = ^Int64(@lOther.fValue)^;
+           end;
       end;
     end;
 
@@ -85,16 +91,24 @@ type
     begin
       var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
       var lValue: Int64 := 0;
+
       case EnumSize of
         1: lValue := ^Byte(@lSelf.fValue)^;
         2: lValue := ^Word(@lSelf.fValue)^;
         4: lValue := ^Int32(@lSelf.fValue)^;
         8: lValue := InternalCalls.Cast<Dummy64Enum>(InternalCalls.Cast(self)).fValue;
       end;
+
       result := self.GetType.Constants.FirstOrDefault(a -> a.IsStatic and (Convert.ToInt64(a.Value) = lValue)):Name;
       if result = nil then exit lValue.ToString();
     end;
+
+    method CompareTo(a: &Enum): Integer;
+    begin
+      exit EnumSize.CompareTo(a.EnumSize);
+    end;
   end;
+
 
   Void = public record
   public
