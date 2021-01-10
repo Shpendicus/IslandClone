@@ -12,7 +12,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)BaseFile.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)BitConverter.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Convert.pas" />
-    <Compile Include="$(MSBuildThisFileDirectory)Debug.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)EqualityComparer.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)Exceptions.pas" />
     <Compile Include="$(MSBuildThisFileDirectory)FileUtils.pas" />
@@ -52,10 +51,13 @@
     <Compile Include="List.pas" />
     <Compile Include="LifetimeStrategy.pas" />
     <Compile Include="Delegates.pas" />
+    <Compile Include="Floats.pas" />
+    <Compile Include="Integers.pas" />
     <Compile Include="Math.pas" />
     <Compile Include="Object.pas" />
     <Compile Include="String.pas" />
     <Compile Include="Type.pas" />
+    <Compile Include="Types.pas" />
     <Compile Include="Array.pas" />
     <Compile Include="Thread.pas" />
     <Compile Include="Console.pas" />

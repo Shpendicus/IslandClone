@@ -1,4 +1,4 @@
-﻿namespace RemObjects.Elements.System;
+﻿﻿namespace RemObjects.Elements.System;
 
 type
 	Tuple<T1> = public record(IEquatable<Tuple<T1>>)
@@ -16,7 +16,7 @@ type
 			exit Item1.GetHashCode;
 		end;
 
-	method &Equals(a: &Tuple<T1>): Boolean;
+		method &Equals(a: &Tuple<T1>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(Item1, a.Item1));
 		end;
@@ -35,7 +35,7 @@ type
 		begin
 			exit not (a = b);
 		end;
-	end;
+		end;
 
 	Tuple<T1, T2> = public record(IEquatable<Tuple<T1, T2>>)
 	public
@@ -55,7 +55,7 @@ type
 			if Item2 <> nil then result := Tuple.R3(result) xor Item2.GetHashCode;
 		end;
 
-	class operator Equal(a, b: &Tuple<T1, T2, T3>): Boolean;
+		class operator Equal(a, b: &Tuple<T1, T2, T3>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2));
@@ -73,7 +73,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3>(arg1));
 		end;
 	end;
 
@@ -98,7 +98,7 @@ type
 			if Item3 <> nil then result := Tuple.R3(result) xor Item3.GetHashCode;
 		end;
 
-	class operator Equal(a, b: &Tuple<T1, T2, T3>): Boolean;
+		class operator Equal(a, b: &Tuple<T1, T2, T3>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -117,7 +117,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3>(arg1));
 		end;
 	end;
 
@@ -136,7 +136,7 @@ type
 		property Item3: T3; readonly;
 		property Item4: T4; readonly;
 
-	method GetHashCode: Integer; override;
+		method GetHashCode: Integer; override;
 		begin
 			result := 0;
 			if Item1 <> nil then result := Tuple.R3(result) xor Item1.GetHashCode;
@@ -186,7 +186,7 @@ type
 		property Item4: T4; readonly;
 		property Item5: T5; readonly;
 
-	method GetHashCode: Integer; override;
+		method GetHashCode: Integer; override;
 		begin
 			result := 0;
 			if Item1 <> nil then result := Tuple.R3(result) xor Item1.GetHashCode;
@@ -217,7 +217,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5>(arg1));
 		end;
 	end;
 
@@ -240,7 +240,7 @@ type
 		property Item5: T5; readonly;
 		property Item6: T6; readonly;
 
-	method GetHashCode: Integer; override;
+		method GetHashCode: Integer; override;
 		begin
 			result := 0;
 			if Item1 <> nil then result := Tuple.R3(result) xor Item1.GetHashCode;
@@ -273,7 +273,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6>(arg1));
 		end;
 	end;
 
@@ -298,7 +298,7 @@ type
 		property Item6: T6; readonly;
 		property Item7: T7; readonly;
 
-	method GetHashCode: Integer; override;
+		method GetHashCode: Integer; override;
 		begin
 			result := 0;
 			if Item1 <> nil then result := Tuple.R3(result) xor Item1.GetHashCode;
@@ -333,7 +333,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7>(arg1));
 		end;
 	end;
 
@@ -360,7 +360,7 @@ type
 		property Item7: T7; readonly;
 		property Item8: T8; readonly;
 
-	method GetHashCode: Integer; override;
+		method GetHashCode: Integer; override;
 		begin
 			result := 0;
 			if Item1 <> nil then result := Tuple.R3(result) xor Item1.GetHashCode;
@@ -397,7 +397,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8>(arg1));
 		end;
 	end;
 
@@ -427,7 +427,7 @@ type
 		property Item8: T8; readonly;
 		property Item9: T9; readonly;
 
-	method GetHashCode: Integer; override;
+		method GetHashCode: Integer; override;
 		begin
 			result := 0;
 			if Item1 <> nil then result := Tuple.R3(result) xor Item1.GetHashCode;
@@ -466,7 +466,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>(arg1));
 		end;
 	end;
 
@@ -498,7 +498,7 @@ type
 		property Item9: T9; readonly;
 		property Item10: T10; readonly;
 
-	class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>): Boolean;
+		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -524,7 +524,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(arg1));
 		end;
 	end;
 
@@ -600,7 +600,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>(arg1));
 		end;
 	end;
 
@@ -682,7 +682,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>(arg1));
 		end;
 	end;
 
@@ -766,7 +766,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>(arg1));
 		end;
 	end;
 
@@ -806,7 +806,7 @@ type
 		property Item13: T13; readonly;
 		property Item14: T14; readonly;
 
-	 method GetHashCode: Integer; override;
+		method GetHashCode: Integer; override;
 		begin
 			result := 0;
 			if Item1 <> nil then result := Tuple.R3(result) xor Item1.GetHashCode;
@@ -825,7 +825,7 @@ type
 			if Item14 <> nil then result := Tuple.R3(result) xor Item14.GetHashCode;
 		end;
 
-	 class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>): Boolean;
+		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -855,7 +855,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(arg1));
+			exit &Equals(&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>(arg1));
 		end;
 	end;
 

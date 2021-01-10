@@ -113,6 +113,7 @@ type
 
     const FinalizerIndex = 4 + {$IFDEF I386}4{$ELSE}2{$ENDIF};
 
+
     [SymbolName('__newdelegate')]
     //[SkipDebug]
     class method NewDelegate(aTY: ^Void; aSelf: Object; aPtr: ^Void): &Delegate;

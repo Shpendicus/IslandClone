@@ -5,7 +5,7 @@ interface
 type
   Math = public class
   private
-    const SIN_ACCURACY_ITERATION = 22;
+    const SIN_ACCURACY_ITERATION = 21+1;
     const ln2 = 0.693147180559945309417232121458176568075500134360255254120680009493393621969694715605863326996418687542001481020570685733685520235758130557;
     {$REGION EXP2 lookup table}
     const EXP2_MAX_ITERATIONS=50;
@@ -445,7 +445,7 @@ begin
   //special case, p1 = 0.5
   //12.5 => 12 and 11.5 => 12
   //-12.5 => -12 and -11.5 => -12
-  var d1:Double := a + (if a<0 then -0.5 else 0.5);
+  var d1 := a + if a<0 then -0.5 else 0.5;
   if d1 mod 2 <> 0 then begin
     exit Double(d1) - if a<0 then -1 else 1
   end
