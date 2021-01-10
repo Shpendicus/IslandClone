@@ -73,13 +73,13 @@ begin
 end;
 
 method Stream.CopyTo(Destination: Stream);
-const
-  bufsize = 4*1024; //4 kb
-begin
+begin	
+	const	bufsize = 4096; //4kb
+	
   if Destination = nil then raise new Exception('Destination is null');
   if not self.CanRead then raise new NotSupportedException;
   if not Destination.CanWrite then raise new NotSupportedException;
-  var buf: array [bufsize] of Byte := InternalCalls.Undefined<array [bufsize] of Byte>();
+  var buf: array [1..bufsize] of Byte := InternalCalls.Undefined<array [1..bufsize] of Byte>();
   while true do begin
     var rest := &Read(new Span<Byte>(@buf[0], bufsize));
     if rest > 0 then rest := Destination.Write(new Span<Byte>(@buf[0], rest));

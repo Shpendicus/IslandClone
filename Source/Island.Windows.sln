@@ -1,18 +1,24 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Water
-Project("{00000000-0000-0000-0000-000000000000}") = "Island (Windows)", "Island.Windows.elements", "{00BBBADD-8D31-439B-9495-1F35080E299E}"
+Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Island (Windows)", "Island.Windows.elements", "{00BBBADD-8D31-439B-9495-1F35080E299E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|AnyCPU = Debug|AnyCPU
-		Release|AnyCPU = Release|AnyCPU
+		Debug-i386|AnyCPU = Debug-i386|AnyCPU
+		Debug-x86_64|AnyCPU = Debug-x86_64|AnyCPU
+		Release-i386|AnyCPU = Release-i386|AnyCPU
+		Release-x86_64|AnyCPU = Release-x86_64|AnyCPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
-		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
-		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
-		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release|AnyCPU.Build.0 = Release|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug-i386|AnyCPU.ActiveCfg = Debug-i386|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug-i386|AnyCPU.Build.0 = Debug-i386|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug-x86_64|AnyCPU.ActiveCfg = Debug-x86_64|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug-x86_64|AnyCPU.Build.0 = Debug-x86_64|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release-i386|AnyCPU.ActiveCfg = Release-i386|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release-i386|AnyCPU.Build.0 = Release-i386|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release-x86_64|AnyCPU.ActiveCfg = Release-x86_64|AnyCPU
+		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release-x86_64|AnyCPU.Build.0 = Release-x86_64|AnyCPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

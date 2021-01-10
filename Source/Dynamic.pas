@@ -83,7 +83,9 @@ type
           if not lPars[j].Type.IsAssignableFrom(aArgs[j].GetType)  then begin
             if lPars[j].Type.IsFloat and aArgs[j].GetType.IsIntegerOrFloat then begin
             end else if lPars[j].Type.IsInteger and aArgs[j].GetType.IsInteger then begin
+
             end else if lPars[j].Type.IsEnum and aArgs[j].GetType.IsInteger then begin
+
             end else begin
               lPars := nil;
               break;
@@ -500,10 +502,10 @@ type
               exit Boolean(aLeft) <> Boolean(aRight);
           exit not Object.ReferenceEquals(aLeft, aRight);
         end;
-
       end;
 
       raise new Exception('Binary operator '+aOp+' not supported on these type');
+
     end;
 
     method Unary(aLeft: Object; aOp: Integer): Object;
@@ -541,7 +543,7 @@ type
         DynamicUnaryOperator.Plus:
           exit aLeft;
       end;
-      raise new Exception('Unary operator '+aOp+' not supported on this type');
+      raise new Exception('Unary operator '+aOp.ToString+' not supported on this type');
     end;
   end;
 

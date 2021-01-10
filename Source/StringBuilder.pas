@@ -227,19 +227,23 @@ type
 
       if oldLen >= newLen then begin
         var NewBuf := NewValue.ToCharArray;
-        repeat
-          var delta := idx - old_idx;
+        repeat		
+					(*cast to integer is needed, due to the overwrite of all operators from <INumber>*)
+          var delta := Integer(idx - old_idx);
           if delta > 0 then begin
             IntMove(old_idx, curpos, delta); // move the non-changed text
             inc(curpos, delta);
           end;
           intCopy(@NewBuf[0], @fBuf[curpos], newLen);
           inc(curpos, newLen);
-          old_idx := idx + oldLen;
+					(*cast to integer is needed, due to the overwrite of all operators from <INumber>*)
+          old_idx := Integer(idx + oldLen);
           idx := intIndexOf(OldValue, old_idx, StartIndex+Count);
         until idx = -1;
         IntMove(old_idx, curpos, Length-old_idx); // move the rest of non-changed text
-        inc(curpos, Length-old_idx);
+				(*cast to integer is needed, due to the overwrite of all operators from <INumber>*)
+				var diff := Integer(Length-old_idx);
+        inc(curpos, diff);
         Length := curpos;
       end
       else begin

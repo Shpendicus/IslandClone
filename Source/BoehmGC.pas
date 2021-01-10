@@ -271,7 +271,7 @@ type
     class method &New(aTTY: ^Void; aSize: NativeInt): ^Void;
     begin
       if fFinalizer = nil then begin
-        fFinalizer := ^^Void(InternalCalls.GetTypeInfo<Object>())[Utilities.FinalizerIndex]; // keep in sync with compiler!
+        fFinalizer := ^^Void(InternalCalls.GetTypeInfo<Object>())[Utilities.FinalizerIndex] // keep in sync with compiler!
       end;
       result := ^Void(-1);
       if fLoaded = 0 then LoadGC;

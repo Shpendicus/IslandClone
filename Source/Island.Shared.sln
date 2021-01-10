@@ -1,8 +1,6 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Water
-Project("{00000000-0000-0000-0000-000000000000}") = "Island.Shared", "Island.Shared.elements", "{8BE19C06-DD7E-41F7-954B-6D269C087E4C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 	EndGlobalSection
