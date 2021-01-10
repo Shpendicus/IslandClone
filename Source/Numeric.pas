@@ -1,12 +1,13 @@
 ﻿namespace RemObjects.Elements.System;
 
 	type
-		TNumericType    = public enum (Boolean, Int8, Int16, Int32, Int64,
-																	 UInt8, UInt16, UInt32, UInt64, Single, Double) of Byte;
+		TNumericType    = public enum (Boolean, Int8, Int16, Int32, Int64, AnsiChar,
+																	 UInt8, UInt16, UInt32, UInt64, Single, Double, Digital) of Byte;
 
 		TOperationToken = public enum (&Add, Subtract, Multiply, Divide, Modulus, BitwiseAnd,
 																		GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less); //can be expanded ofc with logical operators
 
+		//TCharSet = set of ['a'..'z', 'A.'..'Z', '0'..'9'];
 
 		[Union]
 		TValue nested in TNumeric = unit record
@@ -21,19 +22,101 @@
 			a8: UInt64;
 			a9: Single;
 			a10:Double;
+			a11: AnsiChar;
 		end;
 
 		TNumeric = public record(IComparable<TNumeric>, IEquatable<TNumeric>)
 		unit
 			fValue: TValue;
 			fType: TNumericType;
+			fUseCharCodesForOperation: Boolean;
+			//This allows to have a UnicodeChar to be used for arithmeticalOps,
+			//Like saying: '~' + '_' translates to: ---> Int8('~') + Int8('_');
+			//and so on...
 
 		private
 			method ArithmeticOperation(const operand1, operand2: TNumeric; token: TOperationToken): TNumeric; static;
 			begin
-				if operand1.fType = TNumericType.Int8 then
+				if (operand1.fType = TNumericType.AnsiChar) then
 				begin
+					const chrOp1 = Byte(operand1);
+					const chrOp2 = Byte(operand2);
+
 					case operand2.fType of
+						TNumericType.AnsiChar:
+						begin
+							case token of
+								TOperationToken.Add:
+								begin
+									result := (chrOp1 + diff);
+
+									if Byte(result.fValue.a11) > high(Byte) then
+										 raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
+
+									exit AnsiChar(result);
+								end;
+								TOperationToken.Subtract:
+								begin
+									result := (chrOp1 - chrOp2);
+									if result < low(Byte) then
+										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
+
+									exit AnsiChar(result);
+								end;
+							end;
+						end;
+						TNumericType.UInt8:
+						begin
+							case token of
+								TOperationToken.Add:
+								begin
+									result := (chrOp1 + chrOp2);
+
+									if result > high(Byte) then
+										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
+
+									exit AnsiChar(result);
+								end;
+								TOperationToken.Subtract:
+								begin
+									result := (chrOp1 - chrOp2);
+
+									if result < low(Byte) then
+										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
+
+									exit AnsiChar(result);
+								end;
+							end;
+						end;
+					end;
+				end;
+
+				if (operand1.fType = TNumericType.Int8) then
+				begin
+					const chrOp1 = Byte(AnsiChar(operand1));
+					case operand2.fType of
+
+						TNumericType.AnsiChar:
+						begin
+							const chrOp2 = Byte(AnsiChar(operand2));
+
+							case token of
+								TOperationToken.Add:
+								begin
+									if (chrOp1 + chrOp2) > high(Byte) then
+										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
+
+									exit AnsiChar(chrOp1 + chrOp2);
+								end;
+								TOperationToken.Subtract:
+								begin
+									if (chrOp1 - chrOp2) > high(Byte) < 0 then
+										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
+
+									exit AnsiChar(chrOp1 - chrOp2);
+								end;
+							 end;
+						end;
 						TNumericType.Int8:
 						begin
 							case token of
@@ -142,11 +225,11 @@
 						end;
 					end;
 				end;
-	 //---------------------------------------------------------------------------------//
+				//---------------------------------------------------------------------------------//
 				if operand1.fType = TNumericType.Int16 then
 				begin
 					case operand2.fType of
-						TNumericType.Int8:
+						TNumericType.Int8, TNumericType.AnsiChar:
 						begin
 							case token of
 								TOperationToken.Add:      exit Int16(operand1) + Int8(operand2);
@@ -261,7 +344,7 @@
 				if operand1.fType = TNumericType.Int32 then
 				begin
 					case operand2.fType of
-						TNumericType.Int8:
+						TNumericType.Int8, TNumericType.AnsiChar:
 						begin
 							case token of
 								TOperationToken.Add:      exit Int32(operand1) + Int8(operand2);
@@ -376,7 +459,7 @@
 				if operand1.fType = TNumericType.Int64 then
 				begin
 					case operand2.fType of
-						TNumericType.Int8:
+						TNumericType.Int8, TNumericType.AnsiChar:
 						begin
 							case token of
 								TOperationToken.Add:      exit Int64(operand1) + Int8(operand2);
@@ -491,7 +574,7 @@
 				if operand1.fType = TNumericType.UInt8 then
 				begin
 					case operand2.fType of
-						TNumericType.Int8:
+						TNumericType.Int8, TNumericType.AnsiChar:
 						begin
 							case token of
 								TOperationToken.Add:      exit UInt8(operand1) + Int8(operand2);
@@ -2340,6 +2423,12 @@
 			end;
 
 		public
+			constructor(useCharCodesForOperation: Boolean);
+			begin
+				if useCharCodesForOperation then
+
+			end;
+
 			method ToString: String; override;
 			begin
 				case fType of
@@ -2354,6 +2443,7 @@
 					TNumericType.UInt64:  exit fValue.a8.ToString();
 					TNumericType.Single:  exit fValue.a9.ToString();
 					TNumericType.Double:  exit fValue.a10.ToString();
+					TNumericType.AnsiChar:  exit fValue.a11.ToString;
 				end;
 			end;
 
@@ -2489,6 +2579,14 @@
 				exit operand.fValue.a10;
 			end;
 
+			operator Implicit(const operand: TNumeric): AnsiChar;
+			begin
+				exit operand.fValue.a11;
+			end;
+
+
+			{IMPLICIT CONVERSION FROM:  BaseType to TNumeric}
+			 //var myNumber : TNumber := 100;
 			operator Implicit(const operand: Boolean): TNumeric;
 			begin
 				var nr : TNumeric;
@@ -2497,8 +2595,6 @@
 				exit nr;
 			end;
 
-			{IMPLICIT CONVERSION FROM:  BaseType to TNumeric}
-			 //var myNumber : TNumber := 100;
 			operator Implicit(const operand: Int8): TNumeric;
 			begin
 				var nr : TNumeric;
@@ -2585,6 +2681,15 @@
 				var nr : TNumeric;
 				nr.fValue.a10 := operand;
 				nr.fType := TNumericType.Double;
+				exit nr;
+			end;
+
+			operator Implicit(const operand: AnsiChar): TNumeric;
+			begin
+				 //var myNumber : Number := 100;
+				var nr : TNumeric;
+				nr.fValue.a11 := operand;
+				nr.fType := TNumericType.AnsiChar;
 				exit nr;
 			end;
 
@@ -2680,6 +2785,14 @@
 				exit nr;
 			end;
 
+			operator Explicit(const operand: AnsiChar): TNumeric;
+			begin
+				 //var myNumber : Number := 100;
+				var nr : TNumeric;
+				nr.fValue.a11 := operand;
+				nr.fType := TNumericType.AnsiChar;
+				exit nr;
+			end;
 
 			{1. EXPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := BaseType(myNumeric)}
 			operator Explicit(const operand: TNumeric): Boolean;
@@ -2735,6 +2848,11 @@
 			operator Explicit(const operand: TNumeric): Double;
 			begin
 				exit operand.fValue.a10;
+			end;
+
+			operator Explicit(const operand: TNumeric): AnsiChar;
+			begin
+				exit operand.fValue.a11;
 			end;
 		end;
 end.
