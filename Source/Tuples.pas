@@ -1,4 +1,4 @@
-﻿﻿namespace RemObjects.Elements.System;
+﻿namespace RemObjects.Elements.System;
 
 type
 	Tuple<T1> = public record(IEquatable<Tuple<T1>>)
@@ -23,7 +23,7 @@ type
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			Equals(&Tuple<T1>(arg1));
+			exit &Equals(&Tuple<T1>(arg1));
 		end;
 
 		class operator Equal(a, b: &Tuple<T1>): Boolean;
@@ -35,9 +35,9 @@ type
 		begin
 			exit not (a = b);
 		end;
-		end;
+	end;
 
-	Tuple<T1, T2> = public record(IEquatable<Tuple<T1, T2>>)
+	Tuple<T1, T2> = public record(IEquatable<&Tuple<T1, T2>>)
 	public
 		constructor(aItem1: T1; aItem2: T2);
 		begin
@@ -55,29 +55,29 @@ type
 			if Item2 <> nil then result := Tuple.R3(result) xor Item2.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3>): Boolean;
+		class operator Equal(a, b: &Tuple<T1, T2>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2));
 		end;
 
-		class operator NotEqual(a, b: &Tuple<T1, T2, T3>): Boolean;
+		class operator NotEqual(a, b: &Tuple<T1, T2>): Boolean;
 		begin
 			exit not (a = b);
 		end;
 
-		method &Equals(a: &Tuple<T1, T2, T3>): Boolean;
+		method &Equals(a: &Tuple<T1, T2>): Boolean;
 		begin
 			exit (self = a);
 		end;
 
 		method &Equals(arg1: Object): Boolean; override;
 		begin
-			exit &Equals(&Tuple<T1, T2, T3>(arg1));
+			exit &Equals(&Tuple<T1, T2>(arg1));
 		end;
 	end;
 
-	Tuple<T1, T2, T3> = public record(IEquatable<Tuple<T1, T2, T3>>)
+	Tuple<T1, T2, T3> = public record(IEquatable<&Tuple<T1, T2, T3>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3);
 		begin
@@ -121,7 +121,7 @@ type
 		end;
 	end;
 
-	Tuple<T1, T2, T3, T4> = public record(IEquatable<Tuple<T1, T2, T3, T4>>)
+	Tuple<T1, T2, T3, T4> = public record(IEquatable<&Tuple<T1, T2, T3, T4>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4);
 		begin
@@ -169,7 +169,7 @@ type
 		end;
 	end;
 
-	Tuple<T1, T2, T3, T4, T5> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5>>)
+	Tuple<T1, T2, T3, T4, T5> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5);
 		begin
@@ -221,7 +221,7 @@ type
 		end;
 	end;
 
-	Tuple<T1, T2, T3, T4, T5, T6> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5, T6>>)
+	Tuple<T1, T2, T3, T4, T5, T6> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5, T6>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6);
 		begin
@@ -277,7 +277,7 @@ type
 		end;
 	end;
 
-	Tuple<T1, T2, T3, T4, T5, T6, T7> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5, T6, T7>>)
+	Tuple<T1, T2, T3, T4, T5, T6, T7> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7);
 		begin
@@ -337,7 +337,7 @@ type
 		end;
 	end;
 
-	Tuple<T1, T2, T3, T4, T5, T6, T7, T8> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5, T6, T7, T8>>)
+	Tuple<T1, T2, T3, T4, T5, T6, T7, T8> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7; aItem8: T8);
 		begin
@@ -402,7 +402,7 @@ type
 	end;
 
 
-	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>>)
+	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7; aItem8: T8; aItem9: T9);
 		begin
@@ -471,7 +471,7 @@ type
 	end;
 
 
-	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>)
+	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7; aItem8: T8; aItem9: T9; aItem10: T10);
 		begin
@@ -528,7 +528,7 @@ type
 		end;
 	end;
 
-	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>)
+	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7; aItem8: T8; aItem9: T9; aItem10: T10; aItem11: T11);
 		begin
@@ -605,7 +605,7 @@ type
 	end;
 
 
-	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>>)
+	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7; aItem8: T8; aItem9: T9; aItem10: T10; aItem11: T11; aItem12: T12);
 		begin
@@ -771,7 +771,7 @@ type
 	end;
 
 
-	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> = public record(IEquatable<Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>>)
+	Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14> = public record(IEquatable<&Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>>)
 	public
 		constructor(aItem1: T1; aItem2: T2; aItem3: T3; aItem4: T4; aItem5: T5; aItem6: T6; aItem7: T7; aItem8: T8; aItem9: T9; aItem10: T10; aItem11: T11; aItem12: T12; aItem13: T13; aItem14: T14);
 		begin
@@ -825,7 +825,7 @@ type
 			if Item14 <> nil then result := Tuple.R3(result) xor Item14.GetHashCode;
 		end;
 
-		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13>): Boolean;
+		class operator Equal(a, b: &Tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14>): Boolean;
 		begin
 			exit (EqualityComparer.Equals(a.Item1, b.Item1)) and
 			 (EqualityComparer.Equals(a.Item2, b.Item2)) and
@@ -938,5 +938,4 @@ type
 			exit new Tuple<T1, T2, T3, T4, T5,T6, T7, T8, T9, T10, T11, T12, T13, T14>(aItem1, aItem2, aItem3, aItem4, aItem5, aItem6, aItem7, aItem8, aItem9, aItem10, aItem11, aItem12, aItem13, aItem14);
 		end;
 	end;
-
 end.
