@@ -58,7 +58,7 @@
 								TOperationToken.Subtract:
 								begin
 									result := (chrOp1 - chrOp2);
-									if result < low(Byte) then
+									if Byte(result.fValue.a11) < low(Byte) then
 										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
 
 									exit AnsiChar(result);
