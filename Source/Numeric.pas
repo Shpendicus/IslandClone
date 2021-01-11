@@ -577,7 +577,7 @@
 							end;
 						end;
 
-						TNumericType.Int8
+						TNumericType.Int8:
 						begin
 							case token of
 								TOperationToken.Add:      exit UInt8(operand1) + Int8(operand2);

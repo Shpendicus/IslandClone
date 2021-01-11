@@ -147,7 +147,8 @@ type
     class method IsNumber(aChar: Char): Boolean;
     method ToLower(aInvariant: Boolean := false): Char;
     method ToUpper(aInvariant: Boolean := false): Char;
-
+    operator &Add(const a, b: Char): Char;
+    operator &Subtract(const a, b: Char): Char;
 
     method &Equals(other: Char): Boolean;
     begin
@@ -174,7 +175,8 @@ type
     method ToString: String; override;
     method GetHashCode: Integer; override;
     method &Equals(obj: Object): Boolean; override;
-
+    operator &Add(const a, b: AnsiChar): AnsiChar;
+    operator &Subtract(const a, b: AnsiChar): AnsiChar;
 
     method &Equals(other: AnsiChar): Boolean;
     begin
@@ -228,6 +230,16 @@ begin
     exit self = Boolean(obj)
   else
     exit False;
+end;
+
+operator Char.&Add(const a, b: Char): Char;
+begin
+  exit Char(ord(a) + ord(b));
+end;
+
+operator Char.&Subtract(const a, b: Char): Char;
+begin
+  exit Char(ord(a) - ord(b));
 end;
 
 method Char.ToString: String;
@@ -315,6 +327,16 @@ end;
 method AnsiChar.ToString: String;
 begin
   exit String(Char(self));
+end;
+
+operator AnsiChar.&Add(const a, b: AnsiChar): AnsiChar;
+begin
+  exit AnsiChar(ord(a) + ord(b));
+end;
+
+operator AnsiChar.&Subtract(const a, b: AnsiChar): AnsiChar;
+begin
+  exit AnsiChar(ord(a) - ord(b));
 end;
 
 method AnsiChar.GetHashCode: Integer;
