@@ -93,30 +93,7 @@
 
 				if (operand1.fType = TNumericType.Int8) then
 				begin
-					const chrOp1 = Byte(AnsiChar(operand1));
 					case operand2.fType of
-
-						TNumericType.AnsiChar:
-						begin
-							const chrOp2 = Byte(AnsiChar(operand2));
-
-							case token of
-								TOperationToken.Add:
-								begin
-									if (chrOp1 + chrOp2) > high(Byte) then
-										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
-
-									exit AnsiChar(chrOp1 + chrOp2);
-								end;
-								TOperationToken.Subtract:
-								begin
-									if (chrOp1 - chrOp2) > high(Byte) < 0 then
-										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
-
-									exit AnsiChar(chrOp1 - chrOp2);
-								end;
-							 end;
-						end;
 						TNumericType.Int8:
 						begin
 							case token of
@@ -573,8 +550,34 @@
 			 //------------------------------------------------------------------------------------------//
 				if operand1.fType = TNumericType.UInt8 then
 				begin
+					const chrOp1 = UInt8(operand1);
+					const chrOp2 = UInt8(operand2);
+
 					case operand2.fType of
-						TNumericType.Int8, TNumericType.AnsiChar:
+						TNumericType.AnsiChar:
+						begin
+							case token of
+								TOperationToken.Add:
+								begin
+									result := (chrOp1 + chrOp2);
+
+									if Byte(result.fValue.a11) > high(Byte) then
+										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
+
+									exit AnsiChar(result);
+								end;
+								TOperationToken.Subtract:
+								begin
+									result := (chrOp1 - chrOp2);
+									if Byte(result.fValue.a11) < low(Byte) then
+										raise new ArgumentOutOfRangeException('the result of the + operation extends the valid boundaries of AnsiChar');
+
+									exit AnsiChar(result);
+								end;
+							end;
+						end;
+
+						TNumericType.Int8
 						begin
 							case token of
 								TOperationToken.Add:      exit UInt8(operand1) + Int8(operand2);

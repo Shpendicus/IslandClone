@@ -23,11 +23,7 @@ type
 
   DummyEnum = class(&Enum) public fValue: Integer; end;
   Dummy64Enum = class(&Enum) public fValue: Int64; end;
-/*
-  TRec = sealed record
 
-  end;
-*/
   &Enum = public abstract class(IEquatable<&Enum>, IComparable<&Enum>)
   public
     property EnumSize: Integer

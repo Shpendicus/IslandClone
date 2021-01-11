@@ -338,6 +338,8 @@ type
       raise new ArgumentException('Unknown type for o '+o);
     end;
 
+
+
     method ToInt64(o: Object): Int64;
     begin
       if o = nil then raise new ArgumentNullException('o is null');

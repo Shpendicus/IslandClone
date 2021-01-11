@@ -33,7 +33,5 @@ type
     begin
       exit a = b;
     end;
-
   end;
-
 end.
