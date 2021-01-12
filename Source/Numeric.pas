@@ -25,13 +25,10 @@
 			a11: AnsiChar;
 		end;
 
-		TActiveType nested in TNumeric = set of TNumericType;
-
 		TNumeric = public record(IComparable<TNumeric>, IEquatable<TNumeric>)
 		unit
 			fValue: TValue;
 			fType: TNumericType;
-			fActiveType: TActiveType;
 
 		private
 			method CastTo(const operand: TNumeric; const toCastTo: TNumericType) : TNumeric; static;
@@ -2767,7 +2764,6 @@
 				var nr : TNumeric;
 				nr.fValue.a0 := operand;
 				nr.fType := TNumericType.Boolean;
-				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2776,7 +2772,6 @@
 				var nr : TNumeric;
 				nr.fValue.a1 := operand;
 				nr.fType := TNumericType.Int8;
-				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2786,7 +2781,6 @@
 				var nr : TNumeric;
 				nr.fValue.a2 := operand;
 				nr.fType := TNumericType.Int16;
-				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2825,7 +2819,6 @@
 				var nr : TNumeric;
 				nr.fValue.a6 := operand;
 				nr.fType := TNumericType.UInt16;
-				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2835,7 +2828,6 @@
 				var nr : TNumeric;
 				nr.fValue.a7 := operand;
 				nr.fType := TNumericType.UInt32;
-				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2865,7 +2857,6 @@
 				var nr : TNumeric;
 				nr.fValue.a10 := operand;
 				nr.fType := TNumericType.Double;
-				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2875,7 +2866,6 @@
 				var nr : TNumeric;
 				nr.fValue.a11 := operand;
 				nr.fType := TNumericType.AnsiChar;
-				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
