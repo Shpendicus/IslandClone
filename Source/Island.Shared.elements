@@ -1,12 +1,1 @@
-﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="Build">
-  <PropertyGroup Label="Globals">
-    <ProjectGuid>8BE19C06-DD7E-41F7-954B-6D269C087E4C</ProjectGuid>
-    <RootNamespace>RemObjects.Elements.System</RootNamespace>
-  </PropertyGroup>
-  <Import Project="Island.Shared.projitems" Label="Shared" />
-  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.SharedProject.targets" />
-  <PropertyGroup>
-    <PreBuildEvent />
-  </PropertyGroup>
-</Project>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0" DefaultTargets="Build"><PropertyGroup Label="Globals"><ProjectGuid>8BE19C06-DD7E-41F7-954B-6D269C087E4C</ProjectGuid><RootNamespace>RemObjects.Elements.System</RootNamespace></PropertyGroup><PropertyGroup Condition=" '$(Configuration)' == 'Debug' " /><Import Project="Island.Shared.projitems" Label="Shared" /><Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.SharedProject.targets" /><PropertyGroup><PreBuildEvent /></PropertyGroup></Project>

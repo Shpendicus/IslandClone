@@ -25,19 +25,191 @@
 			a11: AnsiChar;
 		end;
 
+		TActiveType nested in TNumeric = set of TNumericType;
+
 		TNumeric = public record(IComparable<TNumeric>, IEquatable<TNumeric>)
 		unit
 			fValue: TValue;
 			fType: TNumericType;
-			fUseCharCodesForOperation: Boolean;
-			//This allows to have a UnicodeChar to be used for arithmeticalOps,
-			//Like saying: '~' + '_' translates to: ---> Int8('~') + Int8('_');
-			//and so on...
+			fActiveType: TActiveType;
 
 		private
+			method CastTo(const operand: TNumeric; const toCastTo: TNumericType) : TNumeric; static;
+			begin
+				for i: TNumericType := low(TNumericType) to high(TNumericType) do
+				begin
+					if i = operand.fType then
+					begin
+						case i of
+							TNumericType.Boolean: exit UInt8(operand.fValue.a0);
+							TNumericType.Int8:
+							begin
+								case toCastTo of
+									TNumericType.Boolean: exit Boolean(operand.fValue.a1);
+									TNumericType.Int16:   exit Int16(operand.fValue.a1);
+									TNumericType.Int32:   exit Int32(operand.fValue.a1);
+									TNumericType.Int64:   exit Int64(operand.fValue.a1);
+									TNumericType.UInt8:   exit UInt8(operand.fValue.a1);
+									TNumericType.UInt16:  exit UInt16(operand.fValue.a1);
+									TNumericType.UInt32:  exit UInt32(operand.fValue.a1);
+									TNumericType.UInt64:  exit UInt8(operand.fValue.a1);
+									TNumericType.Single:  exit Single(operand.fValue.a1);
+									TNumericType.Double:  exit Double(operand.fValue.a1);
+									TNumericType.AnsiChar:exit AnsiChar(operand.fValue.a1);
+								end;
+							end;
+							TNumericType.Int16:
+							begin
+								case toCastTo of
+									TNumericType.Boolean: exit Boolean(operand.fValue.a2);
+									TNumericType.Int8:    exit Int8(operand.fValue.a2);
+									TNumericType.Int32:   exit Int16(operand.fValue.a2);
+									TNumericType.Int64:   exit Int64(operand.fValue.a2);
+									TNumericType.UInt8:   exit UInt8(operand.fValue.a2);
+									TNumericType.UInt16:  exit UInt16(operand.fValue.a2);
+									TNumericType.UInt32:  exit UInt32(operand.fValue.a2);
+									TNumericType.UInt64:  exit UInt8(operand.fValue.a2);
+									TNumericType.Single:  exit Single(operand.fValue.a2);
+									TNumericType.Double:  exit Double(operand.fValue.a2);
+								end;
+							end;
+							TNumericType.Int32:
+							begin
+								case toCastTo of
+									TNumericType.Boolean: Boolean(operand.fValue.a3);
+									TNumericType.Int8:    Int8(operand.fValue.a3);
+									TNumericType.Int16:   Int16(operand.fValue.a3);
+									TNumericType.Int64:   Int32(operand.fValue.a3);
+									TNumericType.UInt8:   UInt8(operand.fValue.a3);
+									TNumericType.UInt16:  UInt16(operand.fValue.a3);
+									TNumericType.UInt32:  UInt32(operand.fValue.a3);
+									TNumericType.UInt64:  UInt8(operand.fValue.a3);
+									TNumericType.Single:  Single(operand.fValue.a3);
+									TNumericType.Double:  Double(operand.fValue.a3);
+								end;
+							end;
+							TNumericType.Int64:
+							begin
+								case toCastTo of
+									TNumericType.Boolean: exit Boolean(operand.fValue.a4);
+									TNumericType.Int8:    exit Int8(operand.fValue.a4);
+									TNumericType.Int16:   exit Int16(operand.fValue.a4);
+									TNumericType.Int32:   exit Int32(operand.fValue.a4);
+									TNumericType.UInt8:   exit UInt8(operand.fValue.a4);
+									TNumericType.UInt16:  exit UInt16(operand.fValue.a4);
+									TNumericType.UInt32:  exit UInt32(operand.fValue.a4);
+									TNumericType.UInt64:  exit UInt8(operand.fValue.a4);
+									TNumericType.Single:  exit Single(operand.fValue.a4);
+									TNumericType.Double:  Double(operand.fValue.a4);
+								end;
+							end;
+							TNumericType.UInt8:
+							begin
+								case toCastTo of
+									TNumericType.Boolean: exit Boolean(operand.fValue.a5);
+									TNumericType.Int8:    exit Int8(operand.fValue.a5);
+									TNumericType.Int16:   exit Int16(operand.fValue.a5);
+									TNumericType.Int32:   exit Int32(operand.fValue.a5);
+									TNumericType.Int64:   exit Int64(operand.fValue.a5);
+									TNumericType.UInt16:  exit UInt16(operand.fValue.a5);
+									TNumericType.UInt32:  exit UInt32(operand.fValue.a5);
+									TNumericType.UInt64:  exit UInt8(operand.fValue.a5);
+									TNumericType.Single:  exit Single(operand.fValue.a5);
+									TNumericType.Double:  exit Double(operand.fValue.a5);
+								end;
+							end;
+							TNumericType.UInt16:
+							begin
+								case toCastTo of
+									TNumericType.Boolean: exit Boolean(operand.fValue.a6);
+									TNumericType.Int8:    exit Int8(operand.fValue.a6);
+									TNumericType.Int16:   exit Int16(operand.fValue.a6);
+									TNumericType.Int32:   exit Int32(operand.fValue.a6);
+									TNumericType.Int64:   exit Int64(operand.fValue.a6);
+									TNumericType.UInt8:   exit UInt8(operand.fValue.a6);
+									TNumericType.UInt32:  exit UInt32(operand.fValue.a6);
+									TNumericType.UInt64:  exit UInt64(operand.fValue.a6);
+									TNumericType.Single:  exit Single(operand.fValue.a6);
+									TNumericType.Double:  exit Double(operand.fValue.a6);
+								end;
+							end;
+							TNumericType.UInt32:
+							begin
+								case toCastTo of
+									TNumericType.Boolean: exit Boolean(operand.fValue.a7);
+									TNumericType.Int8:    exit Int8(operand.fValue.a7);
+									TNumericType.Int16:   exit Int16(operand.fValue.a7);
+									TNumericType.Int32:   exit Int32(operand.fValue.a7);
+									TNumericType.Int64:   exit Int64(operand.fValue.a7);
+									TNumericType.UInt8:   exit UInt8(operand.fValue.a7);
+									TNumericType.UInt64:  exit UInt64(operand.fValue.a7);
+									TNumericType.UInt16:  exit UInt16(operand.fValue.a7);
+									TNumericType.Single:  exit Single(operand.fValue.a7);
+									TNumericType.Double:  exit Double(operand.fValue.a7);
+								end;
+							end;
+							TNumericType.UInt64:
+							begin
+								case toCastTo of
+									TNumericType.Boolean: exit Boolean(operand.fValue.a8);
+									TNumericType.Int8:    exit Int8(operand.fValue.a8);
+									TNumericType.Int16:   exit Int16(operand.fValue.a8);
+									TNumericType.Int32:   exit Int32(operand.fValue.a8);
+									TNumericType.Int64:   exit Int64(operand.fValue.a8);
+									TNumericType.UInt8:   exit UInt8(operand.fValue.a8);
+									TNumericType.UInt32:  exit UInt32(operand.fValue.a8);
+									TNumericType.UInt16:  exit UInt16(operand.fValue.a8);
+									TNumericType.Single:  exit Single(operand.fValue.a8);
+									TNumericType.Double:  exit Double(operand.fValue.a8);
+								end;
+							end;
+							TNumericType.Single:
+							begin
+								case toCastTo of
+									TNumericType.Int8:    exit Int8(operand.fValue.a9);
+									TNumericType.Int16:   exit Int16(operand.fValue.a9);
+									TNumericType.Int32:   exit Int32(operand.fValue.a9);
+									TNumericType.Int64:   exit Int64(operand.fValue.a9);
+									TNumericType.UInt8:   exit UInt8(operand.fValue.a9);
+									TNumericType.UInt32:  exit UInt32(operand.fValue.a9);
+									TNumericType.UInt16:  exit UInt16(operand.fValue.a9);
+									TNumericType.UInt64:  exit UInt64(operand.fValue.a9);
+									TNumericType.Double:  exit Double(operand.fValue.a9);
+								end;
+							end;
+							TNumericType.Double:
+							begin
+								case toCastTo of
+									TNumericType.Int8:    exit Int8(operand.fValue.a10);
+									TNumericType.Int16:  exit Int16(operand.fValue.a10);
+									TNumericType.Int32:  exit Int32(operand.fValue.a10);
+									TNumericType.Int64:  exit Int64(operand.fValue.a10);
+									TNumericType.UInt8:  exit UInt8(operand.fValue.a10);
+									TNumericType.UInt32: exit UInt32(operand.fValue.a10);
+									TNumericType.UInt16: exit UInt16(operand.fValue.a10);
+									TNumericType.UInt64: exit UInt64(operand.fValue.a10);
+									TNumericType.Single: exit  Single(operand.fValue.a10);
+								end;
+							end;
+							TNumericType.AnsiChar:
+							begin
+								//operand.fActiveType := [low(TNumericType)..high(TNumericType)]
+
+								case toCastTo of
+									TNumericType.Int8, TnumericType.Int16,
+									TnumericType.Int32, TnumericType.Int64,
+									TnumericType.UInt8, TnumericType.UInt16,
+									TnumericType.UInt32, TnumericType.UInt64 :   exit Int8(operand.fValue.a11);
+								end;
+							end;
+						end;
+					end;
+				end;
+			end;
+
 			method ArithmeticOperation(const operand1, operand2: TNumeric; token: TOperationToken): TNumeric; static;
 			begin
-				if (operand1.fType = TNumericType.AnsiChar) then
+					if (operand1.fType = TNumericType.AnsiChar) then
 				begin
 					const chrOp1 = Byte(operand1);
 					const chrOp2 = Byte(operand2);
@@ -2595,6 +2767,7 @@
 				var nr : TNumeric;
 				nr.fValue.a0 := operand;
 				nr.fType := TNumericType.Boolean;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2603,6 +2776,7 @@
 				var nr : TNumeric;
 				nr.fValue.a1 := operand;
 				nr.fType := TNumericType.Int8;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2612,6 +2786,7 @@
 				var nr : TNumeric;
 				nr.fValue.a2 := operand;
 				nr.fType := TNumericType.Int16;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2621,6 +2796,7 @@
 				var nr : TNumeric;
 				nr.fValue.a3 := operand;
 				nr.fType := TNumericType.Int32;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2630,6 +2806,7 @@
 				var nr : TNumeric;
 				nr.fValue.a4 := operand;
 				nr.fType := TNumericType.Int64;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2648,6 +2825,7 @@
 				var nr : TNumeric;
 				nr.fValue.a6 := operand;
 				nr.fType := TNumericType.UInt16;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2657,6 +2835,7 @@
 				var nr : TNumeric;
 				nr.fValue.a7 := operand;
 				nr.fType := TNumericType.UInt32;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2666,6 +2845,7 @@
 				var nr : TNumeric;
 				nr.fValue.a8 := operand;
 				nr.fType := TNumericType.UInt64;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2675,6 +2855,7 @@
 				var nr : TNumeric;
 				nr.fValue.a9 := operand;
 				nr.fType := TNumericType.Single;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2684,6 +2865,7 @@
 				var nr : TNumeric;
 				nr.fValue.a10 := operand;
 				nr.fType := TNumericType.Double;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2693,6 +2875,7 @@
 				var nr : TNumeric;
 				nr.fValue.a11 := operand;
 				nr.fType := TNumericType.AnsiChar;
+				nr.fActiveType := nr.fActiveType + [nr.fType];
 				exit nr;
 			end;
 
@@ -2800,62 +2983,62 @@
 			{1. EXPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := BaseType(myNumeric)}
 			operator Explicit(const operand: TNumeric): Boolean;
 			begin
-				exit operand.fValue.a0;
+				exit CastTo(operand, TNumericType.Boolean);
 			end;
 
 			operator Explicit(const operand: TNumeric): Int8;
 			begin
-				exit operand.fValue.a1;
+				exit CastTo(operand, TNumericType.Int8);
 			end;
 
 			operator Explicit(const operand: TNumeric): Int16;
 			begin
-				exit operand.fValue.a2;
+				exit CastTo(operand, TNumericType.Int16);
 			end;
 
 			operator Explicit(const operand: TNumeric): Int32;
 			begin
-				exit operand.fValue.a3;
+				exit CastTo(operand, TNumericType.Int32);
 			end;
 
 			operator Explicit(const operand: TNumeric): Int64;
 			begin
-				exit operand.fValue.a4;
+				exit CastTo(operand, TNumericType.Int64);
 			end;
 
 			operator Explicit(const operand: TNumeric): UInt8;
 			begin
-				exit operand.fValue.a5;
+				exit CastTo(operand, TNumericType.UInt8);
 			end;
 
 			operator Explicit(const operand: TNumeric): UInt16;
 			begin
-				exit operand.fValue.a6;
+				exit CastTo(operand, TNumericType.UInt16);
 			end;
 
 			operator Explicit(const operand: TNumeric): UInt32;
 			begin
-				exit operand.fValue.a7;
+				exit CastTo(operand, TNumericType.UInt32);
 			end;
 
 			operator Explicit(const operand: TNumeric): UInt64;
 			begin
-				exit operand.fValue.a8;
+				exit CastTo(operand, TNumericType.UInt64);
 			end;
 
 			operator Explicit(const operand: TNumeric): Single;
 			begin
-				exit operand.fValue.a9;
+				exit CastTo(operand, TNumericType.Single);
 			end;
 
 			operator Explicit(const operand: TNumeric): Double;
 			begin
-				exit operand.fValue.a10;
+				exit CastTo(operand, TNumericType.Double);
 			end;
 
 			operator Explicit(const operand: TNumeric): AnsiChar;
 			begin
-				exit operand.fValue.a11;
+				exit CastTo(operand, TNumericType.AnsiChar);
 			end;
 		end;
 end.
