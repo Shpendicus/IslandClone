@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # RemObjects Water
-Project("{00000000-0000-0000-0000-000000000000}") = "ConsoleApplication4", "..\..\..\ConsoleApplication4\ConsoleApplication4.elements", "{CF434A7C-DC21-41E8-B3B8-221B24C45753}"
+Project("{00000000-0000-0000-0000-000000000000}") = "ConsoleApplication", "..\..\..\App\ConsoleApplication.elements", "{860E8230-918A-49C3-9CAB-3256C9F17B59}"
 EndProject
 Project("{656346D9-4656-40DA-A068-22D5425D4639}") = "Island (Windows)", "Island.Windows.elements", "{00BBBADD-8D31-439B-9495-1F35080E299E}"
 EndProject
@@ -13,10 +13,10 @@ Global
 		Release|AnyCPU = Release|AnyCPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CF434A7C-DC21-41E8-B3B8-221B24C45753}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
-		{CF434A7C-DC21-41E8-B3B8-221B24C45753}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
-		{CF434A7C-DC21-41E8-B3B8-221B24C45753}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
-		{CF434A7C-DC21-41E8-B3B8-221B24C45753}.Release|AnyCPU.Build.0 = Release|AnyCPU
+		{860E8230-918A-49C3-9CAB-3256C9F17B59}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
+		{860E8230-918A-49C3-9CAB-3256C9F17B59}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
+		{860E8230-918A-49C3-9CAB-3256C9F17B59}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
+		{860E8230-918A-49C3-9CAB-3256C9F17B59}.Release|AnyCPU.Build.0 = Release|AnyCPU
 		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug|AnyCPU.ActiveCfg = Debug|AnyCPU
 		{00BBBADD-8D31-439B-9495-1F35080E299E}.Debug|AnyCPU.Build.0 = Debug|AnyCPU
 		{00BBBADD-8D31-439B-9495-1F35080E299E}.Release|AnyCPU.ActiveCfg = Release|AnyCPU
