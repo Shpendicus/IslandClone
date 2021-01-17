@@ -17,6 +17,7 @@
     <Optimize>False</Optimize>
     <DefaultGlobalsToPublic>True</DefaultGlobalsToPublic>
     <Architecture>x86_64</Architecture>
+    <SDK>Windows 10.0.19041.0</SDK>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <OutputPath>Bin\Debug</OutputPath>
@@ -31,6 +32,7 @@
     <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
     <GenerateDebugInfo>True</GenerateDebugInfo>
     <Architecture>x86_64</Architecture>
+    <SDK>Windows 10.0.19041.0</SDK>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <OutputPath>Bin\Release</OutputPath>
@@ -45,6 +47,7 @@
     <GenerateDebugInfo>False</GenerateDebugInfo>
     <Optimize>True</Optimize>
     <Architecture>x86_64</Architecture>
+    <SDK>Windows 10.0.19041.0</SDK>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BoehmGC.pas" />
