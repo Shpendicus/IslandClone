@@ -11,17 +11,24 @@ type
     method GetHashCode: Integer;
   end;
 
-  IEquatable<T> = public interface
+  IEquatable<T> = public soft interface   //make them "soft" so no boxing is needed when the compiler detects an Equals(a) or GetHashCode function
     method Equals(other: T): Boolean;
     method GetHashCode: Integer;
   end;
 
-  IComparable<T> = public interface
+  IComparable<T> = public soft interface  //make them "soft" so no boxing is needed when the compiler detects a CompareTo(a) function
     method CompareTo(a: T): Integer;
   end;
 
   IComparable = public interface
     method CompareTo(a: Object): Integer;
+  end;
+
+  ISoftObject<T> = public soft interface
+    //method &Finish;
+    method IsEqual(other: T): Boolean;
+    Property HashCode: Integer read;
+    method AsString: String;
   end;
 
   EqualityComparer = public static class
@@ -64,7 +71,6 @@ type
   private
     fComparator: block(a, b: T): Integer;
   public
-
     constructor (aComparator: block(a, b: T): Integer := nil);
     begin
       fComparator := aComparator;
@@ -89,7 +95,6 @@ type
   private
     fComparator: block(a, b: T): Integer;
   public
-
     constructor();
     begin
     end;

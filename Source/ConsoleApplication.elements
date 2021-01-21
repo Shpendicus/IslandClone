@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <ProductVersion>3.5</ProductVersion>
+    <RootNamespace>ConsoleApplication</RootNamespace>
+    <ProjectGuid>{7C0A83E7-4067-44AC-AAC7-F482F1E1CBAF}</ProjectGuid>
+    <OutputType>Executable</OutputType>
+    <AssemblyName>ConsoleApplication</AssemblyName>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <DefaultUses>RemObjects.Elements.RTL</DefaultUses>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>False</Optimize>
+    <OutputPath>.\Bin\Debug</OutputPath>
+    <ConditionalDefines>DEBUG;TRACE;</ConditionalDefines>
+    <GenerateDebugInfo>True</GenerateDebugInfo>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+    <EnableAsserts>True</EnableAsserts>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>.\Bin\Release</OutputPath>
+    <EnableUnmanagedDebugging>False</EnableUnmanagedDebugging>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="gc">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Island\SDKs\Windows\x86_64\gc.fx</HintPath>
+    </Reference>
+    <Reference Include="rtl">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Island\SDKs\Windows\x86_64\rtl.fx</HintPath>
+    </Reference>
+    <Reference Include="Elements" />
+    <Reference Include="java">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Island\SDKs\Windows\x86_64\java.fx</HintPath>
+    </Reference>
+    <Reference Include="sqlite3">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Island\SDKs\Windows\x86_64\sqlite3.fx</HintPath>
+    </Reference>
+    <Reference Include="winrt">
+      <HintPath>C:\Program Files (x86)\RemObjects Software\Elements\Island\SDKs\Windows\x86_64\winrt.fx</HintPath>
+    </Reference>
+    <ProjectReference Include="Island.Windows">
+      <HintPath>Bin\Debug\Windows\x86_64\Island.fx</HintPath>
+      <Project>{00BBBADD-8D31-439B-9495-1F35080E299E}</Project>
+      <ProjectFile>Island.Windows.elements</ProjectFile>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.pas" />
+    <Compile Include="..\..\..\Numeric.pas" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\RemObjects Software\Elements\RemObjects.Elements.Island.Windows.targets" />
+</Project>

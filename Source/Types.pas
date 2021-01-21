@@ -112,7 +112,8 @@ type
     method GetHashCode: Integer; override; empty; // not callable
   end;
 
-  Boolean = public record(IEquatable<Boolean>, IComparable, IComparable<Boolean>)
+
+  Boolean = public record/*(IEquatable<Boolean>, IComparable, IComparable<Boolean>)*/
   public
     method ToString: String; override;
     method GetHashCode: Integer; override;
@@ -136,9 +137,22 @@ type
       if self then exit 1;
       exit -1;
     end;
+
+    method AsString: String;
+    begin
+      exit TNumeric(self).AsString;
+    end;
+
+    method HashCode: Integer;
+    begin
+      exit TNumeric(self).HashCode;
+    end;
+
+    operator Implicit(const a: TNumeric): Boolean;
+
   end;
 
-  Char = public record(IEquatable<Char>, IComparable, IComparable<Char>)
+  Char = public record//(IEquatable<Char>, IComparable, IComparable<Char>)
   public
     method ToString: String; override;
     method GetHashCode: Integer; override;
@@ -170,7 +184,7 @@ type
     end;
   end;
 
-  AnsiChar = public record(IEquatable<AnsiChar>, IComparable, IComparable<AnsiChar>)
+  AnsiChar = public record//(IEquatable<AnsiChar>, IComparable, IComparable<AnsiChar>)
   public
     method ToString: String; override;
     method GetHashCode: Integer; override;
@@ -214,142 +228,146 @@ type
 
 implementation
 
-method Boolean.ToString: String;
-begin
-  exit if self then 'True' else 'False';
-end;
+  method Boolean.ToString: String;
+  begin
+    exit if self then 'True' else 'False';
+  end;
 
-method Boolean.GetHashCode: Integer;
-begin
-  exit if self then 1 else 0;
-end;
+  method Boolean.GetHashCode: Integer;
+  begin
+    exit if self then 1 else 0;
+  end;
 
-method Boolean.&Equals(obj: Object): Boolean;
-begin
-  if assigned(obj) and (obj is Boolean) then
-    exit self = Boolean(obj)
-  else
-    exit False;
-end;
+  method Boolean.&Equals(obj: Object): Boolean;
+  begin
+    if assigned(obj) and (obj is Boolean) then
+      exit self = Boolean(obj)
+    else
+      exit False;
+  end;
 
-operator Char.&Add(const a, b: Char): Char;
-begin
-  exit Char(ord(a) + ord(b));
-end;
+  operator Boolean.Implicit(const a: TNumeric): Boolean;
+  begin
+    exit Boolean(a);
+  end;
 
-operator Char.&Subtract(const a, b: Char): Char;
-begin
-  exit Char(ord(a) - ord(b));
-end;
+  operator Char.&Add(const a, b: Char): Char;
+  begin
+    exit Char(ord(a) + ord(b));
+  end;
 
-method Char.ToString: String;
-begin
-  exit String(self);
-end;
+  operator Char.&Subtract(const a, b: Char): Char;
+  begin
+    exit Char(ord(a) - ord(b));
+  end;
 
-method Char.GetHashCode: Integer;
-begin
-  exit Integer(self);
-end;
+  method Char.ToString: String;
+  begin
+    exit String(self);
+  end;
 
-method Char.&Equals(obj: Object): Boolean;
-begin
-  if assigned(obj) and (obj is Char) then
-    exit self = Char(obj)
-  else
-    exit False;
-end;
+  method Char.GetHashCode: Integer;
+  begin
+    exit Integer(self);
+  end;
 
-class method Char.IsWhiteSpace(aChar: Char): Boolean;
-begin
-  // from https://msdn.microsoft.com/en-us/library/system.Char.iswhitespace%28v=vs.110%29.aspx
-  exit Word(aChar) in
-        ($0020, $1680, $2000, $2001, $2002, $2003, $2004, $2005, $2006, $2007, $2008, $2009, $200A, $202F, $205F, $3000, //space separators
-         $2028, //Line Separator
-         $2029, //Paragraph Separator
-         $0009, $000A, $000B, $000C, $000D,$0085,$00A0 // other special symbols
-        );
-end;
+  method Char.&Equals(obj: Object): Boolean;
+  begin
+    if assigned(obj) and (obj is Char) then
+      exit self = Char(obj)
+    else
+      exit False;
+  end;
 
-class method Char.IsNumber(aChar: Char): Boolean;
-begin
-  exit aChar in ['0'..'9'];
-end;
+  class method Char.IsWhiteSpace(aChar: Char): Boolean;
+  begin
+    // from https://msdn.microsoft.com/en-us/library/system.Char.iswhitespace%28v=vs.110%29.aspx
+    exit Word(aChar) in
+          ($0020, $1680, $2000, $2001, $2002, $2003, $2004, $2005, $2006, $2007, $2008, $2009, $200A, $202F, $205F, $3000, //space separators
+           $2028, //Line Separator
+           $2029, //Paragraph Separator
+           $0009, $000A, $000B, $000C, $000D,$0085,$00A0 // other special symbols
+          );
+  end;
 
-method Char.ToLower(aInvariant: Boolean := false): Char;
-begin
-  {$HINT Non-Invariant ToLower is not implemented, yet}
-  {$IFDEF WINDOWS}
-  var ch: Char := self;
-  var temp: NativeInt := ord(ch);
-  temp := NativeInt(rtl.CharLower(rtl.LPWSTR(temp)));
-  result := chr(temp);
-  {$ELSEIF POSIX OR WINDOWS}
-  var b := Encoding.UTF32LE.GetBytes(self);
-  var ch := b[0] + (Int32(b[1]) shl 8) + (Int32(b[2]) shl 16) + (Int32(b[3]) shl 24);
-  var u := rtl.towlower(ch);
-  b[0] := u and $ff;
-  b[1] := (u shr 8) and $ff;
-  b[2] := (u shr 16) and $ff;
-  b[3] := (u shr 24) and $ff;
-  result := Encoding.UTF32LE.GetString(b)[0];
-  {$ELSE}
-  var str := String.FromChar(Self).ToLower(aInvariant);
-  if length(str) > 0 then exit str.Item[0];
-  exit #0;
-  {$ENDIF}
-end;
+  class method Char.IsNumber(aChar: Char): Boolean;
+  begin
+    exit aChar in ['0'..'9'];
+  end;
 
-method Char.ToUpper(aInvariant: Boolean := false): Char;
-begin
-  {$HINT Non-Invariant ToUpper is not implemented, yet}
-  {$IFDEF WINDOWS}
-  var ch: Char := self;
-  var temp: NativeInt := ord(ch);
-  temp := NativeInt(rtl.CharUpper(rtl.LPWSTR(temp)));
-  result := chr(temp);
-  {$ELSEIF POSIX OR WINDOWS}
-  var b := Encoding.UTF32LE.GetBytes(self);
-  var ch := b[0] + (Int32(b[1]) shl 8) + (Int32(b[2]) shl 16) + (Int32(b[3]) shl 24);
-  var u := rtl.towupper(ch);
-  b[0] := u and $ff;
-  b[1] := (u shr 8) and $ff;
-  b[2] := (u shr 16) and $ff;
-  b[3] := (u shr 24) and $ff;
-  result := Encoding.UTF32LE.GetString(b)[0];
-  {$ELSE}
-  var str := String.FromChar(Self).ToUpper(aInvariant);
-  if length(str) > 0 then exit str.Item[0];
-  exit #0;
-  {$ENDIF}
-end;
+  method Char.ToLower(aInvariant: Boolean := false): Char;
+  begin
+    {$HINT Non-Invariant ToLower is not implemented, yet}
+    {$IFDEF WINDOWS}
+    var ch: Char := self;
+    var temp: NativeInt := ord(ch);
+    temp := NativeInt(rtl.CharLower(rtl.LPWSTR(temp)));
+    result := chr(temp);
+    {$ELSEIF POSIX OR WINDOWS}
+    var b := Encoding.UTF32LE.GetBytes(self);
+    var ch := b[0] + (Int32(b[1]) shl 8) + (Int32(b[2]) shl 16) + (Int32(b[3]) shl 24);
+    var u := rtl.towlower(ch);
+    b[0] := u and $ff;
+    b[1] := (u shr 8) and $ff;
+    b[2] := (u shr 16) and $ff;
+    b[3] := (u shr 24) and $ff;
+    result := Encoding.UTF32LE.GetString(b)[0];
+    {$ELSE}
+    var str := String.FromChar(Self).ToLower(aInvariant);
+    if length(str) > 0 then exit str.Item[0];
+    exit #0;
+    {$ENDIF}
+  end;
 
-method AnsiChar.ToString: String;
-begin
-  exit String(Char(self));
-end;
+  method Char.ToUpper(aInvariant: Boolean := false): Char;
+  begin
+    {$HINT Non-Invariant ToUpper is not implemented, yet}
+    {$IFDEF WINDOWS}
+    var ch: Char := self;
+    var temp: NativeInt := ord(ch);
+    temp := NativeInt(rtl.CharUpper(rtl.LPWSTR(temp)));
+    result := chr(temp);
+    {$ELSEIF POSIX OR WINDOWS}
+    var b := Encoding.UTF32LE.GetBytes(self);
+    var ch := b[0] + (Int32(b[1]) shl 8) + (Int32(b[2]) shl 16) + (Int32(b[3]) shl 24);
+    var u := rtl.towupper(ch);
+    b[0] := u and $ff;
+    b[1] := (u shr 8) and $ff;
+    b[2] := (u shr 16) and $ff;
+    b[3] := (u shr 24) and $ff;
+    result := Encoding.UTF32LE.GetString(b)[0];
+    {$ELSE}
+    var str := String.FromChar(Self).ToUpper(aInvariant);
+    if length(str) > 0 then exit str.Item[0];
+    exit #0;
+    {$ENDIF}
+  end;
 
-operator AnsiChar.&Add(const a, b: AnsiChar): AnsiChar;
-begin
-  exit AnsiChar(ord(a) + ord(b));
-end;
+  method AnsiChar.ToString: String;
+  begin
+    exit String(Char(self));
+  end;
 
-operator AnsiChar.&Subtract(const a, b: AnsiChar): AnsiChar;
-begin
-  exit AnsiChar(ord(a) - ord(b));
-end;
+  operator AnsiChar.&Add(const a, b: AnsiChar): AnsiChar;
+  begin
+    exit AnsiChar(ord(a) + ord(b));
+  end;
 
-method AnsiChar.GetHashCode: Integer;
-begin
-  exit Integer(self);
-end;
+  operator AnsiChar.&Subtract(const a, b: AnsiChar): AnsiChar;
+  begin
+    exit AnsiChar(ord(a) - ord(b));
+  end;
 
-method AnsiChar.&Equals(obj: Object): Boolean;
-begin
-  if assigned(obj) and (obj is AnsiChar) then
-    exit self = AnsiChar(obj)
-  else
-    exit False;
-end;
+  method AnsiChar.GetHashCode: Integer;
+  begin
+    exit Integer(self);
+  end;
 
+  method AnsiChar.&Equals(obj: Object): Boolean;
+  begin
+    if assigned(obj) and (obj is AnsiChar) then
+      exit self = AnsiChar(obj)
+    else
+      exit False;
+  end;
 end.
