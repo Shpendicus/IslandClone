@@ -5,7 +5,7 @@
                                    UInt8, UInt16, UInt32, UInt64, Single, Double, Digital) of Byte;
 
     TOperationToken = public enum (&Add, Subtract, Multiply, Divide, Modulus, BitwiseAnd,
-                                    GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less); //can be expanded ofc with logical operators
+                                   GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less) of Byte; //can be expanded ofc with logical operators
 
     //TCharSet = set of ['a'..'z', 'A.'..'Z', '0'..'9'];
 
@@ -25,7 +25,7 @@
       a11: AnsiChar;
     end;
 
-    TNumeric = public record(IComparable<TNumeric>, IEquatable<TNumeric>)
+    TNumeric = public record(IComparable<TNumeric>)
     unit
       fValue: TValue;
       fType: TNumericType;
@@ -1425,7 +1425,7 @@
           raise new ArgumentException("You cannot use arithemtical operations on this type!");
       end;
 
-      //-----------------------------------------------------------------------------------------------------//
+
       //LOGICAL OPERATION------------------------------------------------------------------------------------------
       method LogicalOperation(const operand1, operand2: TNumeric; token: TOperationToken): TNumeric; static;
       begin
@@ -2606,18 +2606,18 @@
       method AsString: String;
       begin
         case fType of
-          TNumericType.Boolean: exit if fValue.a0 then "TRUE" else "FALSE";
-          TNumericType.Int8:    exit fValue.a1.ToString();
-          TNumericType.Int16:   exit fValue.a2.ToString();
-          TNumericType.Int32:   exit fValue.a3.ToString();
-          TNumericType.Int64:   exit fValue.a4.ToString();
-          TNumericType.UInt8:   exit fValue.a5.ToString();
-          TNumericType.UInt16:  exit fValue.a6.ToString();
-          TNumericType.UInt32:  exit fValue.a7.ToString();
-          TNumericType.UInt64:  exit fValue.a8.ToString();
-          TNumericType.Single:  exit fValue.a9.ToString();
-          TNumericType.Double:  exit fValue.a10.ToString();
-          TNumericType.AnsiChar:  exit fValue.a11.ToString;
+          TNumericType.Boolean:   exit fValue.a0.AsString;
+          TNumericType.Int8:      exit fValue.a1.AsString;
+          TNumericType.Int16:     exit fValue.a2.AsString;
+          TNumericType.Int32:     exit fValue.a3.AsString;
+          TNumericType.Int64:     exit fValue.a4.AsString;
+          TNumericType.UInt8:     exit fValue.a5.AsString;
+          TNumericType.UInt16:    exit fValue.a6.AsString;
+          TNumericType.UInt32:    exit fValue.a7.AsString;
+          TNumericType.UInt64:    exit fValue.a8.AsString;
+          TNumericType.Single:    exit fValue.a9.AsString;
+          TNumericType.Double:    exit fValue.a10.AsString;
+          TNumericType.AnsiChar:  exit fValue.a11.AsString;
         end;
       end;
 
@@ -2810,6 +2810,7 @@
         nr.fType := TNumericType.AnsiChar;
         exit nr;
       end;
+
 
 
       {2. EXPLICIT CONVERSION FROM:  BaseType to TNumeric  --> "var b: TNumeric := BaseType(operand.fValue)"}

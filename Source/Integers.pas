@@ -66,9 +66,10 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property HashCode: Integer;
+        property HashCode: Integer read self;
         method IsEqual(other: SByte): Boolean;
       end;
+
 
       Byte = public record/*(IEquatable<SByte>, IComparable, IComparable<SByte>)*/
       private
@@ -111,11 +112,6 @@
         const MinValue: Byte = $0;
         const MaxValue: Byte = $ff;
 
-        method &Equals(other: Byte): Boolean;
-        begin
-          exit self = other;
-        end;
-
         method CompareTo(a: Object): Integer;
         begin
           if a is Byte then
@@ -132,9 +128,10 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property HashCode: Integer;
+        property HashCode: Integer read self;
         method IsEqual(other: Byte): Boolean;
       end;
+
 
       Int16 = public record/*(IEquatable<SByte>, IComparable, IComparable<SByte>)*/
       private
@@ -198,7 +195,7 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property HashCode: Integer;
+        property HashCode: Integer read self;
         method IsEqual(other: Int16): Boolean;
       end;
 
@@ -241,11 +238,6 @@
 
         const MinValue: UInt16 = $0;
         const MaxValue: UInt16 = $ffff;
-
-        method &Equals(other: UInt16): Boolean;
-        begin
-          exit self = other;
-        end;
 
         method CompareTo(a: Object): Integer;
         begin
@@ -329,9 +321,10 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property HashCode: Integer;
+        property HashCode: Integer read self;
         method IsEqual(other: Int32): Boolean;
       end;
+
 
       UInt32 = public record/*(IEquatable<SByte>, IComparable, IComparable<SByte>)*/
       private
@@ -373,10 +366,6 @@
         const MinValue: UInt32 = 0;
         const MaxValue: UInt32 = $ffffffff;
 
-        method &Equals(other: UInt32): Boolean;
-        begin
-          exit self = other;
-        end;
 
         method CompareTo(a: Object): Integer;
         begin
@@ -394,9 +383,10 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property HashCode: Integer;
+        property HashCode: Integer read self;
         method IsEqual(other: UInt32): Boolean;
       end;
+
 
       Int64 = public record/*(IEquatable<SByte>, IComparable, IComparable<SByte>)*/
       private
@@ -434,11 +424,6 @@
         const MinValue: Int64 = $8000000000000000;
         const MaxValue: Int64 = $7fffffffffffffff;
 
-        method &Equals(other: Int64): Boolean;
-        begin
-          exit self = other;
-        end;
-
         method CompareTo(a: Object): Integer;
         begin
           if a is Int64 then
@@ -455,12 +440,12 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property HashCode: Integer;
+        property HashCode: Integer  read Integer(Self xor (Self shr 32) * 7);
         method IsEqual(other: Int64): Boolean;
-
       end;
 
-      UInt64 = public record(IEquatable<UInt64>, IComparable, IComparable<UInt64>)
+
+      UInt64 = public record//(IEquatable<UInt64>, IComparable, IComparable<UInt64>)
       private
         class method DoTryParse(s: String; out Value: UInt64; aRaiseOverflowException: Boolean):Boolean;inline;
         begin
@@ -495,11 +480,6 @@
         const MinValue: UInt64 = $0;
         const MaxValue: UInt64 = $ffffffffffffffff;
 
-        method &Equals(other: UInt64): Boolean;
-        begin
-          exit self = other;
-        end;
-
         method CompareTo(a: Object): Integer;
         begin
           if a is UInt64 then
@@ -516,9 +496,10 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property HashCode: Integer;
+        property HashCode: Integer read Integer(Self xor (Self shr 32) * 7);
         method IsEqual(other: UInt64): Boolean;
       end;
+
 
       NativeInt = public record/*(IEquatable<SByte>, IComparable, IComparable<SByte>)*/
       private
@@ -566,7 +547,6 @@
             exit False;
         end;
 
-
         class method Parse(s: String): NativeInt;
         begin
           if not DoTryParse(s, out result, true) then Convert.RaiseFormatException;
@@ -579,11 +559,6 @@
 
         const MinValue: NativeInt = {$IFDEF cpu64}$8000000000000000{$ELSE}$80000000{$ENDIF};
         const MaxValue: NativeInt = {$IFDEF cpu64}$7fffffffffffffff{$ELSE}$7fffffff{$ENDIF};
-
-        method &Equals(other: NativeInt): Boolean;
-        begin
-          exit self = other;
-        end;
 
         method CompareTo(a: Object): Integer;
         begin
@@ -601,10 +576,10 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property GetHashCode: Integer;
+        property HashCode: Integer read Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
         method IsEqual(other: NativeInt): Boolean;
-
       end;
+
 
       NativeUInt = public record/*(IEquatable<SByte>, IComparable, IComparable<SByte>)*/
       private
@@ -657,11 +632,6 @@
         const MinValue: NativeUInt = $0;
         const MaxValue: NativeUInt = {$IFDEF cpu64}$ffffffffffffffff{$ELSE}$ffffffff{$ENDIF};
 
-        method &Equals(other: NativeUInt): Boolean;
-        begin
-          exit self = other;
-        end;
-
         method CompareTo(a: Object): Integer;
         begin
           if a is NativeUInt then
@@ -678,7 +648,7 @@
 
         //ISoftObject<SByte> implementation! without actually implementing the Interface
         method AsString: String;
-        property HashCode: Integer;
+        property HashCode: Integer read Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
         method IsEqual(other: NativeUInt): Boolean;
      end;
 
@@ -687,6 +657,7 @@
 
 implementation
 
+/*
   property SByte.HashCode: Integer read self;
 
   property Byte.HashCode: Integer read self;
@@ -706,11 +677,13 @@ implementation
   property NativeInt.HashCode: Integer read Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
 
   property NativeUInt.HashCode: Integer read Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
+*/
 
 {----------------------------------------------------------------------------------------}
 
   method Int64.AsString: String;
   begin
+    result := ('DirectCall to Int64 tostring version');
     if self = 0 then exit '0';
     var lBuffer: array[0..50] of Char;
     var i := 50;
@@ -732,6 +705,7 @@ implementation
 
   method UInt64.AsString: String;
   begin
+    result := ('DirectCall to Int64 tostring version');
     if self = 0 then exit '0';
     var lBuffer: array[0..50] of Char;
     var i := 50;

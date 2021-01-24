@@ -5,6 +5,8 @@ type
   public
     class method Main(args: array of String): Int32;
     begin
+      //var pair : tuple of (String, Integer) := ("memberName", 1000);
+      //writeLn(pair.ToString);
       var a := 100;
       var b : TNumeric := 100;
       writeLn(a is IEquatable<TNumeric>); //correct output: FALSE
@@ -28,9 +30,18 @@ type
       //Method "method Equals(other: Boolean): Boolean" not implemented as required for interface "IEquatable<Boolean>" [C:\Users\shho3\Desktop\Numeric.pas (28)]
       //which is correct ofc, since IEquatable<TNumeric> is smth completly different than IEquatable<Boolean>
       //Idk now, strange that happens..
-      Test_DucktypingFromClasses(SByte(100));
+      var enumValue := TEnum.d;
+      var v := enumValue.HashCode;
+      writeLn(v);
+      writeLn(sizeOf(v));
+      Test;
+      //Test_DucktypingFromClasses_1<&Enum>(enumValue);
     end;
-
+    class method Test;
+    begin
+      var pair : tuple of (String, TNumeric) := ("Hi", 1000);
+      writeLn(pair.ToString);
+    end;
     class method Test_Softinterfaces<T>(const a, b: IEquatable<T>);
     begin
       writeLn(a.Equals(b));
@@ -38,15 +49,19 @@ type
       //writeLn(b.GetHashCode);
     end;
 
-    class method Test_DucktypingFromClasses(const a: ISoftObject<Byte>);
+    class method Test_DucktypingFromClasses_0<T>(const a, b: ISoftObject<T>);
     begin
-      writeLn(a.AsString);
+      var v := a.IsEqual(T(TEnum.c));
+      writeLn(v);
     end;
 
+    class method Test_DucktypingFromClasses_1<T>(const a: ISoftObject<T>);
+    begin
+      var v := a.AsString;
+      writeLn(v);
+    end;
   end;
 
-  IEquatable<T> = public soft interface   //make them "soft" so no boxing is needed when the compiler detects an Equals(a) or GetHashCode function
-    method &Equals(other: T): Boolean;
-    method GetHashCode: Integer;
-  end;
+  //TEnum = enum (a=1, b=234, c=34, d=89) of Byte;
+  TEnum = enum(a, b, c, d=100) of Byte;
 end.

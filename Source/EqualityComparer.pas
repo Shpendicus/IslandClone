@@ -27,7 +27,7 @@ type
   ISoftObject<T> = public soft interface
     //method &Finish;
     method IsEqual(other: T): Boolean;
-    Property HashCode: Integer read;
+    Property HashCode: TNumeric read;
     method AsString: String;
   end;
 
