@@ -22,17 +22,17 @@ type
   ValueType = public abstract class
   end;
 
-  DummyEnum = class(&Enum)
+  DummyEnum = assembly class(&Enum)
     public fValue: Int64;
   end;
 
-  &Enum2 = public record(ISoftObject<&Enum>)//(IEquatable<&Enum>, IComparable<&Enum>)
+  &Enum2 = public extension record(TNumeric)//(IEquatable<&Enum>, IComparable<&Enum>)
   public
       property EnumSize: Integer
         read self.GetType.SizeOfType;
 
       {ISoftObject<Enum> implementation aka NO heapallocation?}
-      method AsString: String;
+      method AsString_1: String;
       begin
         var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
         var memberName := self.GetType.Constants.FirstOrDefault(a -> a.IsStatic and (a.Value = lSelf.fValue)):Name;
@@ -44,7 +44,7 @@ type
         //if result = nil then exit lSelf.fValue.AsString;
       end;
 
-      property HashCode: TNumeric
+      property HashCode_1: TNumeric
         read begin
           var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
           writeLn("Here the value of the lSelf is: " + lSelf.fValue.AsString);
@@ -57,7 +57,7 @@ type
           end;
         end;
 
-    method IsEqual(other: &Enum): Boolean;
+    method IsEqual_1(other: &Enum): Boolean;
     begin
       case EnumSize of
         1: begin
@@ -81,29 +81,6 @@ type
           exit lSelf.fValue = lOther.fValue;
         end;
       end;
-    end;
-
-    //Object - Code aka Boxing code//
-    method ToString: String; override;
-    begin
-      exit AsString;
-    end;
-
-    method &Equals(aOther: Object): Boolean; override;
-    begin
-      exit (aOther = nil) and not (aOther.GetType = GetType) and IsEqual(&Enum(aOther));
-    end;
-
-    method GetHashCode: Integer; override;
-    begin
-      exit Integer(HashCode);
-    end;
-
-    method CompareTo(a: &Enum): Integer;
-    begin
-      var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-      var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(a));
-      exit lSelf.fValue.CompareTo(lOther.fValue);
     end;
   end;
 

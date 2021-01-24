@@ -2,7 +2,7 @@
 
   type
     TNumericType    = public enum (Boolean, Int8, Int16, Int32, Int64, AnsiChar,
-                                   UInt8, UInt16, UInt32, UInt64, Single, Double, Digital) of Byte;
+                                   UInt8, UInt16, UInt32, UInt64, Single, Double, &Enum) of Byte;
 
     TOperationToken = public enum (&Add, Subtract, Multiply, Divide, Modulus, BitwiseAnd,
                                    GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less) of Byte; //can be expanded ofc with logical operators
@@ -23,6 +23,7 @@
       a9: Single;
       a10:Double;
       a11: AnsiChar;
+      a12: DummyEnum;
     end;
 
     TNumeric = public record(IComparable<TNumeric>)
@@ -2811,7 +2812,14 @@
         exit nr;
       end;
 
-
+      operator Implicit(const operand: &Enum): TNumeric;
+      begin
+         //var myNumber : Number := 100;
+        var nr : TNumeric;
+        nr.fValue.a12 := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(operand));
+        nr.fType := TNumericType.Enum;
+        exit nr;
+      end;
 
       {2. EXPLICIT CONVERSION FROM:  BaseType to TNumeric  --> "var b: TNumeric := BaseType(operand.fValue)"}
       operator Explicit(const operand: Int8): TNumeric;
@@ -2910,6 +2918,15 @@
         var nr : TNumeric;
         nr.fValue.a11 := operand;
         nr.fType := TNumericType.AnsiChar;
+        exit nr;
+      end;
+
+      operator Explicit(const operand: &Enum): TNumeric;
+      begin
+         //var myNumber : Number := 100;
+        var nr : TNumeric;
+        nr.fValue.a12 := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(operand));
+        nr.fType := TNumericType.Enum;
         exit nr;
       end;
 

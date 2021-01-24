@@ -31,17 +31,15 @@ type
       //which is correct ofc, since IEquatable<TNumeric> is smth completly different than IEquatable<Boolean>
       //Idk now, strange that happens..
       var enumValue := TEnum.d;
+      var s: TNumeric := TEnum.b;
+      writeLn(s);
+      var v1 := s.AsString_1;
+
       var v := enumValue.HashCode;
-      writeLn(v);
-      writeLn(sizeOf(v));
-      Test;
+
       //Test_DucktypingFromClasses_1<&Enum>(enumValue);
     end;
-    class method Test;
-    begin
-      var pair : tuple of (String, TNumeric) := ("Hi", 1000);
-      writeLn(pair.ToString);
-    end;
+
     class method Test_Softinterfaces<T>(const a, b: IEquatable<T>);
     begin
       writeLn(a.Equals(b));
