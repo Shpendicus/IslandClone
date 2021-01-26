@@ -61,7 +61,7 @@ type
 
     method &Equals(aOther: Object): Boolean; override;
     begin
-      exit (aOther = nil) and not (aOther.GetType = GetType) and Equals(&Enum(aOther));
+      exit (aOther = nil) and not (aOther.GetType = GetType) and &Equals(&Enum(aOther));
     end;
 
     method Equals(other: &Enum): Boolean;

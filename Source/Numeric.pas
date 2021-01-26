@@ -2,7 +2,7 @@
 
   type
     TNumericType    = public enum (Boolean, Int8, Int16, Int32, Int64, AnsiChar,
-                                   UInt8, UInt16, UInt32, UInt64, Single, Double, &Enum) of Byte;
+                                   UInt8, UInt16, UInt32, UInt64, Single, Double, &Enum, Currency) of Byte;
 
     TOperationToken = public enum (&Add, Subtract, Multiply, Divide, Modulus, BitwiseAnd,
                                    GreaterOrEqual, Greater, Equal, NotEqual, LessOrEqual, Less) of Byte; //can be expanded ofc with logical operators
@@ -23,11 +23,29 @@
       a9: Single;
       a10:Double;
       a11: AnsiChar;
-      a12: &Enum ;
+      a12: &Enum;
+      a13: Currency;
+    end;
+    [Union]
+    TValue = record
+      a0: Boolean;
+      a1: Int8;
+      a2: Int16;
+      a3: Int32;
+      a4: Int64;
+      a5: UInt8;
+      a6: UInt16;
+      a7: UInt32;
+      a8: UInt64;
+      a9: Single;
+      a10:Double;
+      a11: AnsiChar;
+      a12: &Enum;
+      a13: Currency;
     end;
 
     TNumeric = public record(IComparable<TNumeric>)
-    assembly
+    public
       fValue: TValue;
       fType: TNumericType;
 
@@ -54,6 +72,14 @@
                   TNumericType.Single:  exit T(Single(operand.fValue.a1));
                   TNumericType.Double:  exit T(Double(operand.fValue.a1));
                   TNumericType.AnsiChar:exit T(AnsiChar(operand.fValue.a1));
+                  //TNumericType.Currency: exit T(Currency(operand.fValue.a1));
+                  {
+
+                    operator Explicit(const operand: TNumeric): Currency;
+                    begin
+                      exit Cast<Currency>(operand) &To(TNumericType.Currency);
+                    end;
+                  }
                 end;
               end;
               TNumericType.Int16:
@@ -69,6 +95,7 @@
                   TNumericType.UInt64:  exit T(UInt8(operand.fValue.a2));
                   TNumericType.Single:  exit T(Single(operand.fValue.a2));
                   TNumericType.Double:  exit T(Double(operand.fValue.a2));
+                  //TNumericType.Currency: exit T(Currency(operand.fValue.a1));
                 end;
               end;
               TNumericType.Int32:
@@ -2840,6 +2867,16 @@
         exit nr;
       end;
 
+
+      operator Implicit(const operand: Currency): TNumeric;
+      begin
+          //var myNumber : Number := 100;
+        var nr : TNumeric;
+        nr.fValue.a13 := operand;
+        nr.fType := TNumericType.Currency;
+        exit nr;
+      end;
+
       {2. EXPLICIT CONVERSION FROM:  BaseType to TNumeric  --> "var b: TNumeric := BaseType(operand.fValue)"}
       operator Explicit(const operand: Int8): TNumeric;
       begin
@@ -2949,6 +2986,16 @@
         exit nr;
       end;
 
+      operator Explicit(const operand: Currency): TNumeric;
+      begin
+        //var myNumber : Number := 100;
+        var nr : TNumeric;
+        nr.fValue.a13 := operand;
+        nr.fType := TNumericType.Currency;
+        exit nr;
+      end;
+
+
       {1. EXPLICIT CONVERSION FROM:  TNumeric to BaseType => var bt: BaseType := BaseType(myNumeric)}
       operator Explicit(const operand: TNumeric): Boolean;
       begin
@@ -3009,6 +3056,11 @@
       begin
         exit Cast<AnsiChar>(operand) &To(TNumericType.AnsiChar);
       end;
+
+      operator Explicit(const operand: TNumeric): Currency;
+      begin
+        exit Cast<Currency>(operand) &To(TNumericType.Currency);
+      end;
     end;
 
     TEnumeric = unit record(TNumeric)
@@ -3039,16 +3091,16 @@
       end;
 
       property HashCode: TNumeric
-        read begin
-          var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
+      read begin
+        var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
 
-          case EnumSize of
-            1: exit ^Byte(@lSelf.fValue)^;
-            2: exit ^Word(@lSelf.fValue)^;
-            4: exit ^Int32(@lSelf.fValue)^;
-            8: exit ^Int64(@lSelf.fValue)^;
-          end;
+        case EnumSize of
+          1: exit ^Byte(@lSelf.fValue)^;
+          2: exit ^Word(@lSelf.fValue)^;
+          4: exit ^Int32(@lSelf.fValue)^;
+          8: exit ^Int64(@lSelf.fValue)^;
         end;
+      end;
 
       method IsEqual(other: TEnumeric): Boolean;
       begin

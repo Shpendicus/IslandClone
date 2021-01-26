@@ -656,31 +656,6 @@
     UIntPtr = public NativeUInt;
 
 implementation
-
-/*
-  property SByte.HashCode: Integer read self;
-
-  property Byte.HashCode: Integer read self;
-
-  property Int16.HashCode: Integer  read self;
-
-  property UInt16.HashCode: Integer read self;
-
-  property Int32.HashCode: Integer  read self;
-
-  property UInt32.HashCode: Integer read self;
-
-  property Int64.HashCode: Integer  read Integer(Self xor (Self shr 32) * 7);
-
-  property UInt64.HashCode: Integer read Integer(Self xor (Self shr 32) * 7);
-
-  property NativeInt.HashCode: Integer read Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
-
-  property NativeUInt.HashCode: Integer read Integer({$ifdef cpu64}Self xor (Self shr 32) * 7{$else}Self{$endif});
-*/
-
-{----------------------------------------------------------------------------------------}
-
   method Int64.AsString: String;
   begin
     result := ('DirectCall to Int64 tostring version');
