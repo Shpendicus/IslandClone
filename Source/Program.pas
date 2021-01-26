@@ -24,42 +24,25 @@ type
                                            //but not for TNumeric values, as above: IEquatable<TNumeric> allows for both, boolean AND TNumeric values
                                            //which confuses me abit, tbh.
 
+                                            //OK: here is the thing: I get an internal Error when using the TNumeric from custom Island.Shared
+                                            //BUT: When I copy the EXACT same file in the isolated ConsoleApp and use it in EXACT SAME WAY i get only:
+                                            //Method "method Equals(other: Boolean): Boolean" not implemented as required for interface "IEquatable<Boolean>" [C:\Users\shho3\Desktop\Numeric.pas (28)]
+                                            //which is correct ofc, since IEquatable<TNumeric> is smth completly different than IEquatable<Boolean>
+                                            //Idk now, strange that happens..
 
-      //OK: here is the thing: I get an internal Error when using the TNumeric from custom Island.Shared
-      //BUT: When I copy the EXACT same file in the isolated ConsoleApp and use it in EXACT SAME WAY i get only:
-      //Method "method Equals(other: Boolean): Boolean" not implemented as required for interface "IEquatable<Boolean>" [C:\Users\shho3\Desktop\Numeric.pas (28)]
-      //which is correct ofc, since IEquatable<TNumeric> is smth completly different than IEquatable<Boolean>
-      //Idk now, strange that happens..
-      var enumValue := TEnum.d;
-      var s: TNumeric := TEnum.b;
-      writeLn(s);
-      var v1 := s.AsString_1;
+      var s: TNumeric := TEnum.d;
 
-      var v := enumValue.HashCode;
-
-      //Test_DucktypingFromClasses_1<&Enum>(enumValue);
+      Test_DucktypingFromClasses_1(s);
     end;
 
-    class method Test_Softinterfaces<T>(const a, b: IEquatable<T>);
+    class method Test_DucktypingFromClasses_1(const a: TNumeric);
     begin
-      writeLn(a.Equals(b));
-      //writeLn(a.GetHashCode);
-      //writeLn(b.GetHashCode);
-    end;
-
-    class method Test_DucktypingFromClasses_0<T>(const a, b: ISoftObject<T>);
-    begin
-      var v := a.IsEqual(T(TEnum.c));
-      writeLn(v);
-    end;
-
-    class method Test_DucktypingFromClasses_1<T>(const a: ISoftObject<T>);
-    begin
-      var v := a.AsString;
-      writeLn(v);
+      var d := (a.AsString);
+      writeLn(d);
+      //writeLn(a.HashCode);
     end;
   end;
 
   //TEnum = enum (a=1, b=234, c=34, d=89) of Byte;
-  TEnum = enum(a, b, c, d=100) of Byte;
+  TEnum = enum(a=2, b=23, c=34, d=107) of Byte;
 end.

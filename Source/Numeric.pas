@@ -23,11 +23,11 @@
       a9: Single;
       a10:Double;
       a11: AnsiChar;
-      a12: DummyEnum;
+      a12: &Enum ;
     end;
 
     TNumeric = public record(IComparable<TNumeric>)
-    unit
+    assembly
       fValue: TValue;
       fType: TNumericType;
 
@@ -2619,27 +2619,46 @@
           TNumericType.Single:    exit fValue.a9.AsString;
           TNumericType.Double:    exit fValue.a10.AsString;
           TNumericType.AnsiChar:  exit fValue.a11.AsString;
+          TNumericType.Enum:
+          begin
+            var t0: TEnumeric := self.fValue.a12;
+            exit t0.AsString;
+          end;
         end;
       end;
 
       method HashCode: Integer;
       begin
-        exit 3847348; //just some rndVal;
+        case fType of
+          TNumericType.Boolean:   exit fValue.a0.HashCode;
+          TNumericType.Int8:      exit fValue.a1.HashCode;
+          TNumericType.Int16:     exit fValue.a2.HashCode;
+          TNumericType.Int32:     exit fValue.a3.HashCode;
+          TNumericType.Int64:     exit fValue.a4.HashCode;
+          TNumericType.UInt8:     exit fValue.a5.HashCode;
+          TNumericType.UInt16:    exit fValue.a6.HashCode;
+          TNumericType.UInt32:    exit fValue.a7.HashCode;
+          TNumericType.UInt64:    exit fValue.a8.HashCode;
+
+         { TNumericType.Single:    exit fValue.a9.HashCode;
+          TNumericType.Double:    exit fValue.a10.HashCode;
+          TNumericType.AnsiChar:  exit fValue.a11.HashCode;}
+        end;
       end;
 
       method &Equals(other: TNumeric): Boolean;
       begin
-        exit false;//self.fValue = other.fValue; --> look at this line here later
+        exit self = other;
       end;
 
       method CompareTo(a: TNumeric): Integer;
       begin
-        exit 0;
-        {
-        if self = a then exit 0
-        else if self < a then exit -1
-        else exit 1;
-        }
+        if self = a
+          then exit 0
+        else if self < a
+          then exit -1
+        else
+          exit 1;
       end;
 
       //ARITHEMETIC OPERATOR
@@ -2674,32 +2693,32 @@
       end;
 
       //Logical OPERATOR
-      operator Greater(const operand1, operand2: TNumeric): TNumeric;
+      operator Greater(const operand1, operand2: TNumeric): Boolean;
       begin
         exit LogicalOperation(operand1, operand2, TOperationToken.Greater);
       end;
 
-      operator GreaterOrEqual(const operand1, operand2: TNumeric): TNumeric;
+      operator GreaterOrEqual(const operand1, operand2: TNumeric): Boolean;
       begin
         exit LogicalOperation(operand1, operand2, TOperationToken.GreaterOrEqual);
       end;
 
-      operator Less(const operand1, operand2: TNumeric): TNumeric;
+      operator Less(const operand1, operand2: TNumeric): Boolean;
       begin
         exit LogicalOperation(operand1, operand2, TOperationToken.Less);
       end;
 
-      operator LessOrEqual(const operand1, operand2: TNumeric): TNumeric;
+      operator LessOrEqual(const operand1, operand2: TNumeric): Boolean;
       begin
         exit LogicalOperation(operand1, operand2, TOperationToken.LessOrEqual);
       end;
 
-      operator Equal(const operand1, operand2: TNumeric): TNumeric;
+      operator Equal(const operand1, operand2: TNumeric): Boolean;
       begin
         exit LogicalOperation(operand1, operand2, TOperationToken.Equal);
       end;
 
-      operator NotEqual(const operand1, operand2: TNumeric): TNumeric;
+      operator NotEqual(const operand1, operand2: TNumeric): Boolean;
       begin
         exit LogicalOperation(operand1, operand2, TOperationToken.NotEqual);
       end;
@@ -2814,9 +2833,9 @@
 
       operator Implicit(const operand: &Enum): TNumeric;
       begin
-         //var myNumber : Number := 100;
+          //var myNumber : Number := 100;
         var nr : TNumeric;
-        nr.fValue.a12 := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(operand));
+        nr.fValue.a12 := operand;
         nr.fType := TNumericType.Enum;
         exit nr;
       end;
@@ -2925,7 +2944,7 @@
       begin
          //var myNumber : Number := 100;
         var nr : TNumeric;
-        nr.fValue.a12 := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(operand));
+        nr.fValue.a12 := operand;
         nr.fType := TNumericType.Enum;
         exit nr;
       end;
@@ -2989,6 +3008,86 @@
       operator Explicit(const operand: TNumeric): AnsiChar;
       begin
         exit Cast<AnsiChar>(operand) &To(TNumericType.AnsiChar);
+      end;
+    end;
+
+    TEnumeric = unit record(TNumeric)
+    unit
+      fEnum: &Enum;
+    public
+      property EnumSize: Integer
+        read fEnum.GetType.SizeOfType;
+
+        {ISoftObject<Enum> implementation aka NO heapallocation?}
+      method AsString: String;
+      begin
+        var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(fEnum));
+        var lValue: Int64 := 0;
+
+        case EnumSize of
+          1: lValue := ^Byte(@lSelf.fValue)^;
+          2: lValue := ^Word(@lSelf.fValue)^;
+          4: lValue := ^Int32(@lSelf.fValue)^;
+          8: lValue := lSelf.fValue;
+        end;
+
+        //GetType can also be put in TNumeric for performance reasons!
+        result := fEnum.GetType.Constants.FirstOrDefault(a -> a.IsStatic and (Convert.ToInt64(a.Value) = lValue)):Name;
+        result := "(" + result + "," + lValue.AsString + ")";
+
+        if result = nil then exit lValue.AsString;
+      end;
+
+      property HashCode: TNumeric
+        read begin
+          var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
+
+          case EnumSize of
+            1: exit ^Byte(@lSelf.fValue)^;
+            2: exit ^Word(@lSelf.fValue)^;
+            4: exit ^Int32(@lSelf.fValue)^;
+            8: exit ^Int64(@lSelf.fValue)^;
+          end;
+        end;
+
+      method IsEqual(other: TEnumeric): Boolean;
+      begin
+        case EnumSize of
+          1: begin
+            var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
+            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
+            exit ^Byte(@lSelf.fValue)^ = ^Byte(@lOther.fValue)^;
+          end;
+          2: begin
+            var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
+            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
+            exit ^Int16(@lSelf.fValue)^ = ^Int16(@lOther.fValue)^;
+          end;
+          4: begin
+            var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
+            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
+            exit ^Int32(@lSelf.fValue)^ = ^Int32(@lOther.fValue)^;
+          end;
+          8: begin
+            var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
+            var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
+            exit lSelf.fValue = lOther.fValue;
+          end;
+        end;
+      end;
+
+      operator Implicit(const operand: &Enum): TEnumeric;
+      begin
+         //var myNumber : TEnumeric := TEnum.Bla;
+        var nr : TEnumeric;
+        nr.fEnum := operand;
+        exit nr;
+      end;
+
+      operator Explicit(const operand: TEnumeric): &Enum;
+      begin
+         //var myNumber : TEnumeric := TEnum.Bla;
+        exit operand.fEnum;
       end;
     end;
 end.

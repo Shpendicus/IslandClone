@@ -26,84 +26,28 @@ type
     public fValue: Int64;
   end;
 
-  &Enum2 = public extension record(TNumeric)//(IEquatable<&Enum>, IComparable<&Enum>)
-  public
-      property EnumSize: Integer
-        read self.GetType.SizeOfType;
-
-      {ISoftObject<Enum> implementation aka NO heapallocation?}
-      method AsString_1: String;
-      begin
-        var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-        var memberName := self.GetType.Constants.FirstOrDefault(a -> a.IsStatic and (a.Value = lSelf.fValue)):Name;
-        //result := result.AllocString(1 + memberName.Length + 1 + 1 + lValue.AsString.Length + 1);
-        //the result enum shall look like this: (NAME, VALUE) => (A, 23);
-        {var pair : tuple of (String, Int64) := (memberName, lSelf.fValue);
-        result := pair.ToString();}
-        result := memberName;
-        //if result = nil then exit lSelf.fValue.AsString;
-      end;
-
-      property HashCode_1: TNumeric
-        read begin
-          var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-          writeLn("Here the value of the lSelf is: " + lSelf.fValue.AsString);
-
-          case EnumSize of
-            1: exit ^Byte(@lSelf.fValue)^;
-            2: exit ^Word(@lSelf.fValue)^;
-            4: exit ^Int32(@lSelf.fValue)^;
-            8: exit ^Int64(@lSelf.fValue)^;
-          end;
-        end;
-
-    method IsEqual_1(other: &Enum): Boolean;
-    begin
-      case EnumSize of
-        1: begin
-          var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-          var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
-          exit ^Byte(@lSelf.fValue)^ = ^Byte(@lOther.fValue)^;
-        end;
-        2: begin
-          var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-          var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
-          exit ^Int16(@lSelf.fValue)^ = ^Int16(@lOther.fValue)^;
-        end;
-        4: begin
-          var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-          var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
-          exit ^Int32(@lSelf.fValue)^ = ^Int32(@lOther.fValue)^;
-        end;
-        8: begin
-          var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-          var lOther := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(other));
-          exit lSelf.fValue = lOther.fValue;
-        end;
-      end;
-    end;
-  end;
-
-  &Enum = public abstract class(ISoftObject<&Enum>)//(IEquatable<&Enum>, IComparable<&Enum>)
+  &Enum = public abstract class//(IEquatable<&Enum>, IComparable<&Enum>)
   public
     property EnumSize: Integer
       read self.GetType.SizeOfType;
 
     {ISoftObject<Enum> implementation aka NO heapallocation?}
-    method AsString: String;
+    method ToString: String; override;
     begin
       var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
-      var memberName := self.GetType.Constants.FirstOrDefault(a -> a.IsStatic and (a.Value = lSelf.fValue)):Name;
-      //result := result.AllocString(1 + memberName.Length + 1 + 1 + lValue.AsString.Length + 1);
-      //the result enum shall look like this: (NAME, VALUE) => (A, 23);
-      {var pair : tuple of (String, Int64) := (memberName, lSelf.fValue);
-      result := pair.ToString();}
-      result := memberName;
-      //if result = nil then exit lSelf.fValue.AsString;
+      var lValue: Int64 := 0;
+      case EnumSize of
+        1: lValue := ^Byte(@lSelf.fValue)^;
+        2: lValue := ^Word(@lSelf.fValue)^;
+        4: lValue := ^Int32(@lSelf.fValue)^;
+        8: lValue := ^Int64(@lSelf.fValue)^;
+      end;
+      result := self.GetType.Constants.FirstOrDefault(a -> a.IsStatic and (Convert.ToInt64(a.Value) = lValue)):Name;
+      if result = nil then exit lValue.ToString();
     end;
 
-    property HashCode: TNumeric
-    read begin
+    method GetHashCode: Integer; override;
+    begin
       var lSelf := InternalCalls.Cast<DummyEnum>(InternalCalls.Cast(self));
       writeLn("Here the value of the lSelf is: " + lSelf.fValue.AsString);
 
@@ -115,7 +59,12 @@ type
       end;
     end;
 
-    method IsEqual(other: &Enum): Boolean;
+    method &Equals(aOther: Object): Boolean; override;
+    begin
+      exit (aOther = nil) and not (aOther.GetType = GetType) and Equals(&Enum(aOther));
+    end;
+
+    method Equals(other: &Enum): Boolean;
     begin
       case EnumSize of
         1: begin
@@ -139,22 +88,6 @@ type
             exit lSelf.fValue = lOther.fValue;
            end;
       end;
-    end;
-
-   //Object - Code aka Boxing code//
-    method ToString: String; override;
-    begin
-      exit AsString;
-    end;
-
-    method &Equals(aOther: Object): Boolean; override;
-    begin
-      exit (aOther = nil) and not (aOther.GetType = GetType) and IsEqual(&Enum(aOther));
-    end;
-
-    method GetHashCode: Integer; override;
-    begin
-      exit Integer(HashCode);
     end;
 
     method CompareTo(a: &Enum): Integer;
